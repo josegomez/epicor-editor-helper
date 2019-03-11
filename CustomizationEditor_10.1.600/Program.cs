@@ -17,7 +17,7 @@ using System.Data;
 using System.Threading;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
-using ICSharpCode.SharpZipLib.BZip2;
+
 
 namespace CustomizationEditor
 {
