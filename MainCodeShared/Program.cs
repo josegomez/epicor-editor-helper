@@ -139,134 +139,104 @@ namespace CustomizationEditor
 
         private static void DownloadAndSync(Session epiSession, CommandLineParams o)
         {
-            string file = Path.GetTempFileName();
-            using (StreamWriter swLog = new StreamWriter(file))
+            epiSession["Customizing"] = false;
+            var oTrans = new ILauncher(epiSession);
+            CustomizationVerify cm = new CustomizationVerify(epiSession);
+            string dll = cm.getDllName(o.Key2);
+            StringBuilder refds = new StringBuilder();
+            dynamic epiBaseForm = null;
+            dynamic epiTransaction = null;
+            if (string.IsNullOrEmpty(dll))
+                dll = "*.UI.*.dll";
+            foreach (string s in Directory.GetFiles(o.EpicorClientFolder, dll))
             {
-                swLog.WriteLine("Got in the Function");
-                try
+                Assembly assy = Assembly.LoadFile(s);
+                if (assy.DefinedTypes.Where(r => r.FullName.ToUpper().Contains(o.Key2.ToUpper())).Any())
                 {
-                    epiSession["Customizing"] = false;
-                    var oTrans = new ILauncher(epiSession);
-                    CustomizationVerify cm = new CustomizationVerify(epiSession);
-                    swLog.WriteLine("Customization Verify");
-                    string dll = cm.getDllName(o.Key2);
-                    swLog.WriteLine("Got Epicor DLL");
-                    StringBuilder refds = new StringBuilder();
-                    dynamic epiBaseForm = null;
-                    dynamic epiTransaction = null;
-                    if (string.IsNullOrEmpty(dll))
-                        dll = "*.UI.*.dll";
+                    var typeT = assy.DefinedTypes.Where(r => r.Name.Equals("Transaction")).FirstOrDefault();
+                    var typeE = assy.DefinedTypes.Where(r => r.FullName.ToUpper().Contains(o.Key2.ToUpper())).FirstOrDefault();
+                    if (typeT != null)
+                        epiTransaction = Activator.CreateInstance(typeT, new object[] { oTrans });
+                    else
+                        epiTransaction = new EpiTransaction(oTrans);
 
-                    swLog.WriteLine("Finding File");
-                    foreach (string s in Directory.GetFiles(o.EpicorClientFolder, dll))
-                    {
-                        Assembly assy = Assembly.LoadFile(s);
-                        if (assy.DefinedTypes.Where(r => r.FullName.ToUpper().Contains(o.Key2.ToUpper())).Any())
-                        {
-                            var typeT = assy.DefinedTypes.Where(r => r.Name.Equals("Transaction")).FirstOrDefault();
-                            var typeE = assy.DefinedTypes.Where(r => r.FullName.ToUpper().Contains(o.Key2.ToUpper())).FirstOrDefault();
-                            if (typeT != null)
-                                epiTransaction = Activator.CreateInstance(typeT, new object[] { oTrans });
-                            else
-                                epiTransaction = new EpiTransaction(oTrans);
-
-                            epiBaseForm = Activator.CreateInstance(typeE, new object[] { epiTransaction });
-                            epiBaseForm.IsVerificationMode = true;
-                            epiBaseForm.CustomizationName = o.Key1;
-                            refds.AppendLine($"<Reference Include=\"{typeE.Assembly.FullName}\">");
-                            refds.AppendLine($"<HintPath>{s}</HintPath>");
-                            refds.AppendLine($"</Reference>");
-                            break;
-                        }
-                    }
-                    swLog.WriteLine("Initialize EpiUI Utils");
-                    EpiUIUtils eu = new EpiUIUtils(epiBaseForm, epiTransaction, epiBaseForm.MainToolManager, null);
-                    eu.GetType().GetField("currentSession", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(eu, epiTransaction.Session);
-                    eu.GetType().GetField("customizeName", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(eu, o.Key1);
-
-                    swLog.WriteLine("Get composite Customize Data Set");
-                    var mi = eu.GetType().GetMethod("getCompositeCustomizeDataSet", BindingFlags.Instance | BindingFlags.NonPublic);
-                    bool customize = false;
-                    mi.Invoke(eu, new object[] { o.Key2, customize, customize, customize });
-                    Ice.Adapters.GenXDataAdapter ad = new Ice.Adapters.GenXDataAdapter(epiTransaction);
-                    ad.BOConnect();
-                    GenXDataImpl i = (GenXDataImpl)ad.BusinessObject;
-                    swLog.WriteLine("Customization Get By ID");
-                    var ds = i.GetByID(o.Company, o.ProductType, o.LayerType, o.CSGCode, o.Key1, o.Key2, o.Key3);
-                    PersonalizeCustomizeManager csm = new PersonalizeCustomizeManager(epiBaseForm, epiTransaction, o.ProductType, o.Company, "", "", o.Key1, eu.CustLayerMan, DeveloperLicenseType.Customer, LayerType.Customization);
-                    swLog.WriteLine("Init Custom Controls");
-                    csm.InitCustomControlsAndProperties(ds, LayerName.CompositeBase, true);
-                    CustomScriptManager csmR = csm.CurrentCustomScriptManager;
-                    swLog.WriteLine("Generate Refs");
-                    GenerateRefs(refds, csmR, o);
-                    ExportCustmization(ds);
-                    int start = csmR.CustomCodeAll.IndexOf("public void InitializeCustomCode()");
-                    int end = csmR.CustomCodeAll.Length - start;
-                    string allCode;
-                    string script;
-                    allCode = csmR.CustomCodeAll.Replace(csmR.CustomCodeAll.Substring(start, end), "}").Replace("public class Script", "public partial class Script");
-                    script = csmR.Script.Replace("public class Script", "public partial class Script");
-                    swLog.WriteLine("Write Project");
-                    string projectFile = Resource.BasicProjc;
-                    projectFile = projectFile.Replace("<CUSTID>", o.Key1);
-                    projectFile = projectFile.Replace("<!--<ReferencesHere>-->", refds.ToString());
-
-
-                    swLog.WriteLine("Create Folder");
-                    if (string.IsNullOrEmpty(o.ProjectFolder))
-                    {
-                        string origFolderName = ($@"{o.Folder}\{o.Key2}_{ o.Key1}").Replace('.', '_');
-                        string newFolderName = origFolderName;
-                        int ct = 0;
-                        while (Directory.Exists(newFolderName))
-                        {
-                            newFolderName = ($"{origFolderName}_{++ct}").Replace('.', '_');
-                        }
-                        o.ProjectFolder = newFolderName;
-                        Directory.CreateDirectory(o.ProjectFolder);
-                    }
-
-
-                    using (StreamWriter sw = new StreamWriter($@"{o.ProjectFolder}\{o.Key1}.csproj"))
-                    {
-                        sw.Write(projectFile);
-                        sw.Close();
-                    }
-                    swLog.WriteLine("Write Script");
-                    using (StreamWriter sw = new StreamWriter($@"{o.ProjectFolder}\Script.cs"))
-                    {
-                        sw.Write(script);
-                        sw.Close();
-                    }
-
-                    swLog.WriteLine("Write ScriptRO");
-                    using (StreamWriter sw = new StreamWriter($@"{o.ProjectFolder}\ScriptReadOnly.cs"))
-                    {
-                        sw.Write(allCode);
-                        sw.Close();
-                    }
-
-                    swLog.WriteLine("Write Command");
-                    string command = Newtonsoft.Json.JsonConvert.SerializeObject(o);
-                    using (StreamWriter sw = new StreamWriter($@"{o.ProjectFolder}\CustomizationInfo.json"))
-                    {
-                        sw.Write(command);
-                        sw.Close();
-                    }
-
-                    File.SetAttributes($@"{o.ProjectFolder}\ScriptReadOnly.cs", File.GetAttributes($@"{o.ProjectFolder}\ScriptReadOnly.cs") & ~FileAttributes.ReadOnly);
-                    swLog.WriteLine("Write Customization");
-                    ds.WriteXml($@"{o.ProjectFolder}\{o.Key2}_Customization_{o.Key1}_CustomExport.xml", XmlWriteMode.WriteSchema);
+                    epiBaseForm = Activator.CreateInstance(typeE, new object[] { epiTransaction });
+                    epiBaseForm.IsVerificationMode = true;
+                    epiBaseForm.CustomizationName = o.Key1;
+                    refds.AppendLine($"<Reference Include=\"{typeE.Assembly.FullName}\">");
+                    refds.AppendLine($"<HintPath>{s}</HintPath>");
+                    refds.AppendLine($"</Reference>");
+                    break;
                 }
-                catch(Exception ee)
-                {
-                    swLog.WriteLine(ee.ToString());
-                }
-            
             }
+            EpiUIUtils eu = new EpiUIUtils(epiBaseForm, epiTransaction, epiBaseForm.MainToolManager, null);
+            eu.GetType().GetField("currentSession", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(eu, epiTransaction.Session);
+            eu.GetType().GetField("customizeName", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(eu, o.Key1);
+
+            var mi = eu.GetType().GetMethod("getCompositeCustomizeDataSet", BindingFlags.Instance | BindingFlags.NonPublic);
+            bool customize = false;
+            mi.Invoke(eu, new object[] { o.Key2, customize, customize, customize });
+            Ice.Adapters.GenXDataAdapter ad = new Ice.Adapters.GenXDataAdapter(epiTransaction);
+            ad.BOConnect();
+            GenXDataImpl i = (GenXDataImpl)ad.BusinessObject;
+            var ds = i.GetByID(o.Company, o.ProductType, o.LayerType, o.CSGCode, o.Key1, o.Key2, o.Key3);
+            PersonalizeCustomizeManager csm = new PersonalizeCustomizeManager(epiBaseForm, epiTransaction, o.ProductType, o.Company, "", "", o.Key1, eu.CustLayerMan, DeveloperLicenseType.Customer, LayerType.Customization);
+            csm.InitCustomControlsAndProperties(ds, LayerName.CompositeBase, true);
+            CustomScriptManager csmR = csm.CurrentCustomScriptManager;
+            GenerateRefs(refds, csmR,o);
+            ExportCustmization(ds);
+            int start = csmR.CustomCodeAll.IndexOf("public void InitializeCustomCode()");
+            int end = csmR.CustomCodeAll.Length - start;
+            string allCode;
+            string script;
+            allCode = csmR.CustomCodeAll.Replace(csmR.CustomCodeAll.Substring(start, end), "}").Replace("public class Script", "public partial class Script");
+            script = csmR.Script.Replace("public class Script", "public partial class Script");
             
+            string projectFile = Resource.BasicProjc;
+            projectFile = projectFile.Replace("<CUSTID>", o.Key1);
+            projectFile = projectFile.Replace("<!--<ReferencesHere>-->", refds.ToString());
+
+            if (string.IsNullOrEmpty(o.ProjectFolder))
+            {
+                string origFolderName = ($@"{ o.Folder}\{o.Key2}_{ o.Key1}").Replace('.', '_');
+                string newFolderName = origFolderName;
+                int ct = 0;
+                while(Directory.Exists(newFolderName))
+                {
+                    newFolderName = ($"{origFolderName}_{++ct}").Replace('.','_');
+                }
+                o.ProjectFolder = newFolderName;
+                Directory.CreateDirectory(o.ProjectFolder);
+            }
+
+
+            using (StreamWriter sw = new StreamWriter($@"{o.ProjectFolder}\{o.Key1}.csproj"))
+            {
+                sw.Write(projectFile);
+                sw.Close();
+            }
+            using (StreamWriter sw = new StreamWriter($@"{o.ProjectFolder}\Script.cs"))
+            {
+                sw.Write(script);
+                sw.Close();
+            }
+            using (StreamWriter sw = new StreamWriter($@"{o.ProjectFolder}\ScriptReadOnly.cs"))
+            {
+                sw.Write(allCode);
+                sw.Close();
+            }
+
+            string command = Newtonsoft.Json.JsonConvert.SerializeObject(o);
+            using (StreamWriter sw = new StreamWriter($@"{o.ProjectFolder}\CustomizationInfo.json"))
+            {
+                sw.Write(command);
+                sw.Close();
+            }
+
+            File.SetAttributes($@"{o.ProjectFolder}\ScriptReadOnly.cs", File.GetAttributes($@"{o.ProjectFolder}\ScriptReadOnly.cs") & ~FileAttributes.ReadOnly);
+            ds.WriteXml($@"{o.ProjectFolder}\{o.Key2}_Customization_{o.Key1}_CustomExport.xml", XmlWriteMode.WriteSchema);
+
             Console.WriteLine(o.ProjectFolder);
-            MessageBox.Show(file);
         }
 
         public static void ExportCustmization(GenXDataDataSet set1)

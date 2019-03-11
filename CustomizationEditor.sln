@@ -5,13 +5,7 @@ VisualStudioVersion = 15.0.28307.438
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomizationEditor", "CustomizationEditor\CustomizationEditor.csproj", "{7CC05C03-06EC-45E1-80F5-DAAF797FF13D}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "MainCodeShared", "MainCodeShared\MainCodeShared.shproj", "{BE32014F-3BC5-4902-9064-76BB813A8481}"
-EndProject
 Global
-	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		MainCodeShared\MainCodeShared.projitems*{7cc05c03-06ec-45e1-80f5-daaf797ff13d}*SharedItemsImports = 4
-		MainCodeShared\MainCodeShared.projitems*{be32014f-3bc5-4902-9064-76bb813a8481}*SharedItemsImports = 13
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
