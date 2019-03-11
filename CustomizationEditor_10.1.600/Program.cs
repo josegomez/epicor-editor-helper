@@ -116,7 +116,7 @@ namespace CustomizationEditor
                 process.WaitForExit();
             }).Start();
         }
-        
+
 
         private static void UpdateCustomization(CommandLineParams o, Session epiSession)
         {
@@ -127,14 +127,14 @@ namespace CustomizationEditor
                 ad.BOConnect();
 
                 GenXDataImpl i = (GenXDataImpl)ad.BusinessObject;
-                string script = sr.ReadToEnd().Replace("public partial class Script", "public class Script");
+                string script = (sr.ReadToEnd().Replace("public partial class Script", "public class Script").EscapeXml());
                 var ds = i.GetByID(o.Company, o.ProductType, o.LayerType, o.CSGCode, o.Key1, o.Key2, o.Key3);
                 var chunk = ds.XXXDef[0];
-                string content =ad.GetDechunkedStringByIDWithCompany(o.Company, o.ProductType, o.LayerType, o.CSGCode, o.Key1, o.Key2, o.Key3);
-                
+                string content = ad.GetDechunkedStringByIDWithCompany(o.Company, o.ProductType, o.LayerType, o.CSGCode, o.Key1, o.Key2, o.Key3);
+
                 string newC = Regex.Replace(content, @"(?=\/\/ \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*)[\s\S]*?(?=<\/PropertyValue>)", script,
                               RegexOptions.IgnoreCase);
-                ad.ChunkNSaveUncompressedStringByID(o.Company, o.ProductType, o.LayerType, o.CSGCode, o.Key1, o.Key2, o.Key3,chunk.Description,chunk.Version,false,newC);
+                ad.ChunkNSaveUncompressedStringByID(o.Company, o.ProductType, o.LayerType, o.CSGCode, o.Key1, o.Key2, o.Key3, chunk.Description, chunk.Version, false, newC);
             }
         }
 
