@@ -17,6 +17,7 @@ using System.Data;
 using System.Threading;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
+using ICSharpCode.SharpZipLib.BZip2;
 
 namespace CustomizationEditor
 {
@@ -128,12 +129,12 @@ namespace CustomizationEditor
                 GenXDataImpl i = (GenXDataImpl)ad.BusinessObject;
                 string script = sr.ReadToEnd().Replace("public partial class Script", "public class Script");
                 var ds = i.GetByID(o.Company, o.ProductType, o.LayerType, o.CSGCode, o.Key1, o.Key2, o.Key3);
-                string content = ds.XXXDef[0].Content;
+                var chunk = ds.XXXDef[0];
+                string content =ad.GetDechunkedStringByIDWithCompany(o.Company, o.ProductType, o.LayerType, o.CSGCode, o.Key1, o.Key2, o.Key3);
+                
                 string newC = Regex.Replace(content, @"(?=\/\/ \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*)[\s\S]*?(?=<\/PropertyValue>)", script,
                               RegexOptions.IgnoreCase);
-                ds.XXXDef[0].Content = newC;
-                ds.XXXDef[0].RowMod = "U";
-                i.Update(ds);
+                ad.ChunkNSaveUncompressedStringByID(o.Company, o.ProductType, o.LayerType, o.CSGCode, o.Key1, o.Key2, o.Key3,chunk.Description,chunk.Version,false,newC);
             }
         }
 
@@ -382,5 +383,7 @@ namespace CustomizationEditor
         {
             return new Session(o.Username, o.Password, Session.LicenseType.GlobalUser, o.ConfigFile);
         }
+
+        
     }
 }
