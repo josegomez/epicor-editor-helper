@@ -18,7 +18,6 @@ using System.Threading;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
 
-
 namespace CustomizationEditor
 {
     class Program
@@ -116,10 +115,26 @@ namespace CustomizationEditor
                 process.WaitForExit();
             }).Start();
         }
-
+        
 
         private static void UpdateCustomization(CommandLineParams o, Session epiSession)
         {
+            /*using (StreamReader sr = new StreamReader($@"{o.ProjectFolder}\Script.cs"))
+            {
+                var oTrans = new ILauncher(epiSession);
+                Ice.Adapters.GenXDataAdapter ad = new Ice.Adapters.GenXDataAdapter(oTrans);
+                ad.BOConnect();
+
+                GenXDataImpl i = (GenXDataImpl)ad.BusinessObject;
+                string script = sr.ReadToEnd().Replace("public partial class Script", "public class Script");
+                var ds = i.GetByID(o.Company, o.ProductType, o.LayerType, o.CSGCode, o.Key1, o.Key2, o.Key3);
+                string content = ds.XXXDef[0].Content;
+                string newC = Regex.Replace(content, @"(?=\/\/ \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*)[\s\S]*?(?=<\/PropertyValue>)", script,
+                              RegexOptions.IgnoreCase);
+                ds.XXXDef[0].Content = newC;
+                ds.XXXDef[0].RowMod = "U";
+                i.Update(ds);
+            }*/
             using (StreamReader sr = new StreamReader($@"{o.ProjectFolder}\Script.cs"))
             {
                 var oTrans = new ILauncher(epiSession);
@@ -383,7 +398,5 @@ namespace CustomizationEditor
         {
             return new Session(o.Username, o.Password, Session.LicenseType.GlobalUser, o.ConfigFile);
         }
-
-        
     }
 }
