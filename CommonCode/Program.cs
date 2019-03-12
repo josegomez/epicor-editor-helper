@@ -28,7 +28,6 @@ namespace CustomizationEditor
             Application.EnableVisualStyles();
             Session epiSession=null;
             bool reSync = false;
-            
             Parser.Default.ParseArguments<CommandLineParams>(args)
                    .WithParsed(o =>
                    {
@@ -384,7 +383,12 @@ namespace CustomizationEditor
             else
                 epiSession["Customizing"] = false;
             if (edit)
+#if EPICOR_10_2_300
                 oTrans.GetType().GetMethod("addFormnameToArguments", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(oTrans, new object[] { menuRow });
+#else
+                ;
+#endif
+
             LaunchFormOptions lfo = new LaunchFormOptions();
             lfo.IsModal = modal;
             lfo.Sender = oTrans;
