@@ -118,22 +118,7 @@ namespace CustomizationEditor
 
         private static void UpdateCustomization(CommandLineParams o, Session epiSession)
         {
-            /*using (StreamReader sr = new StreamReader($@"{o.ProjectFolder}\Script.cs"))
-            {
-                var oTrans = new ILauncher(epiSession);
-                Ice.Adapters.GenXDataAdapter ad = new Ice.Adapters.GenXDataAdapter(oTrans);
-                ad.BOConnect();
-
-                GenXDataImpl i = (GenXDataImpl)ad.BusinessObject;
-                string script = sr.ReadToEnd().Replace("public partial class Script", "public class Script");
-                var ds = i.GetByID(o.Company, o.ProductType, o.LayerType, o.CSGCode, o.Key1, o.Key2, o.Key3);
-                string content = ds.XXXDef[0].Content;
-                string newC = Regex.Replace(content, @"(?=\/\/ \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*)[\s\S]*?(?=<\/PropertyValue>)", script,
-                              RegexOptions.IgnoreCase);
-                ds.XXXDef[0].Content = newC;
-                ds.XXXDef[0].RowMod = "U";
-                i.Update(ds);
-            }*/
+      
             using (StreamReader sr = new StreamReader($@"{o.ProjectFolder}\Script.cs"))
             {
                 var oTrans = new ILauncher(epiSession);
@@ -178,12 +163,12 @@ namespace CustomizationEditor
                         Assembly assy = Assembly.LoadFile(s);
                         if (assy.DefinedTypes.Where(r => r.FullName.ToUpper().Contains(o.Key2.ToUpper())).Any())
                         {
-                            
+
                             var typeE = assy.DefinedTypes.Where(r => r.FullName.ToUpper().Contains(o.Key2.ToUpper())).FirstOrDefault();
-                            
+
                             var typeT = assy.DefinedTypes.Where(r => r.Name.Contains("Transaction")).FirstOrDefault();
-                            
-                            
+
+
                             if (typeT != null)
                                 epiTransaction = Activator.CreateInstance(typeT, new object[] { oTrans });
                             else
@@ -202,6 +187,7 @@ namespace CustomizationEditor
                     EpiUIUtils eu = new EpiUIUtils(epiBaseForm, epiTransaction, epiBaseForm.MainToolManager, null);
                     eu.GetType().GetField("currentSession", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(eu, epiTransaction.Session);
                     eu.GetType().GetField("customizeName", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(eu, o.Key1);
+                    eu.GetType().GetField("baseExtentionName", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(eu, o.Key3.Replace("BaseExtension^", string.Empty));
 
                     swLog.WriteLine("Get composite Customize Data Set");
                     var mi = eu.GetType().GetMethod("getCompositeCustomizeDataSet", BindingFlags.Instance | BindingFlags.NonPublic);
@@ -212,8 +198,10 @@ namespace CustomizationEditor
                     GenXDataImpl i = (GenXDataImpl)ad.BusinessObject;
                     swLog.WriteLine("Customization Get By ID");
                     var ds = i.GetByID(o.Company, o.ProductType, o.LayerType, o.CSGCode, o.Key1, o.Key2, o.Key3);
+                    string beName = o.Key3.Replace("BaseExtension^", string.Empty);
+                    string exName = (string)eu.GetType().GetField("extensionName", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(eu);
                     CustomizationDS nds = new CustomizationDS();
-                    PersonalizeCustomizeManager csm = new PersonalizeCustomizeManager(epiBaseForm, epiTransaction, o.ProductType, o.Company, "", "", o.Key1, eu.CustLayerMan, DeveloperLicenseType.Customer, LayerType.Customization);
+                    PersonalizeCustomizeManager csm = new PersonalizeCustomizeManager(epiBaseForm, epiTransaction, o.ProductType, o.Company, beName, exName, o.Key1, eu.CustLayerMan, DeveloperLicenseType.Partner, LayerType.Customization);
                     swLog.WriteLine("Init Custom Controls");
                     csm.InitCustomControlsAndProperties(ds, LayerName.CompositeBase, true);
                     CustomScriptManager csmR = csm.CurrentCustomScriptManager;
