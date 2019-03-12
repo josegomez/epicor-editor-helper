@@ -208,7 +208,7 @@ namespace CustomizationEditor
                     swLog.WriteLine("Generate Refs");
                     GenerateRefs(refds, csmR, o);
                     ExportCustmization(nds,ad,o);
-                    int start = csmR.CustomCodeAll.IndexOf("public void InitializeCustomCode()");
+                    int start = csmR.CustomCodeAll.IndexOf("// ** Wizard Insert Location - Do Not Remove 'Begin/End Wizard Added Module Level Variables' Comments! **");
                     int end = csmR.CustomCodeAll.Length - start;
                     string allCode;
                     string script;
@@ -367,7 +367,16 @@ namespace CustomizationEditor
                 if (csmR.CustomAssembly.FullName.Contains(o.Key1))
                     o.DLLLocation = csmR.CustomAssembly.Location;
                 refds.AppendLine($"<Reference Include=\"{r.Value.FullName}\">");
-                refds.AppendLine($"<HintPath>{r.Key}.dll</HintPath>");
+                refds.AppendLine($@"<HintPath>{o.EpicorClientFolder}\{r.Key}.dll</HintPath>");
+                refds.AppendLine($"</Reference>");
+            }
+
+            foreach (var r in csmR.ReferencedAssembliesHT)
+            {
+                if (csmR.CustomAssembly.FullName.Contains(o.Key1))
+                    o.DLLLocation = csmR.CustomAssembly.Location;
+                refds.AppendLine($"<Reference Include=\"{r.Value.FullName}\">");
+                refds.AppendLine($@"<HintPath>{o.EpicorClientFolder}\{r.Key}.dll</HintPath>");
                 refds.AppendLine($"</Reference>");
             }
         }
