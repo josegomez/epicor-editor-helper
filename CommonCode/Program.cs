@@ -212,13 +212,14 @@ namespace CustomizationEditor
                     GenXDataImpl i = (GenXDataImpl)ad.BusinessObject;
                     swLog.WriteLine("Customization Get By ID");
                     var ds = i.GetByID(o.Company, o.ProductType, o.LayerType, o.CSGCode, o.Key1, o.Key2, o.Key3);
+                    CustomizationDS nds = new CustomizationDS();
                     PersonalizeCustomizeManager csm = new PersonalizeCustomizeManager(epiBaseForm, epiTransaction, o.ProductType, o.Company, "", "", o.Key1, eu.CustLayerMan, DeveloperLicenseType.Customer, LayerType.Customization);
                     swLog.WriteLine("Init Custom Controls");
                     csm.InitCustomControlsAndProperties(ds, LayerName.CompositeBase, true);
                     CustomScriptManager csmR = csm.CurrentCustomScriptManager;
                     swLog.WriteLine("Generate Refs");
                     GenerateRefs(refds, csmR, o);
-                    ExportCustmization(ds);
+                    ExportCustmization(nds,ad,o);
                     int start = csmR.CustomCodeAll.IndexOf("public void InitializeCustomCode()");
                     int end = csmR.CustomCodeAll.Length - start;
                     string allCode;
@@ -275,7 +276,7 @@ namespace CustomizationEditor
 
                     File.SetAttributes($@"{o.ProjectFolder}\ScriptReadOnly.cs", File.GetAttributes($@"{o.ProjectFolder}\ScriptReadOnly.cs") & ~FileAttributes.ReadOnly);
                     swLog.WriteLine("Write Customization");
-                    ds.WriteXml($@"{o.ProjectFolder}\{o.Key2}_Customization_{o.Key1}_CustomExport.xml", XmlWriteMode.WriteSchema);
+                    nds.WriteXml($@"{o.ProjectFolder}\{o.Key2}_Customization_{o.Key1}_CustomExport.xml", XmlWriteMode.WriteSchema);
                 }
                 catch(Exception ee)
                 {
@@ -288,13 +289,70 @@ namespace CustomizationEditor
             //MessageBox.Show(file);
         }
 
-        public static void ExportCustmization(GenXDataDataSet set1)
+        public static void ExportCustmization(CustomizationDS nds, Ice.Adapters.GenXDataAdapter ad, CommandLineParams o)
         {
 
-            GenXDataDataSet.XXXDefRow row = set1.XXXDef[0];
-
-            set1.ExtendedProperties["ExportFormat"] = "Gen3";
-            set1.AcceptChanges();
+            string s= ad.GetDechunkedStringByIDWithCompany(o.Company, o.ProductType, o.LayerType, o.Key1, o.Key2, o.Key3);
+            StringReader sr = new StringReader(s);
+            nds.ReadXml(sr, XmlReadMode.IgnoreSchema);
+            sr.Close();
+            if (!nds.ExtendedProperties.ContainsKey("Company"))
+            {
+                nds.ExtendedProperties.Add("Company", o.Company);
+            }
+            else
+            {
+                nds.ExtendedProperties["Company"] = o.Company;
+            }
+            if (!nds.ExtendedProperties.ContainsKey("ProductID"))
+            {
+                nds.ExtendedProperties.Add("ProductID", o.ProductType);
+            }
+            else
+            {
+                nds.ExtendedProperties["ProductID"] = o.ProductType;
+            }
+            if (!nds.ExtendedProperties.ContainsKey("TypeCode"))
+            {
+                nds.ExtendedProperties.Add("TypeCode", o.LayerType);
+            }
+            else
+            {
+                nds.ExtendedProperties["TypeCode"] = o.LayerType;
+            }
+            if (!nds.ExtendedProperties.ContainsKey("CGCCode"))
+            {
+                nds.ExtendedProperties.Add("CGCCode", o.CSGCode);
+            }
+            else
+            {
+                nds.ExtendedProperties["CGCCode"] = o.CSGCode;
+            }
+            
+            if (!nds.ExtendedProperties.ContainsKey("Key1"))
+            {
+                nds.ExtendedProperties.Add("Key1", o.Key1);
+            }
+            else
+            {
+                nds.ExtendedProperties["Key1"] = o.Key1;
+            }
+            if (!nds.ExtendedProperties.ContainsKey("Key2"))
+            {
+                nds.ExtendedProperties.Add("Key2", o.Key2);
+            }
+            else
+            {
+                nds.ExtendedProperties["Key2"] = o.Key2;
+            }
+            if (!nds.ExtendedProperties.ContainsKey("Key3"))
+            {
+                nds.ExtendedProperties.Add("Key3", o.Key3);
+            }
+            else
+            {
+                nds.ExtendedProperties["Key3"] = o.Key3;
+            }
         }
 
         private static void GenerateRefs(StringBuilder refds, CustomScriptManager csmR, CommandLineParams o)
