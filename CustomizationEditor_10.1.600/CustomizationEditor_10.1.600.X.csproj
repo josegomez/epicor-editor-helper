@@ -28,7 +28,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\Releases\10.1.600\</OutputPath>
+    <OutputPath>..\BuiltPackages\10.1.600\</OutputPath>
     <DefineConstants>TRACE;EPICOR_10_1_600</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
