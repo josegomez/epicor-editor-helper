@@ -28,7 +28,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\BuiltPackages\10.2.300\</OutputPath>
-    <DefineConstants>TRACE;EPICOR_10_2_200</DefineConstants>
+    <DefineConstants>TRACE;EPICOR_10_2_300</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -159,4 +159,8 @@
   </ItemGroup>
   <Import Project="..\CommonCode\CommonCode.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>del $(TargetDir)..\Zips\CustomizationHelper.10.2.300.X.zip
+powershell.exe -command "&amp; { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::CreateFromDirectory('$(TargetDir)', '$(TargetDir)..\Zips\CustomizationHelper.10.2.300.X.zip'); }"</PostBuildEvent>
+  </PropertyGroup>
 </Project>

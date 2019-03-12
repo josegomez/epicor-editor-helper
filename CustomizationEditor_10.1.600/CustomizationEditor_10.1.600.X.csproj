@@ -167,4 +167,8 @@
   </ItemGroup>
   <Import Project="..\CommonCode\CommonCode.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>del $(TargetDir)..\Zips\CustomizationHelper.10.1.600.X.zip
+powershell.exe -command "&amp; { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::CreateFromDirectory('$(TargetDir)', '$(TargetDir)..\Zips\CustomizationHelper.10.1.600.X.zip'); }"</PostBuildEvent>
+  </PropertyGroup>
 </Project>
