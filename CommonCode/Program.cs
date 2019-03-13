@@ -91,7 +91,10 @@ namespace CustomizationEditor
                        }
                        if(reSync)
                        {
-                           DownloadAndSync(epiSession, o);
+                           if(o.Key2.Contains("MainController"))//Dashboard
+                            DownloadAndSyncDashboard(epiSession, o);
+                           else
+                            DownloadAndSync(epiSession, o);
                        }
                        ShowProgressBar(false);
                    });
@@ -157,6 +160,169 @@ namespace CustomizationEditor
             }
         }
 
+        private static void DownloadAndSyncDashboard(Session epiSession, CommandLineParams o)
+        {
+            string file = Path.GetTempFileName();
+            using (StreamWriter swLog = new StreamWriter(file))
+            {
+                swLog.WriteLine("Got in the Function");
+                try
+                {
+                    epiSession["Customizing"] = false;
+                    var oTrans = new ILauncher(epiSession);
+                    CustomizationVerify cm = new CustomizationVerify(epiSession);
+                    swLog.WriteLine("Customization Verify");
+                    string dll = cm.getDllName(o.Key2);
+                    swLog.WriteLine("Got Epicor DLL");
+                    StringBuilder refds = new StringBuilder();
+                    dynamic epiBaseForm = null;
+                    dynamic epiTransaction = null;
+                    if (string.IsNullOrEmpty(dll))
+                        dll = "*.UI.*.dll";
+
+
+                    Assembly assy = ClientAssemblyRetriever.ForILaunch(oTrans).RetrieveAssembly(dll);
+                    swLog.WriteLine("Finding File");
+                    string s = "";
+                    
+                    s = assy.Location;
+                    var typeE = assy.DefinedTypes.Where(r => r.FullName.ToUpper().Contains(o.Key2.ToUpper())).FirstOrDefault();
+                    var typeTList = assy.DefinedTypes.Where(r => r.BaseType.Name.Equals("EpiTransaction")).ToList();
+                    
+                    epiTransaction = new EpiTransaction(oTrans);
+                    //epiBaseForm = Activator.CreateInstance(typeE, new object[] { epiTransaction });
+                    
+
+                    
+
+                    refds.AppendLine($"<Reference Include=\"{typeE.Assembly.FullName}\">");
+                    refds.AppendLine($"<HintPath>{s}</HintPath>");
+                    refds.AppendLine($"</Reference>");
+                    
+                        //epiBaseForm.GetType().GetMethod("InitializeLaunch", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(epiBaseForm);
+                    var typ = assy.DefinedTypes.Where(r => r.Name == "Launch").FirstOrDefault();
+                    dynamic launcher = Activator.CreateInstance(typ);
+                    launcher.Session = epiSession;
+                    launcher.GetType().GetMethod("InitializeLaunch", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(launcher, null);
+
+                    epiBaseForm = launcher.GetType().GetField("lForm", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(launcher);
+                    swLog.WriteLine("Initialize EpiUI Utils");
+                    EpiUIUtils eu = epiBaseForm.GetType().GetField("utils",BindingFlags.Instance | BindingFlags.NonPublic).GetValue(epiBaseForm);
+                    eu.GetType().GetField("currentSession", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(eu, epiTransaction.Session);
+                    eu.GetType().GetField("customizeName", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(eu, o.Key1);
+                    eu.GetType().GetField("baseExtentionName", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(eu, o.Key3.Replace("BaseExtension^", string.Empty));
+                    eu.ParentForm = epiBaseForm;
+                    swLog.WriteLine("Get composite Customize Data Set");
+                    var mi = eu.GetType().GetMethod("getCompositeCustomizeDataSet", BindingFlags.Instance | BindingFlags.NonPublic);
+                    bool customize = false;
+                    mi.Invoke(eu, new object[] { o.Key2, customize, customize, customize });
+                    Ice.Adapters.GenXDataAdapter ad = new Ice.Adapters.GenXDataAdapter(epiTransaction);
+                    ad.BOConnect();
+                    GenXDataImpl i = (GenXDataImpl)ad.BusinessObject;
+                    swLog.WriteLine("Customization Get By ID");
+                    var ds = i.GetByID(o.Company, o.ProductType, o.LayerType, o.CSGCode, o.Key1, o.Key2, o.Key3);
+                    string beName = o.Key3.Replace("BaseExtension^", string.Empty);
+                    string exName = (string)eu.GetType().GetField("extensionName", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(eu);
+                    CustomizationDS nds = new CustomizationDS();
+                    PersonalizeCustomizeManager csm = new PersonalizeCustomizeManager(epiBaseForm, epiTransaction, o.ProductType, o.Company, beName, exName, o.Key1, eu.CustLayerMan, DeveloperLicenseType.Partner, LayerType.Customization);
+
+                    swLog.WriteLine("Init Custom Controls");
+                    csm.InitCustomControlsAndProperties(ds, LayerName.CompositeBase, true);
+                    CustomScriptManager csmR = csm.CurrentCustomScriptManager;
+                    swLog.WriteLine("Generate Refs");
+                    List<string> aliases = new List<string>();
+                    Match match = Regex.Match(csmR.CustomCodeAll, "((?<=extern alias )(.*)*(?=;))");
+                    while (match.Success)
+                    {
+                        aliases.Add(match.Value.Replace("_", ".").ToUpper());
+                        match = match.NextMatch();
+                    }
+
+                    GenerateRefs(refds, csmR, o, aliases);
+                    ExportCustmization(nds, ad, o);
+                    int start = csmR.CustomCodeAll.IndexOf("// ** Wizard Insert Location - Do Not Remove 'Begin/End Wizard Added Module Level Variables' Comments! **");
+                    int end = csmR.CustomCodeAll.Length - start;
+                    string allCode;
+                    string script;
+                    allCode = csmR.CustomCodeAll.Replace(csmR.CustomCodeAll.Substring(start, end), "}").Replace("public class Script", "public partial class Script");
+                    script = csmR.Script.Replace("public class Script", "public partial class Script");
+                    swLog.WriteLine("Write Project");
+                    string projectFile = Resource.BasicProjc;
+                    projectFile = projectFile.Replace("<CUSTID>", o.Key1);
+                    projectFile = projectFile.Replace("<!--<ReferencesHere>-->", refds.ToString());
+
+
+                    swLog.WriteLine("Create Folder");
+                    if (string.IsNullOrEmpty(o.ProjectFolder))
+                    {
+                        string origFolderName = ($@"{o.Folder}\{o.Key2}_{ o.Key1}").Replace('.', '_');
+                        string newFolderName = origFolderName;
+                        int ct = 0;
+                        while (Directory.Exists(newFolderName))
+                        {
+                            newFolderName = ($"{origFolderName}_{++ct}").Replace('.', '_');
+                        }
+                        o.ProjectFolder = newFolderName;
+                        Directory.CreateDirectory(o.ProjectFolder);
+                    }
+
+
+                    using (StreamWriter sw = new StreamWriter($@"{o.ProjectFolder}\{o.Key1}.csproj"))
+                    {
+                        sw.Write(projectFile);
+                        sw.Close();
+                    }
+                    swLog.WriteLine("Write Script");
+                    using (StreamWriter sw = new StreamWriter($@"{o.ProjectFolder}\Script.cs"))
+                    {
+                        sw.Write(script);
+                        sw.Close();
+                    }
+
+                    swLog.WriteLine("Write ScriptRO");
+                    using (StreamWriter sw = new StreamWriter($@"{o.ProjectFolder}\ScriptReadOnly.cs"))
+                    {
+                        sw.Write(allCode);
+                        sw.Close();
+                    }
+
+                    swLog.WriteLine("Write Command");
+                    string command = Newtonsoft.Json.JsonConvert.SerializeObject(o);
+                    using (StreamWriter sw = new StreamWriter($@"{o.ProjectFolder}\CustomizationInfo.json"))
+                    {
+                        sw.Write(command);
+                        sw.Close();
+                    }
+
+                    File.SetAttributes($@"{o.ProjectFolder}\ScriptReadOnly.cs", File.GetAttributes($@"{o.ProjectFolder}\ScriptReadOnly.cs") & ~FileAttributes.ReadOnly);
+                    swLog.WriteLine("Write Customization");
+                    nds.WriteXml($@"{o.ProjectFolder}\{o.Key2}_Customization_{o.Key1}_CustomExport.xml", XmlWriteMode.WriteSchema);
+
+
+
+                    epiBaseForm.Dispose();
+
+
+                    ad.Dispose();
+                    cm = null;
+
+                    eu.Dispose();
+
+
+                }
+                catch (Exception ee)
+                {
+                    swLog.WriteLine(ee.ToString());
+                }
+
+            }
+
+            Console.WriteLine(o.ProjectFolder);
+            //MessageBox.Show(file);
+        }
+
+
+
         private static void DownloadAndSync(Session epiSession, CommandLineParams o)
         {
             string file = Path.GetTempFileName();
@@ -196,7 +362,7 @@ namespace CustomizationEditor
                     var typeE = assy.DefinedTypes.Where(r => r.FullName.ToUpper().Contains(o.Key2.ToUpper())).FirstOrDefault();
 
                     var typeTList = assy.DefinedTypes.Where(r => r.BaseType.Name.Equals("EpiTransaction")).ToList();
-                    if(typeTList!=null)
+                    if(typeTList!=null && typeTList.Count>0)
                         foreach (var typeT in typeTList)
                         {
                             try
@@ -217,12 +383,29 @@ namespace CustomizationEditor
                         epiTransaction = new EpiTransaction(oTrans);
                         epiBaseForm = Activator.CreateInstance(typeE, new object[] { epiTransaction });
                     }
-                    epiBaseForm.IsVerificationMode = true;
-                    epiBaseForm.CustomizationName = o.Key1;
+
+                    bool dashboard = false;
+                    try
+                    {
+                        epiBaseForm.IsVerificationMode = true;
+                        epiBaseForm.CustomizationName = o.Key1;
+                    }
+                    catch (Exception) {
+                        //Dashboard
+                        dashboard = true;
+                    }
+                    
                     refds.AppendLine($"<Reference Include=\"{typeE.Assembly.FullName}\">");
                     refds.AppendLine($"<HintPath>{s}</HintPath>");
                     refds.AppendLine($"</Reference>");
-                    
+                    if (dashboard)
+                    {
+                        //epiBaseForm.GetType().GetMethod("InitializeLaunch", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(epiBaseForm);
+                        var typ = assy.DefinedTypes.Where(r => r.Name == "Launch").FirstOrDefault();
+                        dynamic launcher = Activator.CreateInstance(typ);
+                        launcher.Session = epiSession;
+                        launcher.GetType().GetMethod("InitializeLaunch", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(launcher, null);
+                    }
                     
                     swLog.WriteLine("Initialize EpiUI Utils");
                     EpiUIUtils eu = new EpiUIUtils(epiBaseForm, epiTransaction, epiBaseForm.MainToolManager, null);
@@ -530,11 +713,7 @@ namespace CustomizationEditor
         private static Session GetEpiSession(CommandLineParams o)
         {
             var ses = new Session(o.Username, o.Password, Session.LicenseType.Default, o.ConfigFile);
-            //Ice.Lib.Configuration c = new Configuration(o.ConfigFile);
-           // var asy = Assembly.Load("Ice.Lib.Epicor");
-            //Ice.Lib.Deployment.IAssemblyRetriever ad = ConfigureForAutoDeployment.BuildAutoDeployAssemblyRetriever(configuration);
-            //Startup.PreStart(ses, true);
-            //Startup.Start(ses, true);
+            
             Startup.SetupPlugins(ses);
             
             return ses;
