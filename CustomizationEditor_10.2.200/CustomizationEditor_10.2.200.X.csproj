@@ -76,6 +76,11 @@
       <HintPath>..\..\..\..\..\..\epicor\ERP10.2Client\SG_Development\Client\Ice.Lib.EpiReportLib.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Ice.Lib.Startup, Version=3.2.200.0, Culture=neutral, PublicKeyToken=5d3fa3c7105d7992, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\epicor\ERP10.2Client\WCI\Client\Ice.Lib.Startup.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Ice.UI.CustomizationMaintEntry, Version=3.2.300.0, Culture=neutral, PublicKeyToken=5d3fa3c7105d7992, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\epicor\ERP10.2Client\SG_Development\Client\Ice.UI.CustomizationMaintEntry.dll</HintPath>

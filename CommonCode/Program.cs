@@ -17,6 +17,7 @@ using System.Data;
 using System.Threading;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
+using Ice.Lib;
 
 namespace CustomizationEditor
 {
@@ -93,7 +94,7 @@ namespace CustomizationEditor
             if(epiSession!=null)
             {
                 epiSession.OnSessionClosing();
-                epiSession.Dispose();
+               
                 epiSession = null;
                 
             }
@@ -166,15 +167,25 @@ namespace CustomizationEditor
 
                             var typeE = assy.DefinedTypes.Where(r => r.FullName.ToUpper().Contains(o.Key2.ToUpper())).FirstOrDefault();
 
-                            var typeT = assy.DefinedTypes.Where(r => r.Name.Contains("Transaction")).FirstOrDefault();
+                            var typeTList = assy.DefinedTypes.Where(r => r.BaseType.Name.Equals("EpiTransaction")).ToList();
 
+                            foreach(var typeT in typeTList)
+                            {
+                                try
+                                {
+                                    if (typeT != null)
+                                        epiTransaction = Activator.CreateInstance(typeT, new object[] { oTrans });
+                                    else
+                                        epiTransaction = new EpiTransaction(oTrans);
 
-                            if (typeT != null)
-                                epiTransaction = Activator.CreateInstance(typeT, new object[] { oTrans });
-                            else
-                                epiTransaction = new EpiTransaction(oTrans);
+                                    epiBaseForm = Activator.CreateInstance(typeE, new object[] { epiTransaction });
+                                    break;
+                                }
+                                catch(Exception e)
+                                { }
+                            }
 
-                            epiBaseForm = Activator.CreateInstance(typeE, new object[] { epiTransaction });
+                            
                             epiBaseForm.IsVerificationMode = true;
                             epiBaseForm.CustomizationName = o.Key1;
                             refds.AppendLine($"<Reference Include=\"{typeE.Assembly.FullName}\">");
@@ -273,6 +284,20 @@ namespace CustomizationEditor
                     File.SetAttributes($@"{o.ProjectFolder}\ScriptReadOnly.cs", File.GetAttributes($@"{o.ProjectFolder}\ScriptReadOnly.cs") & ~FileAttributes.ReadOnly);
                     swLog.WriteLine("Write Customization");
                     nds.WriteXml($@"{o.ProjectFolder}\{o.Key2}_Customization_{o.Key1}_CustomExport.xml", XmlWriteMode.WriteSchema);
+
+
+                    //epiBaseForm.Close();
+                    epiBaseForm.Dispose();
+                    
+                    //epiTransaction.Close();
+                    //epiTransaction.Dispose();
+                    ad.Dispose();
+                    cm = null;
+                    csm.Dispose();
+                    csmR.Dispose();
+                    eu.Dispose();
+
+                
                 }
                 catch(Exception ee)
                 {
@@ -476,7 +501,15 @@ namespace CustomizationEditor
 
         private static Session GetEpiSession(CommandLineParams o)
         {
-            return new Session(o.Username, o.Password, Session.LicenseType.GlobalUser, o.ConfigFile);
+            var ses = new Session(o.Username, o.Password, Session.LicenseType.Default, o.ConfigFile);
+            //Ice.Lib.Configuration c = new Configuration(o.ConfigFile);
+           // var asy = Assembly.Load("Ice.Lib.Epicor");
+            //Ice.Lib.Deployment.IAssemblyRetriever ad = ConfigureForAutoDeployment.BuildAutoDeployAssemblyRetriever(configuration);
+            //Startup.PreStart(ses, true);
+            //Startup.Start(ses, true);
+            Startup.SetupPlugins(ses);
+            
+            return ses;
         }
     }
 }
