@@ -206,7 +206,15 @@ namespace CustomizationEditor
                     csm.InitCustomControlsAndProperties(ds, LayerName.CompositeBase, true);
                     CustomScriptManager csmR = csm.CurrentCustomScriptManager;
                     swLog.WriteLine("Generate Refs");
-                    GenerateRefs(refds, csmR, o);
+                    List<string> aliases = new List<string>();
+                    Match match =Regex.Match(csmR.CustomCodeAll, "((?<=extern alias )(.*)*(?=;))");
+                    while(match.Success)
+                    {
+                        aliases.Add(match.Value.Replace("_",".").ToUpper());
+                        match =match.NextMatch();
+                    }
+
+                    GenerateRefs(refds, csmR, o, aliases);
                     ExportCustmization(nds,ad,o);
                     int start = csmR.CustomCodeAll.IndexOf("// ** Wizard Insert Location - Do Not Remove 'Begin/End Wizard Added Module Level Variables' Comments! **");
                     int end = csmR.CustomCodeAll.Length - start;
@@ -343,7 +351,7 @@ namespace CustomizationEditor
             }
         }
 
-        private static void GenerateRefs(StringBuilder refds, CustomScriptManager csmR, CommandLineParams o)
+        private static void GenerateRefs(StringBuilder refds, CustomScriptManager csmR, CommandLineParams o, List<string> aliases)
         {
             foreach (var r in csmR.SystemRefAssemblies)
             {
@@ -351,6 +359,11 @@ namespace CustomizationEditor
                     o.DLLLocation = r.Key;
                 refds.AppendLine($"<Reference Include=\"{r.Value.FullName}\">");
                 refds.AppendLine($"<HintPath>{r.Key}.dll</HintPath>");
+                if(aliases.Contains(Path.GetFileName(r.Key).ToUpper()))
+                {
+                    refds.AppendLine($"<Aliases>{r.Key.Replace(".", "_")}</Aliases>");
+                }
+               // < Aliases > asdasda </ Aliases >
                 refds.AppendLine($"</Reference>");
             }
 
@@ -368,6 +381,10 @@ namespace CustomizationEditor
                     o.DLLLocation = csmR.CustomAssembly.Location;
                 refds.AppendLine($"<Reference Include=\"{r.Value.FullName}\">");
                 refds.AppendLine($@"<HintPath>{o.EpicorClientFolder}\{r.Key}.dll</HintPath>");
+                if (aliases.Contains(Path.GetFileName(r.Key).ToUpper()))
+                {
+                    refds.AppendLine($"<Aliases>{r.Key.Replace(".", "_")}</Aliases >");
+                }
                 refds.AppendLine($"</Reference>");
             }
 
@@ -377,6 +394,10 @@ namespace CustomizationEditor
                     o.DLLLocation = csmR.CustomAssembly.Location;
                 refds.AppendLine($"<Reference Include=\"{r.Value.FullName}\">");
                 refds.AppendLine($@"<HintPath>{o.EpicorClientFolder}\{r.Key}.dll</HintPath>");
+                if (aliases.Contains(Path.GetFileName(r.Key).ToUpper()))
+                {
+                    refds.AppendLine($"<Aliases>{r.Key.Replace(".", "_")}</Aliases >");
+                }
                 refds.AppendLine($"</Reference>");
             }
         }
