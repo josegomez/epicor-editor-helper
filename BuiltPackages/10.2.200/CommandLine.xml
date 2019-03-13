@@ -4,6 +4,479 @@
         <name>CommandLine</name>
     </assembly>
     <members>
+        <member name="T:RailwaySharp.ErrorHandling.Result`2">
+            <summary>
+            Represents the result of a computation.
+            </summary>
+            <typeparam name="TSuccess">Type that models the result of a successful computation.</typeparam>
+            <typeparam name="TMessage">Type that model a message related to a computation.</typeparam> 
+        </member>
+        <member name="T:RailwaySharp.ErrorHandling.Ok`2">
+            <summary>
+            Represents the result of a successful computation.
+            </summary>
+            <typeparam name="TSuccess">Type that models the result of a successful computation.</typeparam>
+            <typeparam name="TMessage">Type that model a message related to a computation.</typeparam> 
+        </member>
+        <member name="T:RailwaySharp.ErrorHandling.Bad`2">
+            <summary>
+            Represents the result of a failed computation.
+            </summary>
+            <typeparam name="TSuccess">Type that models the result of a successful computation.</typeparam>
+            <typeparam name="TMessage">Type that model a message related to a computation.</typeparam> 
+        </member>
+        <member name="M:RailwaySharp.ErrorHandling.Result.FailWith``2(System.Collections.Generic.IEnumerable{``1})">
+            <summary>
+            Creates a Failure result with the given messages.
+            </summary>
+        </member>
+        <member name="M:RailwaySharp.ErrorHandling.Result.FailWith``2(``1)">
+            <summary>
+            Creates a Failure result with the given message.
+            </summary>
+        </member>
+        <member name="M:RailwaySharp.ErrorHandling.Result.Succeed``2(``0)">
+            <summary>
+            Creates a Success result with the given value.
+            </summary>
+        </member>
+        <member name="M:RailwaySharp.ErrorHandling.Result.Succeed``2(``0,``1)">
+            <summary>
+            Creates a Success result with the given value and the given message.
+            </summary>
+        </member>
+        <member name="M:RailwaySharp.ErrorHandling.Result.Succeed``2(``0,System.Collections.Generic.IEnumerable{``1})">
+            <summary>
+            Creates a Success result with the given value and the given messages.
+            </summary>
+        </member>
+        <member name="M:RailwaySharp.ErrorHandling.Result.Try``1(System.Func{``0})">
+            <summary>
+            Executes the given function on a given success or captures the failure.
+            </summary>
+        </member>
+        <member name="M:RailwaySharp.ErrorHandling.Trial.Ok``2(``0)">
+            <summary>
+            Wraps a value in a Success.
+            </summary>
+        </member>
+        <member name="M:RailwaySharp.ErrorHandling.Trial.Pass``2(``0)">
+            <summary>
+            Wraps a value in a Success.
+            </summary>
+        </member>
+        <member name="M:RailwaySharp.ErrorHandling.Trial.Warn``2(``1,``0)">
+            <summary>
+            Wraps a value in a Success and adds a message.
+            </summary>
+        </member>
+        <member name="M:RailwaySharp.ErrorHandling.Trial.Fail``2(``1)">
+            <summary>
+            Wraps a message in a Failure.
+            </summary>
+        </member>
+        <member name="M:RailwaySharp.ErrorHandling.Trial.Failed``2(RailwaySharp.ErrorHandling.Result{``0,``1})">
+            <summary>
+            Returns true if the result was not successful.
+            </summary>
+        </member>
+        <member name="M:RailwaySharp.ErrorHandling.Trial.Either``3(System.Func{``0,System.Collections.Generic.IEnumerable{``1},``2},System.Func{System.Collections.Generic.IEnumerable{``1},``2},RailwaySharp.ErrorHandling.Result{``0,``1})">
+            <summary>
+            Takes a Result and maps it with successFunc if it is a Success otherwise it maps it with failureFunc.
+            </summary>
+        </member>
+        <member name="M:RailwaySharp.ErrorHandling.Trial.ReturnOrFail``2(RailwaySharp.ErrorHandling.Result{``0,``1})">
+            <summary>
+            If the given result is a Success the wrapped value will be returned. 
+            Otherwise the function throws an exception with Failure message of the result.
+            </summary>
+        </member>
+        <member name="M:RailwaySharp.ErrorHandling.Trial.MergeMessages``2(System.Collections.Generic.IEnumerable{``1},RailwaySharp.ErrorHandling.Result{``0,``1})">
+            <summary>
+            Appends the given messages with the messages in the given result.
+            </summary>
+        </member>
+        <member name="M:RailwaySharp.ErrorHandling.Trial.Bind``3(System.Func{``0,RailwaySharp.ErrorHandling.Result{``1,``2}},RailwaySharp.ErrorHandling.Result{``0,``2})">
+            <summary>
+            If the result is a Success it executes the given function on the value.
+            Otherwise the exisiting failure is propagated.
+            </summary>
+        </member>
+        <member name="M:RailwaySharp.ErrorHandling.Trial.Flatten``2(RailwaySharp.ErrorHandling.Result{RailwaySharp.ErrorHandling.Result{``0,``1},``1})">
+            <summary>
+            Flattens a nested result given the Failure types are equal.
+            </summary>
+        </member>
+        <member name="M:RailwaySharp.ErrorHandling.Trial.Apply``3(RailwaySharp.ErrorHandling.Result{System.Func{``0,``1},``2},RailwaySharp.ErrorHandling.Result{``0,``2})">
+            <summary>
+            If the wrapped function is a success and the given result is a success the function is applied on the value. 
+            Otherwise the exisiting error messages are propagated.
+            </summary>
+        </member>
+        <member name="M:RailwaySharp.ErrorHandling.Trial.Lift``3(System.Func{``0,``1},RailwaySharp.ErrorHandling.Result{``0,``2})">
+            <summary>
+            Lifts a function into a Result container and applies it on the given result.
+            </summary>
+        </member>
+        <member name="M:RailwaySharp.ErrorHandling.Trial.Lift2``4(System.Func{``0,System.Func{``1,``2}},RailwaySharp.ErrorHandling.Result{``0,``3},RailwaySharp.ErrorHandling.Result{``1,``3})">
+            <summary>
+            Promote a function to a monad/applicative, scanning the monadic/applicative arguments from left to right.
+            </summary>
+        </member>
+        <member name="M:RailwaySharp.ErrorHandling.Trial.Collect``2(System.Collections.Generic.IEnumerable{RailwaySharp.ErrorHandling.Result{``0,``1}})">
+            <summary>
+            Collects a sequence of Results and accumulates their values.
+            If the sequence contains an error the error will be propagated.
+            </summary>
+        </member>
+        <member name="T:RailwaySharp.ErrorHandling.ResultExtensions">
+            <summary>
+            Extensions methods for easier usage.
+            </summary>
+        </member>
+        <member name="M:RailwaySharp.ErrorHandling.ResultExtensions.Match``2(RailwaySharp.ErrorHandling.Result{``0,``1},System.Action{``0,System.Collections.Generic.IEnumerable{``1}},System.Action{System.Collections.Generic.IEnumerable{``1}})">
+            <summary>
+            Allows pattern matching on Results.
+            </summary>
+        </member>
+        <member name="M:RailwaySharp.ErrorHandling.ResultExtensions.Either``3(RailwaySharp.ErrorHandling.Result{``0,``1},System.Func{``0,System.Collections.Generic.IEnumerable{``1},``2},System.Func{System.Collections.Generic.IEnumerable{``1},``2})">
+            <summary>
+            Allows pattern matching on Results.
+            </summary>
+        </member>
+        <member name="M:RailwaySharp.ErrorHandling.ResultExtensions.Map``3(RailwaySharp.ErrorHandling.Result{``0,``1},System.Func{``0,``2})">
+            <summary>
+            Lifts a Func into a Result and applies it on the given result.
+            </summary>
+        </member>
+        <member name="M:RailwaySharp.ErrorHandling.ResultExtensions.Collect``2(System.Collections.Generic.IEnumerable{RailwaySharp.ErrorHandling.Result{``0,``1}})">
+            <summary>
+            Collects a sequence of Results and accumulates their values.
+            If the sequence contains an error the error will be propagated.
+            </summary>
+        </member>
+        <member name="M:RailwaySharp.ErrorHandling.ResultExtensions.Flatten``2(RailwaySharp.ErrorHandling.Result{System.Collections.Generic.IEnumerable{RailwaySharp.ErrorHandling.Result{``0,``1}},``1})">
+            <summary>
+            Collects a sequence of Results and accumulates their values.
+            If the sequence contains an error the error will be propagated.
+            </summary>
+        </member>
+        <member name="M:RailwaySharp.ErrorHandling.ResultExtensions.SelectMany``3(RailwaySharp.ErrorHandling.Result{``0,``1},System.Func{``0,RailwaySharp.ErrorHandling.Result{``2,``1}})">
+            <summary>
+            If the result is a Success it executes the given Func on the value.
+            Otherwise the exisiting failure is propagated.
+            </summary>
+        </member>
+        <member name="M:RailwaySharp.ErrorHandling.ResultExtensions.SelectMany``4(RailwaySharp.ErrorHandling.Result{``0,``1},System.Func{``0,RailwaySharp.ErrorHandling.Result{``2,``1}},System.Func{``0,``2,``3})">
+            <summary>
+            If the result is a Success it executes the given Func on the value.
+            If the result of the Func is a Success it maps it using the given Func.
+            Otherwise the exisiting failure is propagated.
+            </summary>
+        </member>
+        <member name="M:RailwaySharp.ErrorHandling.ResultExtensions.Select``3(RailwaySharp.ErrorHandling.Result{``0,``1},System.Func{``0,``2})">
+            <summary>
+            Lifts a Func into a Result and applies it on the given result.
+            </summary>
+        </member>
+        <member name="M:RailwaySharp.ErrorHandling.ResultExtensions.FailedWith``2(RailwaySharp.ErrorHandling.Result{``0,``1})">
+            <summary>
+            Returns the error messages or fails if the result was a success.
+            </summary>
+        </member>
+        <member name="M:RailwaySharp.ErrorHandling.ResultExtensions.SucceededWith``2(RailwaySharp.ErrorHandling.Result{``0,``1})">
+            <summary>
+            Returns the result or fails if the result was an error.
+            </summary>
+        </member>
+        <member name="M:CSharpx.EnumerableExtensions.Cartesian``3(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``1},System.Func{``0,``1,``2})">
+            <summary>
+            Returns the Cartesian product of two sequences by combining each element of the first set with each in the second
+            and applying the user=define projection to the pair.
+            </summary>
+        </member>
+        <member name="M:CSharpx.EnumerableExtensions.Prepend``1(System.Collections.Generic.IEnumerable{``0},``0)">
+            <summary>
+            Prepends a single value to a sequence.
+            </summary>
+        </member>
+        <member name="M:CSharpx.EnumerableExtensions.Concat``1(``0,System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Returns a sequence consisting of the head element and the given tail elements.
+            </summary>
+        </member>
+        <member name="M:CSharpx.EnumerableExtensions.Concat``1(System.Collections.Generic.IEnumerable{``0},``0)">
+            <summary>
+            Returns a sequence consisting of the head elements and the given tail element.
+            </summary>
+        </member>
+        <member name="M:CSharpx.EnumerableExtensions.Exclude``1(System.Collections.Generic.IEnumerable{``0},System.Int32,System.Int32)">
+            <summary>
+            Excludes <paramref name="count"/> elements from a sequence starting at a given index
+            </summary>
+            <typeparam name="T">The type of the elements of the sequence</typeparam>
+        </member>
+        <member name="M:CSharpx.EnumerableExtensions.Index``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Returns a sequence of <see cref="T:System.Collections.Generic.KeyValuePair`2"/> 
+            where the key is the zero-based index of the value in the source 
+            sequence.
+            </summary>
+        </member>
+        <member name="M:CSharpx.EnumerableExtensions.Index``1(System.Collections.Generic.IEnumerable{``0},System.Int32)">
+            <summary>
+            Returns a sequence of <see cref="T:System.Collections.Generic.KeyValuePair`2"/> 
+            where the key is the index of the value in the source sequence.
+            An additional parameter specifies the starting index.
+            </summary>
+        </member>
+        <member name="M:CSharpx.EnumerableExtensions.Fold``2(System.Collections.Generic.IEnumerable{``0},System.Func{``0,``1})">
+            <summary>
+            Returns the result of applying a function to a sequence of 
+            1 element.
+            </summary>
+        </member>
+        <member name="M:CSharpx.EnumerableExtensions.Fold``2(System.Collections.Generic.IEnumerable{``0},System.Func{``0,``0,``1})">
+            <summary>
+            Returns the result of applying a function to a sequence of 
+            2 elements.
+            </summary>
+        </member>
+        <member name="M:CSharpx.EnumerableExtensions.Fold``2(System.Collections.Generic.IEnumerable{``0},System.Func{``0,``0,``0,``1})">
+            <summary>
+            Returns the result of applying a function to a sequence of 
+            3 elements.
+            </summary>
+        </member>
+        <member name="M:CSharpx.EnumerableExtensions.Fold``2(System.Collections.Generic.IEnumerable{``0},System.Func{``0,``0,``0,``0,``1})">
+            <summary>
+            Returns the result of applying a function to a sequence of 
+            4 elements.
+            </summary>
+        </member>
+        <member name="M:CSharpx.EnumerableExtensions.ForEach``1(System.Collections.Generic.IEnumerable{``0},System.Action{``0})">
+            <summary>
+            Immediately executes the given action on each element in the source sequence.
+            </summary>
+            <typeparam name="T">The type of the elements in the sequence</typeparam>
+        </member>
+        <member name="M:CSharpx.EnumerableExtensions.Pairwise``2(System.Collections.Generic.IEnumerable{``0},System.Func{``0,``0,``1})">
+            <summary>
+            Returns a sequence resulting from applying a function to each 
+            element in the source sequence and its 
+            predecessor, with the exception of the first element which is 
+            only returned as the predecessor of the second element.
+            </summary>
+        </member>
+        <member name="M:CSharpx.EnumerableExtensions.ToDelimitedString``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Creates a delimited string from a sequence of values. The 
+            delimiter used depends on the current culture of the executing thread.
+            </summary>
+        </member>
+        <member name="M:CSharpx.EnumerableExtensions.ToDelimitedString``1(System.Collections.Generic.IEnumerable{``0},System.String)">
+            <summary>
+            Creates a delimited string from a sequence of values and
+            a given delimiter.
+            </summary>
+        </member>
+        <member name="M:CSharpx.EnumerableExtensions.TryHead``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Safe function that returns Just(first element) or None.
+            </summary>
+        </member>
+        <member name="M:CSharpx.EnumerableExtensions.ToMaybe``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Turns an empty sequence to Nothing, otherwise Just(sequence).
+            </summary>
+        </member>
+        <member name="M:CSharpx.EnumerableExtensions.Tail``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Return everything except first element and throws exception if empty.
+            </summary>
+        </member>
+        <member name="M:CSharpx.EnumerableExtensions.TailNoFail``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Return everything except first element without throwing exception if empty.
+            </summary>
+        </member>
+        <member name="M:CSharpx.EnumerableExtensions.Memorize``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Captures current state of a sequence.
+            </summary>
+        </member>
+        <member name="M:CSharpx.EnumerableExtensions.Materialize``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Creates an immutable copy of a sequence.
+            </summary>
+        </member>
+        <member name="T:CSharpx.MaybeType">
+            <summary>
+            Discriminator for <see cref="T:CSharpx.Maybe"/>.
+            </summary>
+        </member>
+        <member name="T:CSharpx.Maybe`1">
+            <summary>
+            The Maybe type models an optional value. A value of type Maybe a either contains a value of type a (represented as Just a),
+            or it is empty (represented as Nothing).
+            </summary>
+        </member>
+        <member name="P:CSharpx.Maybe`1.Tag">
+            <summary>
+            Type discriminator.
+            </summary>
+        </member>
+        <member name="M:CSharpx.Maybe`1.MatchJust(`0@)">
+            <summary>
+            Matches a value returning <c>true</c> and value itself via output parameter.
+            </summary>
+        </member>
+        <member name="M:CSharpx.Maybe`1.MatchNothing">
+            <summary>
+            Matches an empty value returning <c>true</c>.
+            </summary>
+        </member>
+        <member name="T:CSharpx.Nothing`1">
+            <summary>
+            Models a <see cref="T:CSharpx.Maybe"/> when in empty state.
+            </summary>
+        </member>
+        <member name="T:CSharpx.Just`1">
+            <summary>
+            Models a <see cref="T:CSharpx.Maybe"/> when contains a value.
+            </summary>
+        </member>
+        <member name="P:CSharpx.Just`1.Value">
+            <summary>
+            The wrapped value.
+            </summary>
+        </member>
+        <member name="T:CSharpx.Maybe">
+            <summary>
+            Provides static methods for manipulating <see cref="T:CSharpx.Maybe"/>.
+            </summary>
+        </member>
+        <member name="M:CSharpx.Maybe.Nothing``1">
+            <summary>
+            Builds the empty case of <see cref="T:CSharpx.Maybe"/>.
+            </summary>
+        </member>
+        <member name="M:CSharpx.Maybe.Just``1(``0)">
+            <summary>
+            Builds the case when <see cref="T:CSharpx.Maybe"/> contains a value.
+            </summary>
+        </member>
+        <member name="M:CSharpx.Maybe.Return``1(``0)">
+            <summary>
+            Inject a value into the monadic <see cref="T:CSharpx.Maybe`1"/> type.
+            </summary>
+        </member>
+        <member name="M:CSharpx.Maybe.Bind``2(CSharpx.Maybe{``0},System.Func{``0,CSharpx.Maybe{``1}})">
+            <summary>
+            Sequentially compose two actions, passing any value produced by the first as an argument to the second.
+            </summary>
+        </member>
+        <member name="M:CSharpx.Maybe.Map``2(CSharpx.Maybe{``0},System.Func{``0,``1})">
+            <summary>
+            Transforms an maybe value by using a specified mapping function.
+            </summary>
+        </member>
+        <member name="M:CSharpx.Maybe.Merge``2(CSharpx.Maybe{``0},CSharpx.Maybe{``1})">
+            <summary>
+            If both maybes contain a value, it merges them into a maybe with a tupled value.
+            </summary>
+        </member>
+        <member name="T:CSharpx.MaybeExtensions">
+            <summary>
+            Provides convenience extension methods for <see cref="T:CSharpx.Maybe"/>.
+            </summary>
+        </member>
+        <member name="M:CSharpx.MaybeExtensions.Match``1(CSharpx.Maybe{``0},System.Action{``0},System.Action)">
+            <summary>
+            Provides pattern matching using <see cref="T:System.Action"/> delegates.
+            </summary>
+        </member>
+        <member name="M:CSharpx.MaybeExtensions.Match``2(CSharpx.Maybe{System.Tuple{``0,``1}},System.Action{``0,``1},System.Action)">
+            <summary>
+            Provides pattern matching using <see cref="T:System.Action"/> delegates over maybe with tupled wrapped value.
+            </summary>
+        </member>
+        <member name="M:CSharpx.MaybeExtensions.MatchJust``2(CSharpx.Maybe{System.Tuple{``0,``1}},``0@,``1@)">
+            <summary>
+            Matches a value returning <c>true</c> and tupled value itself via two output parameters.
+            </summary>
+        </member>
+        <member name="M:CSharpx.MaybeExtensions.ToMaybe``1(``0)">
+            <summary>
+            Equivalent to monadic <see cref="M:CSharpx.Maybe.Return``1(``0)"/> operation.
+            Builds a <see cref="T:CSharpx.Just`1"/> value in case <paramref name="value"/> is different from its default.
+            </summary>
+        </member>
+        <member name="M:CSharpx.MaybeExtensions.Bind``2(CSharpx.Maybe{``0},System.Func{``0,CSharpx.Maybe{``1}})">
+            <summary>
+            Invokes a function on this maybe value that itself yields a maybe.
+            </summary>
+        </member>
+        <member name="M:CSharpx.MaybeExtensions.Map``2(CSharpx.Maybe{``0},System.Func{``0,``1})">
+            <summary>
+            Transforms this maybe value by using a specified mapping function.
+            </summary>
+        </member>
+        <member name="M:CSharpx.MaybeExtensions.Select``2(CSharpx.Maybe{``0},System.Func{``0,``1})">
+            <summary>
+            Map operation compatible with Linq.
+            </summary>
+        </member>
+        <member name="M:CSharpx.MaybeExtensions.SelectMany``3(CSharpx.Maybe{``0},System.Func{``0,CSharpx.Maybe{``1}},System.Func{``0,``1,``2})">
+            <summary>
+            Bind operation compatible with Linq.
+            </summary>
+        </member>
+        <member name="M:CSharpx.MaybeExtensions.Do``1(CSharpx.Maybe{``0},System.Action{``0})">
+            <summary>
+            If contans a value executes an <see cref="T:System.Action`1"/> delegate over it.
+            </summary>
+        </member>
+        <member name="M:CSharpx.MaybeExtensions.Do``2(CSharpx.Maybe{System.Tuple{``0,``1}},System.Action{``0,``1})">
+            <summary>
+            If contans a value executes an <see cref="T:System.Action`2"/> delegate over it.
+            </summary>
+        </member>
+        <member name="M:CSharpx.MaybeExtensions.IsJust``1(CSharpx.Maybe{``0})">
+            <summary>
+            Returns <c>true</c> iffits argument is of the form <see cref="T:CSharpx.Just`1"/>.
+            </summary>
+        </member>
+        <member name="M:CSharpx.MaybeExtensions.IsNothing``1(CSharpx.Maybe{``0})">
+            <summary>
+            Returns <c>true</c> iffits argument is of the form <see cref="T:CSharpx.Nothing`1"/>.
+            </summary>
+        </member>
+        <member name="M:CSharpx.MaybeExtensions.FromJust``1(CSharpx.Maybe{``0})">
+            <summary>
+            Extracts the element out of a <see cref="T:CSharpx.Just`1"/> and returns a default value if its argument is <see cref="T:CSharpx.Nothing`1"/>.
+            </summary>
+        </member>
+        <member name="M:CSharpx.MaybeExtensions.FromJustOrFail``1(CSharpx.Maybe{``0},System.Exception)">
+            <summary>
+            Extracts the element out of a <see cref="T:CSharpx.Just`1"/> and throws an error if its argument is <see cref="T:CSharpx.Nothing`1"/>.
+            </summary>
+        </member>
+        <member name="M:CSharpx.MaybeExtensions.GetValueOrDefault``1(CSharpx.Maybe{``0},``0)">
+            <summary>
+            If contains a values returns  it, otherwise returns <paramref name="noneValue"/>.
+            </summary>
+        </member>
+        <member name="M:CSharpx.MaybeExtensions.MapValueOrDefault``2(CSharpx.Maybe{``0},System.Func{``0,``1},``1)">
+            <summary>
+            If contains a values executes a mapping function over it, otherwise returns <paramref name="noneValue"/>.
+            </summary>
+        </member>
+        <member name="M:CSharpx.MaybeExtensions.ToEnumerable``1(CSharpx.Maybe{``0})">
+            <summary>
+            Returns an empty list when given <see cref="T:CSharpx.Nothing`1"/> or a singleton list when given a <see cref="T:CSharpx.Just`1"/>.
+            </summary>
+        </member>
         <member name="T:CommandLine.BaseAttribute">
             <summary>
             Models a base attribute to define command line syntax.
@@ -55,6 +528,84 @@
         </member>
         <member name="F:CommandLine.Core.Specification.conversionType">
             This information is denormalized to decouple Specification from PropertyInfo.
+        </member>
+        <member name="M:CommandLine.Infrastructure.EnumerableExtensions.Group``1(System.Collections.Generic.IEnumerable{``0},System.Int32)">
+            <summary>
+            Breaks a collection into groups of a specified size.
+            </summary>
+            <param name="source">A collection of <typeparam name="T"/>.</param>
+            <param name="groupSize">The number of items each group shall contain.</param>
+            <returns>An enumeration of T[].</returns>
+            <remarks>An incomplete group at the end of the source collection will be silently dropped.</remarks>
+        </member>
+        <member name="F:CommandLine.Infrastructure.ReflectionHelper._overrides">
+            <summary>
+            Per thread assembly attribute overrides for testing.
+            </summary>
+        </member>
+        <member name="M:CommandLine.Infrastructure.ReflectionHelper.SetAttributeOverride(System.Collections.Generic.IEnumerable{System.Attribute})">
+            <summary>
+            Assembly attribute overrides for testing.
+            </summary>
+            <remarks>
+            The implementation will fail if two or more attributes of the same type
+            are included in <paramref name="overrides"/>.
+            </remarks>
+            <param name="overrides">
+            Attributes that replace the existing assembly attributes or null,
+            to clear any testing attributes.
+            </param>
+        </member>
+        <member name="T:CommandLine.NameInfo">
+            <summary>
+            Models name information, used in <see cref="T:CommandLine.Error"/> instances.
+            </summary>
+        </member>
+        <member name="F:CommandLine.NameInfo.EmptyName">
+            <summary>
+            Represents an empty name information. Used when <see cref="T:CommandLine.Error"/> are tied to values,
+            rather than options.
+            </summary>
+        </member>
+        <member name="P:CommandLine.NameInfo.ShortName">
+            <summary>
+            Gets the short name of the name information.
+            </summary>
+        </member>
+        <member name="P:CommandLine.NameInfo.LongName">
+            <summary>
+            Gets the long name of the name information.
+            </summary>
+        </member>
+        <member name="P:CommandLine.NameInfo.NameText">
+            <summary>
+            Gets a formatted text with unified name information.
+            </summary>
+        </member>
+        <member name="M:CommandLine.NameInfo.Equals(System.Object)">
+            <summary>
+            Determines whether the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:System.Object"/>.
+            </summary>
+            <param name="obj">The <see cref="T:System.Object"/> to compare with the current <see cref="T:System.Object"/>.</param>
+            <returns><value>true</value> if the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:System.Object"/>; otherwise, <value>false</value>.</returns>
+        </member>
+        <member name="M:CommandLine.NameInfo.GetHashCode">
+            <summary>
+            Serves as a hash function for a particular type.
+            </summary>
+            <remarks>A hash code for the current <see cref="T:System.Object"/>.</remarks>
+        </member>
+        <member name="M:CommandLine.NameInfo.Equals(CommandLine.NameInfo)">
+            <summary>
+            Returns a value that indicates whether the current instance and a specified <see cref="T:CommandLine.NameInfo"/> have the same value.
+            </summary>
+            <param name="other">The <see cref="T:CommandLine.NameInfo"/> instance to compare.</param>
+            <returns><value>true</value> if this instance of <see cref="T:CommandLine.NameInfo"/> and <paramref name="other"/> have the same value; otherwise, <value>false</value>.</returns>
+        </member>
+        <member name="T:CommandLine.NullInstance">
+            <summary>
+            Models a null result when constructing a <see cref="T:CommandLine.ParserResult`1"/> in a faling verbs scenario.
+            </summary>
         </member>
         <member name="T:CommandLine.ErrorType">
             <summary>
@@ -124,11 +675,6 @@
         <member name="F:CommandLine.ErrorType.VersionRequestedError">
             <summary>
             Value of <see cref="T:CommandLine.VersionRequestedError"/> type.
-            </summary>
-        </member>
-        <member name="F:CommandLine.ErrorType.SetValueExceptionError">
-            <summary>
-            Value of <see cref="T:CommandLine.SetValueExceptionError"/> type.
             </summary>
         </member>
         <member name="T:CommandLine.Error">
@@ -338,99 +884,6 @@
         <member name="T:CommandLine.VersionRequestedError">
             <summary>
             Models an error generated when a user explicitly requests version.
-            </summary>
-        </member>
-        <member name="T:CommandLine.SetValueExceptionError">
-            <summary>
-            Models as error generated when exception is thrown at Property.SetValue
-            </summary>
-        </member>
-        <member name="P:CommandLine.SetValueExceptionError.Exception">
-            <summary>
-            The expection thrown from Property.SetValue
-            </summary>
-        </member>
-        <member name="P:CommandLine.SetValueExceptionError.Value">
-            <summary>
-            The value that had to be set to the property
-            </summary>
-        </member>
-        <member name="M:CommandLine.Infrastructure.EnumerableExtensions.Group``1(System.Collections.Generic.IEnumerable{``0},System.Int32)">
-            <summary>
-            Breaks a collection into groups of a specified size.
-            </summary>
-            <param name="source">A collection of <typeparam name="T"/>.</param>
-            <param name="groupSize">The number of items each group shall contain.</param>
-            <returns>An enumeration of T[].</returns>
-            <remarks>An incomplete group at the end of the source collection will be silently dropped.</remarks>
-        </member>
-        <member name="F:CommandLine.Infrastructure.ReflectionHelper._overrides">
-            <summary>
-            Per thread assembly attribute overrides for testing.
-            </summary>
-        </member>
-        <member name="M:CommandLine.Infrastructure.ReflectionHelper.SetAttributeOverride(System.Collections.Generic.IEnumerable{System.Attribute})">
-            <summary>
-            Assembly attribute overrides for testing.
-            </summary>
-            <remarks>
-            The implementation will fail if two or more attributes of the same type
-            are included in <paramref name="overrides"/>.
-            </remarks>
-            <param name="overrides">
-            Attributes that replace the existing assembly attributes or null,
-            to clear any testing attributes.
-            </param>
-        </member>
-        <member name="T:CommandLine.NameInfo">
-            <summary>
-            Models name information, used in <see cref="T:CommandLine.Error"/> instances.
-            </summary>
-        </member>
-        <member name="F:CommandLine.NameInfo.EmptyName">
-            <summary>
-            Represents an empty name information. Used when <see cref="T:CommandLine.Error"/> are tied to values,
-            rather than options.
-            </summary>
-        </member>
-        <member name="P:CommandLine.NameInfo.ShortName">
-            <summary>
-            Gets the short name of the name information.
-            </summary>
-        </member>
-        <member name="P:CommandLine.NameInfo.LongName">
-            <summary>
-            Gets the long name of the name information.
-            </summary>
-        </member>
-        <member name="P:CommandLine.NameInfo.NameText">
-            <summary>
-            Gets a formatted text with unified name information.
-            </summary>
-        </member>
-        <member name="M:CommandLine.NameInfo.Equals(System.Object)">
-            <summary>
-            Determines whether the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:System.Object"/>.
-            </summary>
-            <param name="obj">The <see cref="T:System.Object"/> to compare with the current <see cref="T:System.Object"/>.</param>
-            <returns><value>true</value> if the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:System.Object"/>; otherwise, <value>false</value>.</returns>
-        </member>
-        <member name="M:CommandLine.NameInfo.GetHashCode">
-            <summary>
-            Serves as a hash function for a particular type.
-            </summary>
-            <remarks>A hash code for the current <see cref="T:System.Object"/>.</remarks>
-        </member>
-        <member name="M:CommandLine.NameInfo.Equals(CommandLine.NameInfo)">
-            <summary>
-            Returns a value that indicates whether the current instance and a specified <see cref="T:CommandLine.NameInfo"/> have the same value.
-            </summary>
-            <param name="other">The <see cref="T:CommandLine.NameInfo"/> instance to compare.</param>
-            <returns><value>true</value> if this instance of <see cref="T:CommandLine.NameInfo"/> and <paramref name="other"/> have the same value; otherwise, <value>false</value>.</returns>
-        </member>
-        <member name="T:CommandLine.NullInstance">
-            <summary>
-            Models a null result when constructing a <see cref="T:CommandLine.ParserResult`1"/> in a faling verbs scenario.
             </summary>
         </member>
         <member name="T:CommandLine.OptionAttribute">
@@ -1503,16 +1956,6 @@
             when these are unknown by the main program at build time.
             </remarks>
         </member>
-        <member name="P:CommandLine.ParserSettings.AutoHelp">
-            <summary>
-            Gets or sets a value indicating whether implicit option or verb 'help' should be supported.
-            </summary>
-        </member>
-        <member name="P:CommandLine.ParserSettings.AutoVersion">
-            <summary>
-            Gets or sets a value indicating whether implicit option or verb 'version' should be supported.
-            </summary>
-        </member>
         <member name="P:CommandLine.ParserSettings.EnableDashDash">
             <summary>
             Gets or sets a value indicating whether enable double dash '--' syntax,
@@ -1936,16 +2379,6 @@
             Gets or sets a value indicating whether to add the values of an enum after the description of the specification.
             </summary>
         </member>
-        <member name="P:CommandLine.Text.HelpText.AutoHelp">
-            <summary>
-            Gets or sets a value indicating whether implicit option or verb 'help' should be supported.
-            </summary>
-        </member>
-        <member name="P:CommandLine.Text.HelpText.AutoVersion">
-            <summary>
-            Gets or sets a value indicating whether implicit option or verb 'version' should be supported.
-            </summary>
-        </member>
         <member name="P:CommandLine.Text.HelpText.SentenceBuilder">
             <summary>
             Gets the <see cref="P:CommandLine.Text.HelpText.SentenceBuilder"/> instance specified in constructor.
@@ -2296,11 +2729,6 @@
             Gets or sets a value indicating whether unparsing process shall use equal sign with long names.
             </summary>
         </member>
-        <member name="P:CommandLine.UnParserSettings.ShowHidden">
-            <summary>
-            Gets or sets a value indicating whether unparsing process shall expose hidden options.
-            </summary>
-        </member>
         <member name="M:CommandLine.UnParserSettings.WithGroupSwitchesOnly">
             <summary>
             Factory method that creates an instance of <see cref="T:CommandLine.UnParserSettings"/> with GroupSwitches set to true.
@@ -2383,552 +2811,6 @@
         <member name="P:CommandLine.VerbAttribute.HelpText">
             <summary>
             Gets or sets a short description of this command line option. Usually a sentence summary. 
-            </summary>
-        </member>
-        <member name="F:CSharpx.EitherType.Left">
-            <summary>
-            Failed computation case.
-            </summary>
-        </member>
-        <member name="F:CSharpx.EitherType.Right">
-            <summary>
-            Sccessful computation case.
-            </summary>
-        </member>
-        <member name="M:CSharpx.Either.Return``1(``0)">
-            <summary>
-            Inject a value into the Either type, returning Right case.
-            </summary>
-        </member>
-        <member name="M:CSharpx.Either.Fail``1(System.String)">
-            <summary>
-            Fail with a message. Not part of mathematical definition of a monad.
-            </summary>
-        </member>
-        <member name="M:CSharpx.Either.Bind``3(CSharpx.Either{``0,``1},System.Func{``1,CSharpx.Either{``0,``2}})">
-            <summary>
-            Monadic bind.
-            </summary>
-        </member>
-        <member name="M:CSharpx.Either.Map``3(CSharpx.Either{``0,``1},System.Func{``1,``2})">
-            <summary>
-            Transforms a Either's right value by using a specified mapping function.
-            </summary>
-        </member>
-        <member name="M:CSharpx.Either.Bimap``4(CSharpx.Either{``0,``1},System.Func{``0,``2},System.Func{``1,``3})">
-            <summary>
-            Maps both parts of a Either type. Applies the first function if Either is Left.
-            Otherwise applies the second function.
-            </summary>
-        </member>
-        <member name="M:CSharpx.Either.Select``3(CSharpx.Either{``0,``1},System.Func{``1,``2})">
-            <summary>
-            Map operation compatible with Linq.
-            </summary>
-        </member>
-        <member name="M:CSharpx.Either.GetOrFail``2(CSharpx.Either{``0,``1})">
-            <summary>
-            Returns a Either Right or fail with an exception.
-            </summary>
-        </member>
-        <member name="M:CSharpx.Either.GetLeftOrDefault``2(CSharpx.Either{``0,``1},``0)">
-            <summary>
-            Returns a Either Left or a defualt value.
-            </summary>
-        </member>
-        <member name="M:CSharpx.Either.GetRightOrDefault``2(CSharpx.Either{``0,``1},``1)">
-            <summary>
-            Returns a Either Right or a defualt value.
-            </summary>
-        </member>
-        <member name="M:CSharpx.Either.Try``1(System.Func{``0})">
-            <summary>
-            Wraps a function, encapsulates any exception thrown within to a Either.
-            </summary>
-        </member>
-        <member name="M:CSharpx.Either.Cast``1(System.Object)">
-            <summary>
-            Attempts to cast an object.
-            Stores the cast value in 1Of2 if successful, otherwise stores the exception in 2Of2
-            </summary>
-        </member>
-        <member name="M:CSharpx.EitherExtensions.ToEither``1(``0)">
-            <summary>
-            Equivalent to monadic <see cref="M:CSharpx.Either.Return``1(``0)"/> operation.
-            Builds a <see cref="T:CSharpx.Right`2"/> value in case <paramref name="value"/> by default.
-            </summary>
-        </member>
-        <member name="M:CSharpx.EnumerableExtensions.Cartesian``3(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``1},System.Func{``0,``1,``2})">
-            <summary>
-            Returns the Cartesian product of two sequences by combining each element of the first set with each in the second
-            and applying the user=define projection to the pair.
-            </summary>
-        </member>
-        <member name="M:CSharpx.EnumerableExtensions.Prepend``1(System.Collections.Generic.IEnumerable{``0},``0)">
-            <summary>
-            Prepends a single value to a sequence.
-            </summary>
-        </member>
-        <member name="M:CSharpx.EnumerableExtensions.Concat``1(``0,System.Collections.Generic.IEnumerable{``0})">
-            <summary>
-            Returns a sequence consisting of the head element and the given tail elements.
-            </summary>
-        </member>
-        <member name="M:CSharpx.EnumerableExtensions.Concat``1(System.Collections.Generic.IEnumerable{``0},``0)">
-            <summary>
-            Returns a sequence consisting of the head elements and the given tail element.
-            </summary>
-        </member>
-        <member name="M:CSharpx.EnumerableExtensions.Exclude``1(System.Collections.Generic.IEnumerable{``0},System.Int32,System.Int32)">
-            <summary>
-            Excludes <paramref name="count"/> elements from a sequence starting at a given index
-            </summary>
-            <typeparam name="T">The type of the elements of the sequence</typeparam>
-        </member>
-        <member name="M:CSharpx.EnumerableExtensions.Index``1(System.Collections.Generic.IEnumerable{``0})">
-            <summary>
-            Returns a sequence of <see cref="T:System.Collections.Generic.KeyValuePair`2"/> 
-            where the key is the zero-based index of the value in the source 
-            sequence.
-            </summary>
-        </member>
-        <member name="M:CSharpx.EnumerableExtensions.Index``1(System.Collections.Generic.IEnumerable{``0},System.Int32)">
-            <summary>
-            Returns a sequence of <see cref="T:System.Collections.Generic.KeyValuePair`2"/> 
-            where the key is the index of the value in the source sequence.
-            An additional parameter specifies the starting index.
-            </summary>
-        </member>
-        <member name="M:CSharpx.EnumerableExtensions.Fold``2(System.Collections.Generic.IEnumerable{``0},System.Func{``0,``1})">
-            <summary>
-            Returns the result of applying a function to a sequence of 
-            1 element.
-            </summary>
-        </member>
-        <member name="M:CSharpx.EnumerableExtensions.Fold``2(System.Collections.Generic.IEnumerable{``0},System.Func{``0,``0,``1})">
-            <summary>
-            Returns the result of applying a function to a sequence of 
-            2 elements.
-            </summary>
-        </member>
-        <member name="M:CSharpx.EnumerableExtensions.Fold``2(System.Collections.Generic.IEnumerable{``0},System.Func{``0,``0,``0,``1})">
-            <summary>
-            Returns the result of applying a function to a sequence of 
-            3 elements.
-            </summary>
-        </member>
-        <member name="M:CSharpx.EnumerableExtensions.Fold``2(System.Collections.Generic.IEnumerable{``0},System.Func{``0,``0,``0,``0,``1})">
-            <summary>
-            Returns the result of applying a function to a sequence of 
-            4 elements.
-            </summary>
-        </member>
-        <member name="M:CSharpx.EnumerableExtensions.ForEach``1(System.Collections.Generic.IEnumerable{``0},System.Action{``0})">
-            <summary>
-            Immediately executes the given action on each element in the source sequence.
-            </summary>
-            <typeparam name="T">The type of the elements in the sequence</typeparam>
-        </member>
-        <member name="M:CSharpx.EnumerableExtensions.Pairwise``2(System.Collections.Generic.IEnumerable{``0},System.Func{``0,``0,``1})">
-            <summary>
-            Returns a sequence resulting from applying a function to each 
-            element in the source sequence and its 
-            predecessor, with the exception of the first element which is 
-            only returned as the predecessor of the second element.
-            </summary>
-        </member>
-        <member name="M:CSharpx.EnumerableExtensions.ToDelimitedString``1(System.Collections.Generic.IEnumerable{``0})">
-            <summary>
-            Creates a delimited string from a sequence of values. The 
-            delimiter used depends on the current culture of the executing thread.
-            </summary>
-        </member>
-        <member name="M:CSharpx.EnumerableExtensions.ToDelimitedString``1(System.Collections.Generic.IEnumerable{``0},System.String)">
-            <summary>
-            Creates a delimited string from a sequence of values and
-            a given delimiter.
-            </summary>
-        </member>
-        <member name="M:CSharpx.EnumerableExtensions.TryHead``1(System.Collections.Generic.IEnumerable{``0})">
-            <summary>
-            Safe function that returns Just(first element) or None.
-            </summary>
-        </member>
-        <member name="M:CSharpx.EnumerableExtensions.ToMaybe``1(System.Collections.Generic.IEnumerable{``0})">
-            <summary>
-            Turns an empty sequence to Nothing, otherwise Just(sequence).
-            </summary>
-        </member>
-        <member name="M:CSharpx.EnumerableExtensions.Tail``1(System.Collections.Generic.IEnumerable{``0})">
-            <summary>
-            Return everything except first element and throws exception if empty.
-            </summary>
-        </member>
-        <member name="M:CSharpx.EnumerableExtensions.TailNoFail``1(System.Collections.Generic.IEnumerable{``0})">
-            <summary>
-            Return everything except first element without throwing exception if empty.
-            </summary>
-        </member>
-        <member name="M:CSharpx.EnumerableExtensions.Memorize``1(System.Collections.Generic.IEnumerable{``0})">
-            <summary>
-            Captures current state of a sequence.
-            </summary>
-        </member>
-        <member name="M:CSharpx.EnumerableExtensions.Materialize``1(System.Collections.Generic.IEnumerable{``0})">
-            <summary>
-            Creates an immutable copy of a sequence.
-            </summary>
-        </member>
-        <member name="T:CSharpx.MaybeType">
-            <summary>
-            Discriminator for <see cref="T:CSharpx.Maybe"/>.
-            </summary>
-        </member>
-        <member name="T:CSharpx.Maybe`1">
-            <summary>
-            The Maybe type models an optional value. A value of type Maybe a either contains a value of type a (represented as Just a),
-            or it is empty (represented as Nothing).
-            </summary>
-        </member>
-        <member name="P:CSharpx.Maybe`1.Tag">
-            <summary>
-            Type discriminator.
-            </summary>
-        </member>
-        <member name="M:CSharpx.Maybe`1.MatchJust(`0@)">
-            <summary>
-            Matches a value returning <c>true</c> and value itself via output parameter.
-            </summary>
-        </member>
-        <member name="M:CSharpx.Maybe`1.MatchNothing">
-            <summary>
-            Matches an empty value returning <c>true</c>.
-            </summary>
-        </member>
-        <member name="T:CSharpx.Nothing`1">
-            <summary>
-            Models a <see cref="T:CSharpx.Maybe"/> when in empty state.
-            </summary>
-        </member>
-        <member name="T:CSharpx.Just`1">
-            <summary>
-            Models a <see cref="T:CSharpx.Maybe"/> when contains a value.
-            </summary>
-        </member>
-        <member name="P:CSharpx.Just`1.Value">
-            <summary>
-            The wrapped value.
-            </summary>
-        </member>
-        <member name="T:CSharpx.Maybe">
-            <summary>
-            Provides static methods for manipulating <see cref="T:CSharpx.Maybe"/>.
-            </summary>
-        </member>
-        <member name="M:CSharpx.Maybe.Nothing``1">
-            <summary>
-            Builds the empty case of <see cref="T:CSharpx.Maybe"/>.
-            </summary>
-        </member>
-        <member name="M:CSharpx.Maybe.Just``1(``0)">
-            <summary>
-            Builds the case when <see cref="T:CSharpx.Maybe"/> contains a value.
-            </summary>
-        </member>
-        <member name="M:CSharpx.Maybe.Return``1(``0)">
-            <summary>
-            Inject a value into the monadic <see cref="T:CSharpx.Maybe`1"/> type.
-            </summary>
-        </member>
-        <member name="M:CSharpx.Maybe.Bind``2(CSharpx.Maybe{``0},System.Func{``0,CSharpx.Maybe{``1}})">
-            <summary>
-            Sequentially compose two actions, passing any value produced by the first as an argument to the second.
-            </summary>
-        </member>
-        <member name="M:CSharpx.Maybe.Map``2(CSharpx.Maybe{``0},System.Func{``0,``1})">
-            <summary>
-            Transforms an maybe value by using a specified mapping function.
-            </summary>
-        </member>
-        <member name="M:CSharpx.Maybe.Merge``2(CSharpx.Maybe{``0},CSharpx.Maybe{``1})">
-            <summary>
-            If both maybes contain a value, it merges them into a maybe with a tupled value.
-            </summary>
-        </member>
-        <member name="T:CSharpx.MaybeExtensions">
-            <summary>
-            Provides convenience extension methods for <see cref="T:CSharpx.Maybe"/>.
-            </summary>
-        </member>
-        <member name="M:CSharpx.MaybeExtensions.Match``1(CSharpx.Maybe{``0},System.Action{``0},System.Action)">
-            <summary>
-            Provides pattern matching using <see cref="T:System.Action"/> delegates.
-            </summary>
-        </member>
-        <member name="M:CSharpx.MaybeExtensions.Match``2(CSharpx.Maybe{System.Tuple{``0,``1}},System.Action{``0,``1},System.Action)">
-            <summary>
-            Provides pattern matching using <see cref="T:System.Action"/> delegates over maybe with tupled wrapped value.
-            </summary>
-        </member>
-        <member name="M:CSharpx.MaybeExtensions.MatchJust``2(CSharpx.Maybe{System.Tuple{``0,``1}},``0@,``1@)">
-            <summary>
-            Matches a value returning <c>true</c> and tupled value itself via two output parameters.
-            </summary>
-        </member>
-        <member name="M:CSharpx.MaybeExtensions.ToMaybe``1(``0)">
-            <summary>
-            Equivalent to monadic <see cref="M:CSharpx.Maybe.Return``1(``0)"/> operation.
-            Builds a <see cref="T:CSharpx.Just`1"/> value in case <paramref name="value"/> is different from its default.
-            </summary>
-        </member>
-        <member name="M:CSharpx.MaybeExtensions.Bind``2(CSharpx.Maybe{``0},System.Func{``0,CSharpx.Maybe{``1}})">
-            <summary>
-            Invokes a function on this maybe value that itself yields a maybe.
-            </summary>
-        </member>
-        <member name="M:CSharpx.MaybeExtensions.Map``2(CSharpx.Maybe{``0},System.Func{``0,``1})">
-            <summary>
-            Transforms this maybe value by using a specified mapping function.
-            </summary>
-        </member>
-        <member name="M:CSharpx.MaybeExtensions.Select``2(CSharpx.Maybe{``0},System.Func{``0,``1})">
-            <summary>
-            Map operation compatible with Linq.
-            </summary>
-        </member>
-        <member name="M:CSharpx.MaybeExtensions.SelectMany``3(CSharpx.Maybe{``0},System.Func{``0,CSharpx.Maybe{``1}},System.Func{``0,``1,``2})">
-            <summary>
-            Bind operation compatible with Linq.
-            </summary>
-        </member>
-        <member name="M:CSharpx.MaybeExtensions.Do``1(CSharpx.Maybe{``0},System.Action{``0})">
-            <summary>
-            If contans a value executes an <see cref="T:System.Action`1"/> delegate over it.
-            </summary>
-        </member>
-        <member name="M:CSharpx.MaybeExtensions.Do``2(CSharpx.Maybe{System.Tuple{``0,``1}},System.Action{``0,``1})">
-            <summary>
-            If contans a value executes an <see cref="T:System.Action`2"/> delegate over it.
-            </summary>
-        </member>
-        <member name="M:CSharpx.MaybeExtensions.IsJust``1(CSharpx.Maybe{``0})">
-            <summary>
-            Returns <c>true</c> iffits argument is of the form <see cref="T:CSharpx.Just`1"/>.
-            </summary>
-        </member>
-        <member name="M:CSharpx.MaybeExtensions.IsNothing``1(CSharpx.Maybe{``0})">
-            <summary>
-            Returns <c>true</c> iffits argument is of the form <see cref="T:CSharpx.Nothing`1"/>.
-            </summary>
-        </member>
-        <member name="M:CSharpx.MaybeExtensions.FromJust``1(CSharpx.Maybe{``0})">
-            <summary>
-            Extracts the element out of a <see cref="T:CSharpx.Just`1"/> and returns a default value if its argument is <see cref="T:CSharpx.Nothing`1"/>.
-            </summary>
-        </member>
-        <member name="M:CSharpx.MaybeExtensions.FromJustOrFail``1(CSharpx.Maybe{``0},System.Exception)">
-            <summary>
-            Extracts the element out of a <see cref="T:CSharpx.Just`1"/> and throws an error if its argument is <see cref="T:CSharpx.Nothing`1"/>.
-            </summary>
-        </member>
-        <member name="M:CSharpx.MaybeExtensions.GetValueOrDefault``1(CSharpx.Maybe{``0},``0)">
-            <summary>
-            If contains a values returns  it, otherwise returns <paramref name="noneValue"/>.
-            </summary>
-        </member>
-        <member name="M:CSharpx.MaybeExtensions.MapValueOrDefault``2(CSharpx.Maybe{``0},System.Func{``0,``1},``1)">
-            <summary>
-            If contains a values executes a mapping function over it, otherwise returns <paramref name="noneValue"/>.
-            </summary>
-        </member>
-        <member name="M:CSharpx.MaybeExtensions.ToEnumerable``1(CSharpx.Maybe{``0})">
-            <summary>
-            Returns an empty list when given <see cref="T:CSharpx.Nothing`1"/> or a singleton list when given a <see cref="T:CSharpx.Just`1"/>.
-            </summary>
-        </member>
-        <member name="T:RailwaySharp.ErrorHandling.Result`2">
-            <summary>
-            Represents the result of a computation.
-            </summary>
-            <typeparam name="TSuccess">Type that models the result of a successful computation.</typeparam>
-            <typeparam name="TMessage">Type that model a message related to a computation.</typeparam> 
-        </member>
-        <member name="T:RailwaySharp.ErrorHandling.Ok`2">
-            <summary>
-            Represents the result of a successful computation.
-            </summary>
-            <typeparam name="TSuccess">Type that models the result of a successful computation.</typeparam>
-            <typeparam name="TMessage">Type that model a message related to a computation.</typeparam> 
-        </member>
-        <member name="T:RailwaySharp.ErrorHandling.Bad`2">
-            <summary>
-            Represents the result of a failed computation.
-            </summary>
-            <typeparam name="TSuccess">Type that models the result of a successful computation.</typeparam>
-            <typeparam name="TMessage">Type that model a message related to a computation.</typeparam> 
-        </member>
-        <member name="M:RailwaySharp.ErrorHandling.Result.FailWith``2(System.Collections.Generic.IEnumerable{``1})">
-            <summary>
-            Creates a Failure result with the given messages.
-            </summary>
-        </member>
-        <member name="M:RailwaySharp.ErrorHandling.Result.FailWith``2(``1)">
-            <summary>
-            Creates a Failure result with the given message.
-            </summary>
-        </member>
-        <member name="M:RailwaySharp.ErrorHandling.Result.Succeed``2(``0)">
-            <summary>
-            Creates a Success result with the given value.
-            </summary>
-        </member>
-        <member name="M:RailwaySharp.ErrorHandling.Result.Succeed``2(``0,``1)">
-            <summary>
-            Creates a Success result with the given value and the given message.
-            </summary>
-        </member>
-        <member name="M:RailwaySharp.ErrorHandling.Result.Succeed``2(``0,System.Collections.Generic.IEnumerable{``1})">
-            <summary>
-            Creates a Success result with the given value and the given messages.
-            </summary>
-        </member>
-        <member name="M:RailwaySharp.ErrorHandling.Result.Try``1(System.Func{``0})">
-            <summary>
-            Executes the given function on a given success or captures the failure.
-            </summary>
-        </member>
-        <member name="M:RailwaySharp.ErrorHandling.Trial.Ok``2(``0)">
-            <summary>
-            Wraps a value in a Success.
-            </summary>
-        </member>
-        <member name="M:RailwaySharp.ErrorHandling.Trial.Pass``2(``0)">
-            <summary>
-            Wraps a value in a Success.
-            </summary>
-        </member>
-        <member name="M:RailwaySharp.ErrorHandling.Trial.Warn``2(``1,``0)">
-            <summary>
-            Wraps a value in a Success and adds a message.
-            </summary>
-        </member>
-        <member name="M:RailwaySharp.ErrorHandling.Trial.Fail``2(``1)">
-            <summary>
-            Wraps a message in a Failure.
-            </summary>
-        </member>
-        <member name="M:RailwaySharp.ErrorHandling.Trial.Failed``2(RailwaySharp.ErrorHandling.Result{``0,``1})">
-            <summary>
-            Returns true if the result was not successful.
-            </summary>
-        </member>
-        <member name="M:RailwaySharp.ErrorHandling.Trial.Either``3(System.Func{``0,System.Collections.Generic.IEnumerable{``1},``2},System.Func{System.Collections.Generic.IEnumerable{``1},``2},RailwaySharp.ErrorHandling.Result{``0,``1})">
-            <summary>
-            Takes a Result and maps it with successFunc if it is a Success otherwise it maps it with failureFunc.
-            </summary>
-        </member>
-        <member name="M:RailwaySharp.ErrorHandling.Trial.ReturnOrFail``2(RailwaySharp.ErrorHandling.Result{``0,``1})">
-            <summary>
-            If the given result is a Success the wrapped value will be returned. 
-            Otherwise the function throws an exception with Failure message of the result.
-            </summary>
-        </member>
-        <member name="M:RailwaySharp.ErrorHandling.Trial.MergeMessages``2(System.Collections.Generic.IEnumerable{``1},RailwaySharp.ErrorHandling.Result{``0,``1})">
-            <summary>
-            Appends the given messages with the messages in the given result.
-            </summary>
-        </member>
-        <member name="M:RailwaySharp.ErrorHandling.Trial.Bind``3(System.Func{``0,RailwaySharp.ErrorHandling.Result{``1,``2}},RailwaySharp.ErrorHandling.Result{``0,``2})">
-            <summary>
-            If the result is a Success it executes the given function on the value.
-            Otherwise the exisiting failure is propagated.
-            </summary>
-        </member>
-        <member name="M:RailwaySharp.ErrorHandling.Trial.Flatten``2(RailwaySharp.ErrorHandling.Result{RailwaySharp.ErrorHandling.Result{``0,``1},``1})">
-            <summary>
-            Flattens a nested result given the Failure types are equal.
-            </summary>
-        </member>
-        <member name="M:RailwaySharp.ErrorHandling.Trial.Apply``3(RailwaySharp.ErrorHandling.Result{System.Func{``0,``1},``2},RailwaySharp.ErrorHandling.Result{``0,``2})">
-            <summary>
-            If the wrapped function is a success and the given result is a success the function is applied on the value. 
-            Otherwise the exisiting error messages are propagated.
-            </summary>
-        </member>
-        <member name="M:RailwaySharp.ErrorHandling.Trial.Lift``3(System.Func{``0,``1},RailwaySharp.ErrorHandling.Result{``0,``2})">
-            <summary>
-            Lifts a function into a Result container and applies it on the given result.
-            </summary>
-        </member>
-        <member name="M:RailwaySharp.ErrorHandling.Trial.Lift2``4(System.Func{``0,System.Func{``1,``2}},RailwaySharp.ErrorHandling.Result{``0,``3},RailwaySharp.ErrorHandling.Result{``1,``3})">
-            <summary>
-            Promote a function to a monad/applicative, scanning the monadic/applicative arguments from left to right.
-            </summary>
-        </member>
-        <member name="M:RailwaySharp.ErrorHandling.Trial.Collect``2(System.Collections.Generic.IEnumerable{RailwaySharp.ErrorHandling.Result{``0,``1}})">
-            <summary>
-            Collects a sequence of Results and accumulates their values.
-            If the sequence contains an error the error will be propagated.
-            </summary>
-        </member>
-        <member name="T:RailwaySharp.ErrorHandling.ResultExtensions">
-            <summary>
-            Extensions methods for easier usage.
-            </summary>
-        </member>
-        <member name="M:RailwaySharp.ErrorHandling.ResultExtensions.Match``2(RailwaySharp.ErrorHandling.Result{``0,``1},System.Action{``0,System.Collections.Generic.IEnumerable{``1}},System.Action{System.Collections.Generic.IEnumerable{``1}})">
-            <summary>
-            Allows pattern matching on Results.
-            </summary>
-        </member>
-        <member name="M:RailwaySharp.ErrorHandling.ResultExtensions.Either``3(RailwaySharp.ErrorHandling.Result{``0,``1},System.Func{``0,System.Collections.Generic.IEnumerable{``1},``2},System.Func{System.Collections.Generic.IEnumerable{``1},``2})">
-            <summary>
-            Allows pattern matching on Results.
-            </summary>
-        </member>
-        <member name="M:RailwaySharp.ErrorHandling.ResultExtensions.Map``3(RailwaySharp.ErrorHandling.Result{``0,``1},System.Func{``0,``2})">
-            <summary>
-            Lifts a Func into a Result and applies it on the given result.
-            </summary>
-        </member>
-        <member name="M:RailwaySharp.ErrorHandling.ResultExtensions.Collect``2(System.Collections.Generic.IEnumerable{RailwaySharp.ErrorHandling.Result{``0,``1}})">
-            <summary>
-            Collects a sequence of Results and accumulates their values.
-            If the sequence contains an error the error will be propagated.
-            </summary>
-        </member>
-        <member name="M:RailwaySharp.ErrorHandling.ResultExtensions.Flatten``2(RailwaySharp.ErrorHandling.Result{System.Collections.Generic.IEnumerable{RailwaySharp.ErrorHandling.Result{``0,``1}},``1})">
-            <summary>
-            Collects a sequence of Results and accumulates their values.
-            If the sequence contains an error the error will be propagated.
-            </summary>
-        </member>
-        <member name="M:RailwaySharp.ErrorHandling.ResultExtensions.SelectMany``3(RailwaySharp.ErrorHandling.Result{``0,``1},System.Func{``0,RailwaySharp.ErrorHandling.Result{``2,``1}})">
-            <summary>
-            If the result is a Success it executes the given Func on the value.
-            Otherwise the exisiting failure is propagated.
-            </summary>
-        </member>
-        <member name="M:RailwaySharp.ErrorHandling.ResultExtensions.SelectMany``4(RailwaySharp.ErrorHandling.Result{``0,``1},System.Func{``0,RailwaySharp.ErrorHandling.Result{``2,``1}},System.Func{``0,``2,``3})">
-            <summary>
-            If the result is a Success it executes the given Func on the value.
-            If the result of the Func is a Success it maps it using the given Func.
-            Otherwise the exisiting failure is propagated.
-            </summary>
-        </member>
-        <member name="M:RailwaySharp.ErrorHandling.ResultExtensions.Select``3(RailwaySharp.ErrorHandling.Result{``0,``1},System.Func{``0,``2})">
-            <summary>
-            Lifts a Func into a Result and applies it on the given result.
-            </summary>
-        </member>
-        <member name="M:RailwaySharp.ErrorHandling.ResultExtensions.FailedWith``2(RailwaySharp.ErrorHandling.Result{``0,``1})">
-            <summary>
-            Returns the error messages or fails if the result was a success.
-            </summary>
-        </member>
-        <member name="M:RailwaySharp.ErrorHandling.ResultExtensions.SucceededWith``2(RailwaySharp.ErrorHandling.Result{``0,``1})">
-            <summary>
-            Returns the result or fails if the result was an error.
             </summary>
         </member>
     </members>

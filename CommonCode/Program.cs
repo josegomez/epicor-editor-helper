@@ -58,8 +58,10 @@ namespace CustomizationEditor
                                        o.ConfigFile = Settings.Default.Environment;
                                        epiSession = GetEpiSession(o);
                                        DownloadCustomization(o, epiSession);
+                                       reSync = true;
                                    }
-                                   reSync = true;
+                                   reSync = false;
+                                   
                                }
                                break;
                            case "Update":
