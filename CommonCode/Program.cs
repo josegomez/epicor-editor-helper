@@ -43,14 +43,14 @@ namespace CustomizationEditor
                            case "Launch":
                                {
                                    epiSession = GetEpiSession(o);
-                                   LaunchInEpicor(o, epiSession, false);                                   
+                                   LaunchInEpicor(o, epiSession, false);
                                }
                                break;
                            case "Add":
                                {
                                    ShowProgressBar(false);
                                    LoginForm frm = new LoginForm(o.EpicorClientFolder);
-                                   if(frm.ShowDialog() == DialogResult.OK)
+                                   if (frm.ShowDialog() == DialogResult.OK)
                                    {
                                        ShowProgressBar();
                                        o.Username = Settings.Default.Username;
@@ -83,32 +83,32 @@ namespace CustomizationEditor
                                    {
                                        RunDnSpy(o);
                                    }
-                                   
+
                                    LaunchInEpicor(o, epiSession, false, true);
                                }
                                break;
-                           
+
                        }
-                       if(reSync)
+                       if (reSync)
                        {
                            DownloadAndSync(epiSession, o);
                        }
                        ShowProgressBar(false);
                    });
 
-            if(epiSession!=null)
+            if (epiSession != null)
             {
                 epiSession.OnSessionClosing();
-               
+
                 epiSession = null;
-                
+
             }
-            
+
         }
 
         private static void ShowProgressBar(bool iFlag = true)
         {
-            if(iFlag)
+            if (iFlag)
             {
                 progBarThread = new Thread(() => new ProgressForm($"{currAction}ing Project... Please Wait").ShowDialog());
                 progBarThread.Start();
@@ -134,11 +134,11 @@ namespace CustomizationEditor
                 process.WaitForExit();
             }).Start();
         }
-        
+
 
         private static void UpdateCustomization(CommandLineParams o, Session epiSession)
         {
-      
+
             using (StreamReader sr = new StreamReader($@"{o.ProjectFolder}\Script.cs"))
             {
                 var oTrans = new ILauncher(epiSession);
@@ -184,13 +184,12 @@ namespace CustomizationEditor
                     if (assy == null)
                         foreach (string x in Directory.GetFiles(o.EpicorClientFolder, dll))
                         {
-                                assy = Assembly.LoadFile(x);
+                            assy = Assembly.LoadFile(x);
                             if (assy.DefinedTypes.Where(r => r.FullName.ToUpper().Contains(o.Key2.ToUpper())).Any())
                             {
-                                
-                                    s = x;
-                                    break;
-                                }
+                                s = x;
+                                break;
+                            }
                         }
                     s = assy.Location;
                     var typeE = assy.DefinedTypes.Where(r => r.FullName.ToUpper().Contains(o.Key2.ToUpper())).FirstOrDefault();
@@ -224,8 +223,8 @@ namespace CustomizationEditor
                     refds.AppendLine($"<Reference Include=\"{typeE.Assembly.FullName}\">");
                     refds.AppendLine($"<HintPath>{s}</HintPath>");
                     refds.AppendLine($"</Reference>");
-                    
-                    
+
+
                     swLog.WriteLine("Initialize EpiUI Utils");
                     EpiUIUtils eu = new EpiUIUtils(epiBaseForm, epiTransaction, epiBaseForm.MainToolManager, null);
                     eu.GetType().GetField("currentSession", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(eu, epiTransaction.Session);
@@ -250,15 +249,15 @@ namespace CustomizationEditor
                     CustomScriptManager csmR = csm.CurrentCustomScriptManager;
                     swLog.WriteLine("Generate Refs");
                     List<string> aliases = new List<string>();
-                    Match match =Regex.Match(csmR.CustomCodeAll, "((?<=extern alias )(.*)*(?=;))");
-                    while(match.Success)
+                    Match match = Regex.Match(csmR.CustomCodeAll, "((?<=extern alias )(.*)*(?=;))");
+                    while (match.Success)
                     {
-                        aliases.Add(match.Value.Replace("_",".").ToUpper());
-                        match =match.NextMatch();
+                        aliases.Add(match.Value.Replace("_", ".").ToUpper());
+                        match = match.NextMatch();
                     }
 
                     GenerateRefs(refds, csmR, o, aliases);
-                    ExportCustmization(nds,ad,o);
+                    ExportCustmization(nds, ad, o);
                     int start = csmR.CustomCodeAll.IndexOf("// ** Wizard Insert Location - Do Not Remove 'Begin/End Wizard Added Module Level Variables' Comments! **");
                     int end = csmR.CustomCodeAll.Length - start;
                     string allCode;
@@ -318,24 +317,24 @@ namespace CustomizationEditor
                     nds.WriteXml($@"{o.ProjectFolder}\{o.Key2}_Customization_{o.Key1}_CustomExport.xml", XmlWriteMode.WriteSchema);
 
 
-                    
+
                     epiBaseForm.Dispose();
-                    
-                    
+
+
                     ad.Dispose();
                     cm = null;
-                    
+
                     eu.Dispose();
 
-                
+
                 }
-                catch(Exception ee)
+                catch (Exception ee)
                 {
                     swLog.WriteLine(ee.ToString());
                 }
-            
+
             }
-            
+
             Console.WriteLine(o.ProjectFolder);
             //MessageBox.Show(file);
         }
@@ -343,7 +342,7 @@ namespace CustomizationEditor
         public static void ExportCustmization(CustomizationDS nds, Ice.Adapters.GenXDataAdapter ad, CommandLineParams o)
         {
 
-            string s= ad.GetDechunkedStringByIDWithCompany(o.Company, o.ProductType, o.LayerType, o.Key1, o.Key2, o.Key3);
+            string s = ad.GetDechunkedStringByIDWithCompany(o.Company, o.ProductType, o.LayerType, o.Key1, o.Key2, o.Key3);
             StringReader sr = new StringReader(s);
             nds.ReadXml(sr, XmlReadMode.IgnoreSchema);
             sr.Close();
@@ -379,7 +378,7 @@ namespace CustomizationEditor
             {
                 nds.ExtendedProperties["CGCCode"] = o.CSGCode;
             }
-            
+
             if (!nds.ExtendedProperties.ContainsKey("Key1"))
             {
                 nds.ExtendedProperties.Add("Key1", o.Key1);
@@ -414,11 +413,11 @@ namespace CustomizationEditor
                     o.DLLLocation = r.Key;
                 refds.AppendLine($"<Reference Include=\"{r.Value.FullName}\">");
                 refds.AppendLine($"<HintPath>{r.Key}.dll</HintPath>");
-                if(aliases.Contains(Path.GetFileName(r.Key).ToUpper()))
+                if (aliases.Contains(Path.GetFileName(r.Key).ToUpper()))
                 {
                     refds.AppendLine($"<Aliases>{r.Key.Replace(".", "_")}</Aliases>");
                 }
-               // < Aliases > asdasda </ Aliases >
+                // < Aliases > asdasda </ Aliases >
                 refds.AppendLine($"</Reference>");
             }
 
@@ -469,14 +468,14 @@ namespace CustomizationEditor
             {
                 DataSetMode = DataSetMode.RowsDataSet,
                 SelectMode = SelectMode.SingleSelect,
-                PreLoadSearchFilter= "TypeCode = 'Customization'"
+                PreLoadSearchFilter = "TypeCode = 'Customization'"
 
             };
             oTrans.InvokeSearch(opts);
             EpiDataView edvxxDef = (EpiDataView)oTrans.EpiDataViews["xxxDef"];
-            if(edvxxDef.Row>=0)
+            if (edvxxDef.Row >= 0)
             {
-                GenXDataDataSet.XXXDefRow r = (GenXDataDataSet.XXXDefRow) edvxxDef.CurrentDataRow;
+                GenXDataDataSet.XXXDefRow r = (GenXDataDataSet.XXXDefRow)edvxxDef.CurrentDataRow;
                 o.Company = r.Company;
                 o.CSGCode = r.CGCCode;
                 o.Key1 = r.Key1;
@@ -507,9 +506,9 @@ namespace CustomizationEditor
             oTrans.InvokeSearch(opts);
             MenuDataSet.MenuRow menuRow = (MenuDataSet.MenuRow)oTrans.GetType().GetMethod("getMenuRow", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(oTrans, new object[] { "Run" });
             menuRow["Company"] = string.Empty;
-            
+
             epiSession["AllowCustomizing"] = edit;
-            if(edit)
+            if (edit)
                 epiSession["Customizing"] = epiSession.CanCustomize;
             else
                 epiSession["Customizing"] = false;
@@ -533,12 +532,12 @@ namespace CustomizationEditor
         {
             var ses = new Session(o.Username, o.Password, Session.LicenseType.Default, o.ConfigFile);
             //Ice.Lib.Configuration c = new Configuration(o.ConfigFile);
-           // var asy = Assembly.Load("Ice.Lib.Epicor");
+            // var asy = Assembly.Load("Ice.Lib.Epicor");
             //Ice.Lib.Deployment.IAssemblyRetriever ad = ConfigureForAutoDeployment.BuildAutoDeployAssemblyRetriever(configuration);
             //Startup.PreStart(ses, true);
             //Startup.Start(ses, true);
             Startup.SetupPlugins(ses);
-            
+
             return ses;
         }
     }
