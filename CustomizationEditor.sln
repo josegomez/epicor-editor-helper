@@ -11,6 +11,10 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "CommonCode", "CommonCode\Co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomizationEditor_10.2.200.X", "CustomizationEditor_10.2.200\CustomizationEditor_10.2.200.X.csproj", "{E0B385DC-04A2-4F50-97B5-4959D83041F5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonForms", "CommonForms\CommonForms.csproj", "{34039205-D2AE-49A3-B152-79F5D575C634}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonClasses", "CommonClasses\CommonClasses.csproj", "{C69D3D4C-26D3-416B-A253-3AB74B4955D6}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		CommonCode\CommonCode.projitems*{7cc05c03-06ec-45e1-80f5-daaf797ff13d}*SharedItemsImports = 4
@@ -35,6 +39,14 @@ Global
 		{E0B385DC-04A2-4F50-97B5-4959D83041F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E0B385DC-04A2-4F50-97B5-4959D83041F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E0B385DC-04A2-4F50-97B5-4959D83041F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34039205-D2AE-49A3-B152-79F5D575C634}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34039205-D2AE-49A3-B152-79F5D575C634}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34039205-D2AE-49A3-B152-79F5D575C634}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34039205-D2AE-49A3-B152-79F5D575C634}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C69D3D4C-26D3-416B-A253-3AB74B4955D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C69D3D4C-26D3-416B-A253-3AB74B4955D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C69D3D4C-26D3-416B-A253-3AB74B4955D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C69D3D4C-26D3-416B-A253-3AB74B4955D6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

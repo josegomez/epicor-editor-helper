@@ -1,6 +1,6 @@
 ﻿namespace CustomizationEditor
 {
-    partial class Progress
+    partial class ProgressForm
     {
         /// <summary>
         /// Required designer variable.

@@ -23,31 +23,36 @@ namespace CustomizationEditor
 {
     class Program
     {
+        private static Thread progBarThread;
+        private static string currAction;
+
         [STAThread]
         static void Main(string[] args)
         {
             Application.EnableVisualStyles();
-            Session epiSession=null;
+            Session epiSession = null;
             bool reSync = false;
             Parser.Default.ParseArguments<CommandLineParams>(args)
                    .WithParsed(o =>
                    {
-                       Thread t = new Thread(() => new Progress().ShowDialog());
-                       t.Start();
+                       currAction = o.Action;
+                       ShowProgressBar();
+
                        switch (o.Action)
                        {
                            case "Launch":
                                {
                                    epiSession = GetEpiSession(o);
-                                   LaunchInEpicor(o, epiSession, false);
-                                   
+                                   LaunchInEpicor(o, epiSession, false);                                   
                                }
                                break;
                            case "Add":
                                {
-                                   LoginFrm frm = new LoginFrm(o.EpicorClientFolder);
-                                   if(frm.ShowDialog()==DialogResult.OK)
+                                   ShowProgressBar(false);
+                                   LoginForm frm = new LoginForm(o.EpicorClientFolder);
+                                   if(frm.ShowDialog() == DialogResult.OK)
                                    {
+                                       ShowProgressBar();
                                        o.Username = Settings.Default.Username;
                                        o.Password = Settings.Default.Password;
                                        o.ConfigFile = Settings.Default.Environment;
@@ -88,7 +93,7 @@ namespace CustomizationEditor
                        {
                            DownloadAndSync(epiSession, o);
                        }
-                       t.Abort();
+                       ShowProgressBar(false);
                    });
 
             if(epiSession!=null)
@@ -99,6 +104,20 @@ namespace CustomizationEditor
                 
             }
             
+        }
+
+        private static void ShowProgressBar(bool iFlag = true)
+        {
+            if(iFlag)
+            {
+                progBarThread = new Thread(() => new ProgressForm($"{currAction}ing Project... Please Wait").ShowDialog());
+                progBarThread.Start();
+            }
+            else
+            {
+                progBarThread.Abort();
+                progBarThread = null;
+            }
         }
 
         private static void RunDnSpy(CommandLineParams o)
@@ -493,11 +512,11 @@ namespace CustomizationEditor
             else
                 epiSession["Customizing"] = false;
             if (edit)
+            {
 #if EPICOR_10_2_300
                 oTrans.GetType().GetMethod("addFormnameToArguments", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(oTrans, new object[] { menuRow });
-#else
-                ;
 #endif
+            }
 
             LaunchFormOptions lfo = new LaunchFormOptions();
             lfo.IsModal = modal;
