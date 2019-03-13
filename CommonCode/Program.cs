@@ -115,8 +115,11 @@ namespace CustomizationEditor
             }
             else
             {
-                progBarThread.Abort();
-                progBarThread = null;
+                if (progBarThread != null)
+                {
+                    progBarThread.Abort();
+                    progBarThread = null;
+                }
             }
         }
 
