@@ -1,6 +1,6 @@
 ﻿namespace CustomizationEditor
 {
-    partial class LoginFrm
+    partial class LoginForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LoginForm));
             this.cmbEnvironment = new System.Windows.Forms.ComboBox();
             this.lblEnvironment = new System.Windows.Forms.Label();
             this.lblUserName = new System.Windows.Forms.Label();
@@ -37,12 +38,14 @@
             this.btnLogin = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.chkRemember = new System.Windows.Forms.CheckBox();
+            this.lblPassPlnTxtWarn = new System.Windows.Forms.Label();
+            this.lblInfo = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // cmbEnvironment
             // 
             this.cmbEnvironment.FormattingEnabled = true;
-            this.cmbEnvironment.Location = new System.Drawing.Point(102, 46);
+            this.cmbEnvironment.Location = new System.Drawing.Point(177, 90);
             this.cmbEnvironment.Name = "cmbEnvironment";
             this.cmbEnvironment.Size = new System.Drawing.Size(239, 21);
             this.cmbEnvironment.TabIndex = 0;
@@ -50,7 +53,7 @@
             // lblEnvironment
             // 
             this.lblEnvironment.AutoSize = true;
-            this.lblEnvironment.Location = new System.Drawing.Point(30, 49);
+            this.lblEnvironment.Location = new System.Drawing.Point(105, 93);
             this.lblEnvironment.Name = "lblEnvironment";
             this.lblEnvironment.Size = new System.Drawing.Size(66, 13);
             this.lblEnvironment.TabIndex = 1;
@@ -59,7 +62,7 @@
             // lblUserName
             // 
             this.lblUserName.AutoSize = true;
-            this.lblUserName.Location = new System.Drawing.Point(41, 87);
+            this.lblUserName.Location = new System.Drawing.Point(116, 120);
             this.lblUserName.Name = "lblUserName";
             this.lblUserName.Size = new System.Drawing.Size(55, 13);
             this.lblUserName.TabIndex = 2;
@@ -68,7 +71,7 @@
             // lblPassword
             // 
             this.lblPassword.AutoSize = true;
-            this.lblPassword.Location = new System.Drawing.Point(43, 113);
+            this.lblPassword.Location = new System.Drawing.Point(118, 146);
             this.lblPassword.Name = "lblPassword";
             this.lblPassword.Size = new System.Drawing.Size(53, 13);
             this.lblPassword.TabIndex = 3;
@@ -76,14 +79,14 @@
             // 
             // txtUsername
             // 
-            this.txtUsername.Location = new System.Drawing.Point(102, 84);
+            this.txtUsername.Location = new System.Drawing.Point(177, 117);
             this.txtUsername.Name = "txtUsername";
             this.txtUsername.Size = new System.Drawing.Size(100, 20);
             this.txtUsername.TabIndex = 4;
             // 
             // txtPassword
             // 
-            this.txtPassword.Location = new System.Drawing.Point(102, 110);
+            this.txtPassword.Location = new System.Drawing.Point(177, 143);
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.PasswordChar = '*';
             this.txtPassword.Size = new System.Drawing.Size(100, 20);
@@ -91,7 +94,7 @@
             // 
             // btnLogin
             // 
-            this.btnLogin.Location = new System.Drawing.Point(102, 181);
+            this.btnLogin.Location = new System.Drawing.Point(338, 204);
             this.btnLogin.Name = "btnLogin";
             this.btnLogin.Size = new System.Drawing.Size(75, 23);
             this.btnLogin.TabIndex = 6;
@@ -102,7 +105,7 @@
             // btnCancel
             // 
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(193, 181);
+            this.btnCancel.Location = new System.Drawing.Point(429, 204);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 7;
@@ -113,19 +116,40 @@
             // chkRemember
             // 
             this.chkRemember.AutoSize = true;
-            this.chkRemember.Location = new System.Drawing.Point(102, 137);
+            this.chkRemember.Location = new System.Drawing.Point(177, 170);
             this.chkRemember.Name = "chkRemember";
-            this.chkRemember.Size = new System.Drawing.Size(63, 17);
+            this.chkRemember.Size = new System.Drawing.Size(132, 17);
             this.chkRemember.TabIndex = 8;
-            this.chkRemember.Text = "Rember";
+            this.chkRemember.Text = "Remember Credentials";
             this.chkRemember.UseVisualStyleBackColor = true;
             // 
-            // LoginFrm
+            // lblPassPlnTxtWarn
+            // 
+            this.lblPassPlnTxtWarn.AutoSize = true;
+            this.lblPassPlnTxtWarn.ForeColor = System.Drawing.Color.Maroon;
+            this.lblPassPlnTxtWarn.Location = new System.Drawing.Point(283, 146);
+            this.lblPassPlnTxtWarn.Name = "lblPassPlnTxtWarn";
+            this.lblPassPlnTxtWarn.Size = new System.Drawing.Size(129, 13);
+            this.lblPassPlnTxtWarn.TabIndex = 9;
+            this.lblPassPlnTxtWarn.Text = "(Note: Stored in plain text)";
+            // 
+            // lblInfo
+            // 
+            this.lblInfo.AutoSize = true;
+            this.lblInfo.Location = new System.Drawing.Point(17, 9);
+            this.lblInfo.Name = "lblInfo";
+            this.lblInfo.Size = new System.Drawing.Size(487, 52);
+            this.lblInfo.TabIndex = 10;
+            this.lblInfo.Text = resources.GetString("lblInfo.Text");
+            // 
+            // LoginForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(369, 216);
+            this.ClientSize = new System.Drawing.Size(520, 237);
+            this.Controls.Add(this.lblInfo);
+            this.Controls.Add(this.lblPassPlnTxtWarn);
             this.Controls.Add(this.chkRemember);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnLogin);
@@ -135,11 +159,14 @@
             this.Controls.Add(this.lblUserName);
             this.Controls.Add(this.lblEnvironment);
             this.Controls.Add(this.cmbEnvironment);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.Name = "LoginFrm";
+            this.MinimizeBox = false;
+            this.Name = "LoginForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "LoginFrm";
-            this.Load += new System.EventHandler(this.LoginFrm_Load);
+            this.Text = "Login";
+            this.TopMost = true;
+            this.Load += new System.EventHandler(this.LoginForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -156,5 +183,7 @@
         private System.Windows.Forms.Button btnLogin;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.CheckBox chkRemember;
+        private System.Windows.Forms.Label lblPassPlnTxtWarn;
+        private System.Windows.Forms.Label lblInfo;
     }
 }

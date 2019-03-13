@@ -1,26 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CustomizationEditor
 {
-    public partial class LoginFrm : Form
+    public partial class LoginForm : Form
     {
         string clientFolder = "";
-        public LoginFrm(string clientFolder)
+        public LoginForm(string clientFolder)
         {
             InitializeComponent();
             this.clientFolder = clientFolder;
         }
 
-        private void LoginFrm_Load(object sender, EventArgs e)
+        private void LoginForm_Load(object sender, EventArgs e)
         {
             var sysconfigs = Directory.GetFiles($"{clientFolder}/config/", "*.sysconfig");
             List<Environment> envAry = new List<Environment>();
@@ -39,8 +33,17 @@ namespace CustomizationEditor
                 txtPassword.Text = Settings.Default.Password;
                 chkRemember.Checked = true;
             }
-            this.BringToFront();
 
+            ForceFront();
+        }
+
+        private void ForceFront()
+        {
+            this.TopMost = true;
+            this.Focus();
+            this.BringToFront();
+            this.cmbEnvironment.Focus();
+            System.Media.SystemSounds.Beep.Play();
         }
 
         private void btnLogin_Click(object sender, EventArgs e)
