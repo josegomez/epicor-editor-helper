@@ -158,42 +158,53 @@ namespace CustomizationEditor
                     if (string.IsNullOrEmpty(dll))
                         dll = "*.UI.*.dll";
 
+
+                    Assembly assy = ClientAssemblyRetriever.ForILaunch(oTrans).RetrieveAssembly(dll);
                     swLog.WriteLine("Finding File");
-                    foreach (string s in Directory.GetFiles(o.EpicorClientFolder, dll))
-                    {
-                        Assembly assy = Assembly.LoadFile(s);
-                        if (assy.DefinedTypes.Where(r => r.FullName.ToUpper().Contains(o.Key2.ToUpper())).Any())
+                    string s = "";
+                    if (assy == null)
+                        foreach (string x in Directory.GetFiles(o.EpicorClientFolder, dll))
                         {
-
-                            var typeE = assy.DefinedTypes.Where(r => r.FullName.ToUpper().Contains(o.Key2.ToUpper())).FirstOrDefault();
-
-                            var typeTList = assy.DefinedTypes.Where(r => r.BaseType.Name.Equals("EpiTransaction")).ToList();
-
-                            foreach(var typeT in typeTList)
+                                assy = Assembly.LoadFile(x);
+                            if (assy.DefinedTypes.Where(r => r.FullName.ToUpper().Contains(o.Key2.ToUpper())).Any())
                             {
-                                try
-                                {
-                                    if (typeT != null)
-                                        epiTransaction = Activator.CreateInstance(typeT, new object[] { oTrans });
-                                    else
-                                        epiTransaction = new EpiTransaction(oTrans);
-
-                                    epiBaseForm = Activator.CreateInstance(typeE, new object[] { epiTransaction });
+                                
+                                    s = x;
                                     break;
                                 }
-                                catch(Exception e)
-                                { }
-                            }
-
-                            
-                            epiBaseForm.IsVerificationMode = true;
-                            epiBaseForm.CustomizationName = o.Key1;
-                            refds.AppendLine($"<Reference Include=\"{typeE.Assembly.FullName}\">");
-                            refds.AppendLine($"<HintPath>{s}</HintPath>");
-                            refds.AppendLine($"</Reference>");
-                            break;
                         }
+                    s = assy.Location;
+                    var typeE = assy.DefinedTypes.Where(r => r.FullName.ToUpper().Contains(o.Key2.ToUpper())).FirstOrDefault();
+
+                    var typeTList = assy.DefinedTypes.Where(r => r.BaseType.Name.Equals("EpiTransaction")).ToList();
+                    if(typeTList!=null)
+                        foreach (var typeT in typeTList)
+                        {
+                            try
+                            {
+                                if (typeT != null)
+                                    epiTransaction = Activator.CreateInstance(typeT, new object[] { oTrans });
+                                else
+                                    epiTransaction = new EpiTransaction(oTrans);
+
+                                epiBaseForm = Activator.CreateInstance(typeE, new object[] { epiTransaction });
+                                break;
+                            }
+                            catch (Exception e)
+                            { }
+                        }
+                    else
+                    {
+                        epiTransaction = new EpiTransaction(oTrans);
+                        epiBaseForm = Activator.CreateInstance(typeE, new object[] { epiTransaction });
                     }
+                    epiBaseForm.IsVerificationMode = true;
+                    epiBaseForm.CustomizationName = o.Key1;
+                    refds.AppendLine($"<Reference Include=\"{typeE.Assembly.FullName}\">");
+                    refds.AppendLine($"<HintPath>{s}</HintPath>");
+                    refds.AppendLine($"</Reference>");
+                    
+                    
                     swLog.WriteLine("Initialize EpiUI Utils");
                     EpiUIUtils eu = new EpiUIUtils(epiBaseForm, epiTransaction, epiBaseForm.MainToolManager, null);
                     eu.GetType().GetField("currentSession", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(eu, epiTransaction.Session);
@@ -286,15 +297,13 @@ namespace CustomizationEditor
                     nds.WriteXml($@"{o.ProjectFolder}\{o.Key2}_Customization_{o.Key1}_CustomExport.xml", XmlWriteMode.WriteSchema);
 
 
-                    //epiBaseForm.Close();
+                    
                     epiBaseForm.Dispose();
                     
-                    //epiTransaction.Close();
-                    //epiTransaction.Dispose();
+                    
                     ad.Dispose();
                     cm = null;
-                    csm.Dispose();
-                    csmR.Dispose();
+                    
                     eu.Dispose();
 
                 
