@@ -1,20 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CustomizationEditor
+﻿namespace CustomizationEditor
 {
+    /// <summary>
+    /// Generic class holding environment information
+    /// </summary>
     public class Environment
     {
-        string path;
+        public string Path { get; set; }
+        public string Name { get; set; }
 
-        public string Path { get => path; set => path = value; }
-        public string Name { get => name; set => name = value; }
-
-        string name;
-
+        /// <summary>
+        /// Overrides the standard to string for the class normally exposing the type as a string with the name
+        /// </summary>
+        /// <returns>
+        /// Environment.Name current value
+        /// </returns>
         public override string ToString()
         {
             return Name;

@@ -12,6 +12,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)CommandLineParams.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Environment.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Program.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)XMLShiz.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)StaticExtensions.cs" />
   </ItemGroup>
 </Project>

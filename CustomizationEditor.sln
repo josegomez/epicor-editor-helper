@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.438
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomizationEditor_10.2.300.X", "CustomizationEditor\CustomizationEditor_10.2.300.X.csproj", "{7CC05C03-06EC-45E1-80F5-DAAF797FF13D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomizationEditor_10.2.300.X", "CustomizationEditor_10.2.300\CustomizationEditor_10.2.300.X.csproj", "{7CC05C03-06EC-45E1-80F5-DAAF797FF13D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomizationEditor_10.1.600.X", "CustomizationEditor_10.1.600\CustomizationEditor_10.1.600.X.csproj", "{86C9A944-A03F-495F-9793-4796301DE98D}"
 EndProject
