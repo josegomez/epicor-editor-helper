@@ -60,7 +60,8 @@ namespace CustomizationEditor
                                        DownloadCustomization(o, epiSession);
                                        reSync = true;
                                    }
-                                   reSync = false;
+                                   else
+                                    reSync = false;
                                    
                                }
                                break;
