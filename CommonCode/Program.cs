@@ -108,15 +108,18 @@ namespace CustomizationEditor
 
         private static void ShowProgressBar(bool iFlag = true)
         {
-            if(iFlag)
+            if (iFlag)
             {
                 progBarThread = new Thread(() => new ProgressForm($"{currAction}ing Project... Please Wait").ShowDialog());
                 progBarThread.Start();
             }
             else
             {
-                progBarThread.Abort();
-                progBarThread = null;
+                if (progBarThread != null)
+                {
+                    progBarThread.Abort();
+                    progBarThread = null;
+                }
             }
         }
 

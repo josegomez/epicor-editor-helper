@@ -62,5 +62,7 @@ namespace CustomizationEditor
         {
             this.DialogResult = DialogResult.Cancel;
         }
+
+        private bool
     }
 }
