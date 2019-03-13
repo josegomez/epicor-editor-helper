@@ -196,7 +196,8 @@ namespace CustomizationEditor
                     var typeE = assy.DefinedTypes.Where(r => r.FullName.ToUpper().Contains(o.Key2.ToUpper())).FirstOrDefault();
 
                     var typeTList = assy.DefinedTypes.Where(r => r.BaseType.Name.Equals("EpiTransaction")).ToList();
-                    if(typeTList!=null)
+                    if (typeTList != null)
+                    {
                         foreach (var typeT in typeTList)
                         {
                             try
@@ -212,6 +213,7 @@ namespace CustomizationEditor
                             catch (Exception e)
                             { }
                         }
+                    }
                     else
                     {
                         epiTransaction = new EpiTransaction(oTrans);
