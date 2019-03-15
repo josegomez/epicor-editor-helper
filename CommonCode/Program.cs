@@ -367,7 +367,7 @@ namespace CustomizationEditor
                     s = assy.Location;
                     var typeE = assy.DefinedTypes.Where(r => r.FullName.ToUpper().Contains(o.Key2.ToUpper())).FirstOrDefault();
 
-                    var typeTList = assy.DefinedTypes.Where(r => r.BaseType.Name.Equals("EpiTransaction") || r.BaseType.Name.Equals("UDMultiViewTransaction") || r.BaseType.Name.Equals("UDSingleViewTransaction")).ToList();
+                    var typeTList = assy.DefinedTypes.Where(r => r.BaseType.Name.Equals("EpiTransaction") || r.BaseType.Name.Equals("EpiMultiViewTransaction") || r.BaseType.Name.Equals("EpiSingleViewTransaction") || r.BaseType.Name.Equals("UDMultiViewTransaction") || r.BaseType.Name.Equals("UDSingleViewTransaction")).ToList();
                     if(typeTList!=null && typeTList.Count>0)
                         foreach (var typeT in typeTList)
                         {
