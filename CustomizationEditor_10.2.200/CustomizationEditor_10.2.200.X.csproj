@@ -38,6 +38,12 @@
       <HintPath>..\packages\CommandLineParser.2.2.0\lib\net45\CommandLine.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Epicor, Version=3.2.200.0, Culture=neutral, PublicKeyToken=5d3fa3c7105d7992, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\epicor\ERP10.2Client\WCI\Client\Epicor.exe</HintPath>
+      <Aliases>epi</Aliases>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Epicor.ServiceModel">
       <HintPath>..\..\..\..\..\..\epicor\ERP10.2Client\SG_Development\Client\Epicor.ServiceModel.dll</HintPath>
       <Private>False</Private>
@@ -65,6 +71,11 @@
     <Reference Include="Ice.Core.Session, Version=3.2.300.0, Culture=neutral, PublicKeyToken=5d3fa3c7105d7992, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\epicor\ERP10.2Client\SG_Development\Client\Ice.Core.Session.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Ice.Lib.Deployment, Version=3.2.200.0, Culture=neutral, PublicKeyToken=5d3fa3c7105d7992, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\epicor\ERP10.2Client\SG_Development\Client\Ice.Lib.Deployment.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Ice.Lib.EpiClientLib, Version=3.2.300.0, Culture=neutral, PublicKeyToken=5d3fa3c7105d7992, processorArchitecture=MSIL">

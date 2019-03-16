@@ -1,4 +1,5 @@
-﻿using CommandLine;
+﻿extern alias epi;
+using CommandLine;
 using Ice.Core;
 using Ice.Lib.Framework;
 using System;
@@ -18,6 +19,7 @@ using System.Threading;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
 using Ice.Lib;
+using Ice.Lib.Deployment;
 
 namespace CustomizationEditor
 {
@@ -719,9 +721,27 @@ namespace CustomizationEditor
         private static Session GetEpiSession(CommandLineParams o)
         {
             var ses = new Session(o.Username, o.Password, Session.LicenseType.Default, o.ConfigFile);
-            
+
             Startup.SetupPlugins(ses);
-            
+
+
+            epi.Ice.Lib.Configuration c = new epi.Ice.Lib.Configuration(o.ConfigFile);
+            Assembly assy = Assembly.LoadFile($"{o.EpicorClientFolder}\\Epicor.exe");
+            TypeInfo ty = assy.DefinedTypes.Where(r => r.Name == "ConfigureForAutoDeployment").FirstOrDefault();
+            dynamic thing = Activator.CreateInstance(ty);
+            //thing.SetUpAssemblyRetrieversAndPossiblyGetNewConfiguration(ref c);
+            object[] args = { c };
+            thing.GetType().GetMethod("SetUpAssemblyRetrieversAndPossiblyGetNewConfiguration", BindingFlags.Instance | BindingFlags.Public).Invoke(thing, args);
+
+
+            /*configureForAutoDeployment.SetUpAssemblyRetrieversAndPossiblyGetNewConfiguration(ref Epicor.configuration);
+            WellKnownAssemblyRetrievers.AutoDeployAssemblyRetriever = configureForAutoDeployment.AutoDeployAssemblyRetriever;
+            WellKnownAssemblyRetrievers.SessionlessAssemblyRetriever = configureForAutoDeployment.SessionlessAssemblyRetriever;
+            ConfigureForAutoDeployment.EnsureAutoDeployCoreManifestFilesHaveBeenDeployed(WellKnownAssemblyRetrievers.AutoDeployAssemblyRetriever);*/
+            WellKnownAssemblyRetrievers.AutoDeployAssemblyRetriever = (IAssemblyRetriever) thing.GetType().GetProperty("AutoDeployAssemblyRetriever", BindingFlags.Instance | BindingFlags.Public |BindingFlags.NonPublic).GetValue(thing);
+            WellKnownAssemblyRetrievers.SessionlessAssemblyRetriever = (IAssemblyRetriever)thing.GetType().GetProperty("SessionlessAssemblyRetriever", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).GetValue(thing);
+
+            Startup.PreStart(ses,true);
             return ses;
         }
     }
