@@ -38,7 +38,6 @@
             this.btnLogin = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.chkRemember = new System.Windows.Forms.CheckBox();
-            this.lblPassPlnTxtWarn = new System.Windows.Forms.Label();
             this.lblInfo = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
@@ -123,16 +122,6 @@
             this.chkRemember.Text = "Remember Credentials";
             this.chkRemember.UseVisualStyleBackColor = true;
             // 
-            // lblPassPlnTxtWarn
-            // 
-            this.lblPassPlnTxtWarn.AutoSize = true;
-            this.lblPassPlnTxtWarn.ForeColor = System.Drawing.Color.Maroon;
-            this.lblPassPlnTxtWarn.Location = new System.Drawing.Point(283, 146);
-            this.lblPassPlnTxtWarn.Name = "lblPassPlnTxtWarn";
-            this.lblPassPlnTxtWarn.Size = new System.Drawing.Size(129, 13);
-            this.lblPassPlnTxtWarn.TabIndex = 9;
-            this.lblPassPlnTxtWarn.Text = "(Note: Stored in plain text)";
-            // 
             // lblInfo
             // 
             this.lblInfo.AutoSize = true;
@@ -149,7 +138,6 @@
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(543, 237);
             this.Controls.Add(this.lblInfo);
-            this.Controls.Add(this.lblPassPlnTxtWarn);
             this.Controls.Add(this.chkRemember);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnLogin);
@@ -183,7 +171,6 @@
         private System.Windows.Forms.Button btnLogin;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.CheckBox chkRemember;
-        private System.Windows.Forms.Label lblPassPlnTxtWarn;
         private System.Windows.Forms.Label lblInfo;
     }
 }
