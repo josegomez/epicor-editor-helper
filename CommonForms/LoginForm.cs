@@ -1,8 +1,10 @@
-﻿using System;
+﻿using CommonForms.Properties;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Windows.Forms;
-
+using System.Security.Cryptography;
 namespace CustomizationEditor
 {
     public partial class LoginForm : Form
@@ -52,7 +54,12 @@ namespace CustomizationEditor
             if (cmbEnvironment.SelectedValue != null)
                 Settings.Default.Environment = ((string)cmbEnvironment.SelectedValue);
             Settings.Default.Username = txtUsername.Text;
-            Settings.Default.Password = txtPassword.Text;
+
+            byte[] bytes = Encoding.Unicode.GetBytes(txtPassword.Text);
+            byte[] protectedPassword = ProtectedData.Protect(bytes, Encoding.Unicode.GetBytes("70A47403717EC0F50E0755B2C4CF8488C8A061F3A694E0D1AB336D672C21781A"), DataProtectionScope.CurrentUser);
+            string encryptedString = Convert.ToBase64String(protectedPassword);
+            Settings.Default.Encrypted = true;
+            Settings.Default.Password = encryptedString;
 
             Settings.Default.Save();
             this.DialogResult = DialogResult.OK;

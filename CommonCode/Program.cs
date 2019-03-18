@@ -20,6 +20,8 @@ using System.Text.RegularExpressions;
 using System.Diagnostics;
 using Ice.Lib;
 using Ice.Lib.Deployment;
+using CommonForms.Properties;
+using System.Security.Cryptography;
 
 namespace CustomizationEditor
 {
@@ -56,8 +58,9 @@ namespace CustomizationEditor
                                    {
                                        ShowProgressBar();
                                        o.Username = Settings.Default.Username;
-                                       o.Password = Settings.Default.Password;
+                                       o.Password = Settings.Default.Password; 
                                        o.ConfigFile = Settings.Default.Environment;
+                                       o.Encrypted = "true";
                                        epiSession = GetEpiSession(o);
                                        DownloadCustomization(o, epiSession);
                                        reSync = true;
@@ -71,7 +74,11 @@ namespace CustomizationEditor
                                {
                                    epiSession = GetEpiSession(o);
                                    reSync = true;
-                                   UpdateCustomization(o, epiSession);
+                                   if(!UpdateCustomization(o, epiSession))
+                                   {
+                                       if(MessageBox.Show("You've canceled the sync operation, would you like to download the latest copy of the customization from Epicor? This will over-write any changes you have made to the custom script since the last sync.","Re-Download?", MessageBoxButtons.YesNo, MessageBoxIcon.Question)==DialogResult.No)
+                                       reSync = false;
+                                   }
                                }
                                break;
                            case "Edit":
@@ -114,6 +121,17 @@ namespace CustomizationEditor
             
         }
 
+        private static void ConvertToEncrypted(CommandLineParams o)
+        {
+            byte[] bytes = Encoding.Unicode.GetBytes(o.Password);
+            byte[] protectedPassword = ProtectedData.Protect(bytes, Encoding.Unicode.GetBytes("70A47403717EC0F50E0755B2C4CF8488C8A061F3A694E0D1AB336D672C21781A"), DataProtectionScope.CurrentUser);
+            string encryptedString = Convert.ToBase64String(protectedPassword);
+
+            Settings.Default.Password = encryptedString;
+            Settings.Default.Encrypted = true;
+            Settings.Default.Save();
+        }
+
         private static void ShowProgressBar(bool iFlag = true)
         {
             if (iFlag)
@@ -147,7 +165,7 @@ namespace CustomizationEditor
         }
         
 
-        private static void UpdateCustomization(CommandLineParams o, Session epiSession)
+        private static bool UpdateCustomization(CommandLineParams o, Session epiSession)
         {
       
             using (StreamReader sr = new StreamReader($@"{o.ProjectFolder}\Script.cs"))
@@ -160,12 +178,21 @@ namespace CustomizationEditor
                 string script = (sr.ReadToEnd().Replace("public partial class Script", "public class Script").EscapeXml());
                 var ds = i.GetByID(o.Company, o.ProductType, o.LayerType, o.CSGCode, o.Key1, o.Key2, o.Key3);
                 var chunk = ds.XXXDef[0];
+                if(chunk.SysRevID != o.Version && o.Version>0)
+                {
+                    if (MessageBox.Show("The customization appears to have been updated internally within Epicor, this means that if you continue you may be over-writing some changes made. Would you like to continue?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
+                    {
+                        return false;
+                    }
+                     
+                }
                 string content = ad.GetDechunkedStringByIDWithCompany(o.Company, o.ProductType, o.LayerType, o.CSGCode, o.Key1, o.Key2, o.Key3);
 
                 string newC = Regex.Replace(content, @"(?=\/\/ \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*)[\s\S]*?(?=<\/PropertyValue>)", script,
                               RegexOptions.IgnoreCase);
                 ad.ChunkNSaveUncompressedStringByID(o.Company, o.ProductType, o.LayerType, o.CSGCode, o.Key1, o.Key2, o.Key3, chunk.Description, chunk.Version, false, newC);
             }
+            return true;
         }
 
         private static void DownloadAndSyncDashboard(Session epiSession, CommandLineParams o)
@@ -245,7 +272,7 @@ namespace CustomizationEditor
                         aliases.Add(match.Value.Replace("_", ".").ToUpper());
                         match = match.NextMatch();
                     }
-
+                    o.Version = ds.XXXDef[0].SysRevID;
                     GenerateRefs(refds, csmR, o, aliases);
                     ExportCustmization(nds, ad, o);
                     int start = csmR.CustomCodeAll.IndexOf("// ** Wizard Insert Location - Do Not Remove 'Begin/End Wizard Added Module Level Variables' Comments! **");
@@ -458,7 +485,7 @@ namespace CustomizationEditor
                     string projectFile = Resource.BasicProjc;
                     projectFile = projectFile.Replace("<CUSTID>", o.Key1);
                     projectFile = projectFile.Replace("<!--<ReferencesHere>-->", refds.ToString());
-
+                    o.Version = ds.XXXDef[0].SysRevID;
 
                     swLog.WriteLine("Create Folder");
                     if (string.IsNullOrEmpty(o.ProjectFolder))
@@ -621,10 +648,10 @@ namespace CustomizationEditor
             }
             foreach (var r in csmR.CustRefAssembliesSL)
             {
-                if (csmR.CustomAssembly.FullName.Contains(o.Key1))
-                    o.DLLLocation = csmR.CustomAssembly.Location;
+                if (r.Value.FullName.Contains(o.Key1))
+                    o.DLLLocation = Path.Combine(o.EpicorClientFolder, r.Key + ".dll");
                 refds.AppendLine($"<Reference Include=\"{r.Value.FullName}\">");
-                refds.AppendLine($@"<HintPath>{o.EpicorClientFolder}\{r.Key}.dll</HintPath>");
+                refds.AppendLine($@"<HintPath>{Path.Combine(o.EpicorClientFolder,r.Key+".dll")}</HintPath>");
                 if (aliases.Contains(Path.GetFileName(r.Key).ToUpper()))
                 {
                     refds.AppendLine($"<Aliases>{r.Key.Replace(".", "_")}</Aliases >");
@@ -634,10 +661,10 @@ namespace CustomizationEditor
 
             foreach (var r in csmR.ReferencedAssembliesHT)
             {
-                if (csmR.CustomAssembly.FullName.Contains(o.Key1))
-                    o.DLLLocation = csmR.CustomAssembly.Location;
+                if (r.Value.FullName.Contains(o.Key1))
+                    o.DLLLocation = Path.Combine(o.EpicorClientFolder, r.Key + ".dll");
                 refds.AppendLine($"<Reference Include=\"{r.Value.FullName}\">");
-                refds.AppendLine($@"<HintPath>{o.EpicorClientFolder}\{r.Key}.dll</HintPath>");
+                refds.AppendLine($@"<HintPath>{Path.Combine(o.EpicorClientFolder, r.Key + ".dll")}</HintPath>");
                 if (aliases.Contains(Path.GetFileName(r.Key).ToUpper()))
                 {
                     refds.AppendLine($"<Aliases>{r.Key.Replace(".", "_")}</Aliases >");
@@ -720,29 +747,44 @@ namespace CustomizationEditor
 
         private static Session GetEpiSession(CommandLineParams o)
         {
-            var ses = new Session(o.Username, o.Password, Session.LicenseType.Default, o.ConfigFile);
-
+            string password = o.Password;
+            if(bool.Parse(o.Encrypted))
+            {
+                password =Encoding.Unicode.GetString(ProtectedData.Unprotect(Convert.FromBase64String(o.Password), Encoding.Unicode.GetBytes("70A47403717EC0F50E0755B2C4CF8488C8A061F3A694E0D1AB336D672C21781A"), DataProtectionScope.CurrentUser));
+            }
+            else
+            {
+                password = o.Password;
+                EncryptPassword(o);
+            }
+            var ses = new Session(o.Username, password, Session.LicenseType.Default, o.ConfigFile);
+            
             Startup.SetupPlugins(ses);
 
 
             epi.Ice.Lib.Configuration c = new epi.Ice.Lib.Configuration(o.ConfigFile);
-            Assembly assy = Assembly.LoadFile($"{o.EpicorClientFolder}\\Epicor.exe");
+            Assembly assy = Assembly.LoadFile(Path.Combine(o.EpicorClientFolder,"Epicor.exe"));
             TypeInfo ty = assy.DefinedTypes.Where(r => r.Name == "ConfigureForAutoDeployment").FirstOrDefault();
             dynamic thing = Activator.CreateInstance(ty);
-            //thing.SetUpAssemblyRetrieversAndPossiblyGetNewConfiguration(ref c);
+            
             object[] args = { c };
             thing.GetType().GetMethod("SetUpAssemblyRetrieversAndPossiblyGetNewConfiguration", BindingFlags.Instance | BindingFlags.Public).Invoke(thing, args);
-
-
-            /*configureForAutoDeployment.SetUpAssemblyRetrieversAndPossiblyGetNewConfiguration(ref Epicor.configuration);
-            WellKnownAssemblyRetrievers.AutoDeployAssemblyRetriever = configureForAutoDeployment.AutoDeployAssemblyRetriever;
-            WellKnownAssemblyRetrievers.SessionlessAssemblyRetriever = configureForAutoDeployment.SessionlessAssemblyRetriever;
-            ConfigureForAutoDeployment.EnsureAutoDeployCoreManifestFilesHaveBeenDeployed(WellKnownAssemblyRetrievers.AutoDeployAssemblyRetriever);*/
             WellKnownAssemblyRetrievers.AutoDeployAssemblyRetriever = (IAssemblyRetriever) thing.GetType().GetProperty("AutoDeployAssemblyRetriever", BindingFlags.Instance | BindingFlags.Public |BindingFlags.NonPublic).GetValue(thing);
             WellKnownAssemblyRetrievers.SessionlessAssemblyRetriever = (IAssemblyRetriever)thing.GetType().GetProperty("SessionlessAssemblyRetriever", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).GetValue(thing);
-
+            ses.DisableTheming = true;
             Startup.PreStart(ses,true);
+            ses.DisableTheming = false;
             return ses;
+        }
+
+        private static string EncryptPassword(CommandLineParams o)
+        {
+            byte[] bytes = Encoding.Unicode.GetBytes(o.Password);
+            byte[] protectedPassword = ProtectedData.Protect(bytes, Encoding.Unicode.GetBytes("70A47403717EC0F50E0755B2C4CF8488C8A061F3A694E0D1AB336D672C21781A"), DataProtectionScope.CurrentUser);
+            string encryptedString = Convert.ToBase64String(protectedPassword);
+            o.Password = encryptedString;
+            o.Encrypted = "true";
+            return encryptedString;
         }
     }
 }

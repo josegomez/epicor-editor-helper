@@ -37,5 +37,9 @@ namespace CustomizationEditor
         public string DLLLocation { get; set; }
         [Option('y', "dll", Required = false, HelpText = "DN Spy Location")]
         public string DNSpy { get; set; }
+        [Option('v', "customizationversion", Required = false, HelpText = "Customization Version",Default =0)]
+        public long Version { get; set; }
+        [Option('e', "encrypted", Required = false, HelpText = "Password Encrypted", Default = "false")]
+        public string Encrypted { get; set; }
     }
 }
