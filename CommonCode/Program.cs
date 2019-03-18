@@ -768,24 +768,18 @@ namespace CustomizationEditor
         {
             string password = o.Password;
             Session ses = null;
-            if(bool.Parse(o.Encrypted))
-            {
-                password =Encoding.Unicode.GetString(ProtectedData.Unprotect(Convert.FromBase64String(o.Password), Encoding.Unicode.GetBytes("70A47403717EC0F50E0755B2C4CF8488C8A061F3A694E0D1AB336D672C21781A"), DataProtectionScope.CurrentUser));
-            }
-            else
-            {
-                password = o.Password;
-                EncryptPassword(o);
-            }
+           
             try
             {
+                password = NeedtoEncrypt(o);
                 ses = new Session(o.Username, password, Session.LicenseType.Default, o.ConfigFile);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
+                ShowProgressBar(false);
                 MessageBox.Show("Failed to Authenticate","Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 
-                ShowProgressBar(false);
+                
                 LoginForm frm = new LoginForm(o.EpicorClientFolder);
                 if (frm.ShowDialog() == DialogResult.OK)
                 {
@@ -794,6 +788,8 @@ namespace CustomizationEditor
                     o.Password = Settings.Default.Password;
                     o.ConfigFile = Settings.Default.Environment;
                     o.Encrypted = "true";
+                    password = NeedtoEncrypt(o);
+                    
                     try
                     {
                         ses = new Session(o.Username, password, Session.LicenseType.Default, o.ConfigFile);
@@ -803,7 +799,9 @@ namespace CustomizationEditor
                         MessageBox.Show("Failed to Authenticate", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         ses = null;
                     }
+                    ShowProgressBar(true);
                 }
+                
             }
 
             if (ses != null)
@@ -825,6 +823,22 @@ namespace CustomizationEditor
                 ses.DisableTheming = false;
             }
             return ses;
+        }
+
+        private static string NeedtoEncrypt(CommandLineParams o)
+        {
+            string password;
+            if (bool.Parse(o.Encrypted))
+            {
+                password = Encoding.Unicode.GetString(ProtectedData.Unprotect(Convert.FromBase64String(o.Password), Encoding.Unicode.GetBytes("70A47403717EC0F50E0755B2C4CF8488C8A061F3A694E0D1AB336D672C21781A"), DataProtectionScope.CurrentUser));
+            }
+            else
+            {
+                password = o.Password;
+                EncryptPassword(o);
+            }
+
+            return password;
         }
 
         private static string EncryptPassword(CommandLineParams o)
