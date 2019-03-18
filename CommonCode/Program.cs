@@ -69,7 +69,8 @@ namespace CustomizationEditor
                                            DownloadCustomization(o, epiSession);
                                            reSync = true;
                                        }
-                                       reSync = false;
+                                       else
+                                        reSync = false;
                                    }
                                    else
                                     reSync = false;
@@ -162,8 +163,12 @@ namespace CustomizationEditor
             {
                 if (progBarThread != null)
                 {
-                    progBarThread.Abort();
-                    progBarThread = null;
+                    try
+                    {
+                        progBarThread.Abort();
+                        progBarThread = null;
+                    }
+                    catch { }
                 }
             }
         }
