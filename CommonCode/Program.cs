@@ -47,7 +47,8 @@ namespace CustomizationEditor
                            case "Launch":
                                {
                                    epiSession = GetEpiSession(o);
-                                   LaunchInEpicor(o, epiSession, false);                                   
+                                   if(epiSession!=null)
+                                    LaunchInEpicor(o, epiSession, false);                                   
                                }
                                break;
                            case "Add":
@@ -61,9 +62,14 @@ namespace CustomizationEditor
                                        o.Password = Settings.Default.Password; 
                                        o.ConfigFile = Settings.Default.Environment;
                                        o.Encrypted = "true";
+                                       
                                        epiSession = GetEpiSession(o);
-                                       DownloadCustomization(o, epiSession);
-                                       reSync = true;
+                                       if (epiSession != null)
+                                       {
+                                           DownloadCustomization(o, epiSession);
+                                           reSync = true;
+                                       }
+                                       reSync = false;
                                    }
                                    else
                                     reSync = false;
@@ -73,30 +79,43 @@ namespace CustomizationEditor
                            case "Update":
                                {
                                    epiSession = GetEpiSession(o);
-                                   reSync = true;
-                                   if(!UpdateCustomization(o, epiSession))
+                                   if (epiSession != null)
                                    {
-                                       if(MessageBox.Show("You've canceled the sync operation, would you like to download the latest copy of the customization from Epicor? This will over-write any changes you have made to the custom script since the last sync.","Re-Download?", MessageBoxButtons.YesNo, MessageBoxIcon.Question)==DialogResult.No)
-                                       reSync = false;
+                                       reSync = true;
+                                       if (!UpdateCustomization(o, epiSession))
+                                       {
+                                           if (MessageBox.Show("You've canceled the sync operation, would you like to download the latest copy of the customization from Epicor? This will over-write any changes you have made to the custom script since the last sync.", "Re-Download?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                                               reSync = false;
+                                       }
                                    }
+                                   else
+                                       reSync = false;
                                }
                                break;
                            case "Edit":
                                {
                                    epiSession = GetEpiSession(o);
-                                   LaunchInEpicor(o, epiSession, true);
-                                   reSync = true;
+                                   if (epiSession != null)
+                                   {
+                                       LaunchInEpicor(o, epiSession, true);
+                                       reSync = true;
+                                   }
+                                   else
+                                       reSync = false;
                                }
                                break;
                            case "Debug":
                                {
                                    epiSession = GetEpiSession(o);
-                                   if (!string.IsNullOrEmpty(o.DNSpy))
+                                   if (epiSession != null)
                                    {
-                                       RunDnSpy(o);
+                                       if (!string.IsNullOrEmpty(o.DNSpy))
+                                       {
+                                           RunDnSpy(o);
+                                       }
+
+                                       LaunchInEpicor(o, epiSession, false, true);
                                    }
-                                   
-                                   LaunchInEpicor(o, epiSession, false, true);
                                }
                                break;
                            
@@ -748,6 +767,7 @@ namespace CustomizationEditor
         private static Session GetEpiSession(CommandLineParams o)
         {
             string password = o.Password;
+            Session ses = null;
             if(bool.Parse(o.Encrypted))
             {
                 password =Encoding.Unicode.GetString(ProtectedData.Unprotect(Convert.FromBase64String(o.Password), Encoding.Unicode.GetBytes("70A47403717EC0F50E0755B2C4CF8488C8A061F3A694E0D1AB336D672C21781A"), DataProtectionScope.CurrentUser));
@@ -757,23 +777,53 @@ namespace CustomizationEditor
                 password = o.Password;
                 EncryptPassword(o);
             }
-            var ses = new Session(o.Username, password, Session.LicenseType.Default, o.ConfigFile);
-            
-            Startup.SetupPlugins(ses);
+            try
+            {
+                ses = new Session(o.Username, password, Session.LicenseType.Default, o.ConfigFile);
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("Failed to Authenticate","Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                
+                ShowProgressBar(false);
+                LoginForm frm = new LoginForm(o.EpicorClientFolder);
+                if (frm.ShowDialog() == DialogResult.OK)
+                {
+                    ShowProgressBar();
+                    o.Username = Settings.Default.Username;
+                    o.Password = Settings.Default.Password;
+                    o.ConfigFile = Settings.Default.Environment;
+                    o.Encrypted = "true";
+                    try
+                    {
+                        ses = new Session(o.Username, password, Session.LicenseType.Default, o.ConfigFile);
+                    }
+                    catch(Exception)
+                    {
+                        MessageBox.Show("Failed to Authenticate", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        ses = null;
+                    }
+                }
+            }
+
+            if (ses != null)
+            {
+                Startup.SetupPlugins(ses);
 
 
-            epi.Ice.Lib.Configuration c = new epi.Ice.Lib.Configuration(o.ConfigFile);
-            Assembly assy = Assembly.LoadFile(Path.Combine(o.EpicorClientFolder,"Epicor.exe"));
-            TypeInfo ty = assy.DefinedTypes.Where(r => r.Name == "ConfigureForAutoDeployment").FirstOrDefault();
-            dynamic thing = Activator.CreateInstance(ty);
-            
-            object[] args = { c };
-            thing.GetType().GetMethod("SetUpAssemblyRetrieversAndPossiblyGetNewConfiguration", BindingFlags.Instance | BindingFlags.Public).Invoke(thing, args);
-            WellKnownAssemblyRetrievers.AutoDeployAssemblyRetriever = (IAssemblyRetriever) thing.GetType().GetProperty("AutoDeployAssemblyRetriever", BindingFlags.Instance | BindingFlags.Public |BindingFlags.NonPublic).GetValue(thing);
-            WellKnownAssemblyRetrievers.SessionlessAssemblyRetriever = (IAssemblyRetriever)thing.GetType().GetProperty("SessionlessAssemblyRetriever", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).GetValue(thing);
-            ses.DisableTheming = true;
-            Startup.PreStart(ses,true);
-            ses.DisableTheming = false;
+                epi.Ice.Lib.Configuration c = new epi.Ice.Lib.Configuration(o.ConfigFile);
+                Assembly assy = Assembly.LoadFile(Path.Combine(o.EpicorClientFolder, "Epicor.exe"));
+                TypeInfo ty = assy.DefinedTypes.Where(r => r.Name == "ConfigureForAutoDeployment").FirstOrDefault();
+                dynamic thing = Activator.CreateInstance(ty);
+
+                object[] args = { c };
+                thing.GetType().GetMethod("SetUpAssemblyRetrieversAndPossiblyGetNewConfiguration", BindingFlags.Instance | BindingFlags.Public).Invoke(thing, args);
+                WellKnownAssemblyRetrievers.AutoDeployAssemblyRetriever = (IAssemblyRetriever)thing.GetType().GetProperty("AutoDeployAssemblyRetriever", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).GetValue(thing);
+                WellKnownAssemblyRetrievers.SessionlessAssemblyRetriever = (IAssemblyRetriever)thing.GetType().GetProperty("SessionlessAssemblyRetriever", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).GetValue(thing);
+                ses.DisableTheming = true;
+                Startup.PreStart(ses, true);
+                ses.DisableTheming = false;
+            }
             return ses;
         }
 

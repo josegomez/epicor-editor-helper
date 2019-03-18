@@ -32,7 +32,11 @@ namespace CustomizationEditor
             if(Settings.Default.Remember)
             {
                 txtUsername.Text = Settings.Default.Username;
-                txtPassword.Text = Settings.Default.Password;
+                if (Settings.Default.Encrypted)
+                    txtPassword.Text = Encoding.Unicode.GetString(ProtectedData.Unprotect(Convert.FromBase64String(Settings.Default.Password), Encoding.Unicode.GetBytes("70A47403717EC0F50E0755B2C4CF8488C8A061F3A694E0D1AB336D672C21781A"), DataProtectionScope.CurrentUser));
+                else
+                    txtPassword.Text = Settings.Default.Password;
+
                 chkRemember.Checked = true;
             }
 
