@@ -127,9 +127,11 @@
             this.lblInfo.AutoSize = true;
             this.lblInfo.Location = new System.Drawing.Point(17, 9);
             this.lblInfo.Name = "lblInfo";
-            this.lblInfo.Size = new System.Drawing.Size(487, 52);
+            this.lblInfo.Size = new System.Drawing.Size(444, 39);
             this.lblInfo.TabIndex = 10;
-            this.lblInfo.Text = resources.GetString("lblInfo.Text");
+            this.lblInfo.Text = "Select an Epicor instance you would like to create a VS Code project for. If you " +
+    "are unable to\r\nfind a *.sysconfig you are looking for please review your Client " +
+    "Folder setting.\r\n.";
             // 
             // LoginForm
             // 
