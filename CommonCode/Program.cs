@@ -199,7 +199,7 @@ namespace CustomizationEditor
                 ad.BOConnect();
 
                 GenXDataImpl i = (GenXDataImpl)ad.BusinessObject;
-                string script = (sr.ReadToEnd().Replace("public partial class Script", "public class Script").EscapeXml());
+                string script = (sr.ReadToEnd().Replace("public partial class Script", "public class Script").Replace("public static partial class Script", "public static class Script").EscapeXml());
                 var ds = i.GetByID(o.Company, o.ProductType, o.LayerType, o.CSGCode, o.Key1, o.Key2, o.Key3);
                 var chunk = ds.XXXDef[0];
                 if(chunk.SysRevID != o.Version && o.Version>0)
@@ -289,22 +289,23 @@ namespace CustomizationEditor
                     csm.InitCustomControlsAndProperties(ds, LayerName.CompositeBase, true);
                     CustomScriptManager csmR = csm.CurrentCustomScriptManager;
                     swLog.WriteLine("Generate Refs");
-                    List<string> aliases = new List<string>();
+                    /*List<string> aliases = new List<string>();
                     Match match = Regex.Match(csmR.CustomCodeAll, "((?<=extern alias )(.*)*(?=;))");
                     while (match.Success)
                     {
                         aliases.Add(match.Value.Replace("_", ".").ToUpper());
                         match = match.NextMatch();
-                    }
+                    }*/
                     o.Version = ds.XXXDef[0].SysRevID;
-                    GenerateRefs(refds, csmR, o, aliases);
+                    GenerateRefs(refds, csmR, o,null);
                     ExportCustmization(nds, ad, o);
                     int start = csmR.CustomCodeAll.IndexOf("// ** Wizard Insert Location - Do Not Remove 'Begin/End Wizard Added Module Level Variables' Comments! **");
                     int end = csmR.CustomCodeAll.Length - start;
                     string allCode;
                     string script;
-                    allCode = csmR.CustomCodeAll.Replace(csmR.CustomCodeAll.Substring(start, end), "}").Replace("public class Script", "public partial class Script");
+                    allCode = csmR.CustomCodeAll.Replace(csmR.CustomCodeAll.Substring(start, end), "}").Replace("public class Script", "public partial class Script").Replace("public static class Script", "public static partial class Script");
                     script = csmR.Script.Replace("public class Script", "public partial class Script");
+                    script = script.Replace("public static class Script", "public static partial class Script");
                     swLog.WriteLine("Write Project");
                     string projectFile = Resource.BasicProjc;
                     projectFile = projectFile.Replace("<CUSTID>", o.Key1);
@@ -489,22 +490,23 @@ namespace CustomizationEditor
                     csm.InitCustomControlsAndProperties(ds, LayerName.CompositeBase, true);
                     CustomScriptManager csmR = csm.CurrentCustomScriptManager;
                     swLog.WriteLine("Generate Refs");
-                    List<string> aliases = new List<string>();
+                    /*List<string> aliases = new List<string>();
                     Match match =Regex.Match(csmR.CustomCodeAll, "((?<=extern alias )(.*)*(?=;))");
                     while(match.Success)
                     {
                         aliases.Add(match.Value.Replace("_",".").ToUpper());
                         match =match.NextMatch();
-                    }
+                    }*/
 
-                    GenerateRefs(refds, csmR, o, aliases);
+                    GenerateRefs(refds, csmR, o, null);
                     ExportCustmization(nds,ad,o);
                     int start = csmR.CustomCodeAll.IndexOf("// ** Wizard Insert Location - Do Not Remove 'Begin/End Wizard Added Module Level Variables' Comments! **");
                     int end = csmR.CustomCodeAll.Length - start;
                     string allCode;
                     string script;
-                    allCode = csmR.CustomCodeAll.Replace(csmR.CustomCodeAll.Substring(start, end), "}").Replace("public class Script", "public partial class Script");
+                    allCode = csmR.CustomCodeAll.Replace(csmR.CustomCodeAll.Substring(start, end), "}").Replace("public class Script", "public partial class Script").Replace("public static class Script", "public static partial class Script");
                     script = csmR.Script.Replace("public class Script", "public partial class Script");
+                    script = script.Replace("public static class Script", "public static partial class Script");
                     swLog.WriteLine("Write Project");
                     string projectFile = Resource.BasicProjc;
                     projectFile = projectFile.Replace("<CUSTID>", o.Key1);
@@ -654,11 +656,6 @@ namespace CustomizationEditor
                     o.DLLLocation = r.Key;
                 refds.AppendLine($"<Reference Include=\"{r.Value.FullName}\">");
                 refds.AppendLine($"<HintPath>{r.Key}.dll</HintPath>");
-                if(aliases.Contains(Path.GetFileName(r.Key).ToUpper()))
-                {
-                    refds.AppendLine($"<Aliases>{r.Key.Replace(".", "_")}</Aliases>");
-                }
-               // < Aliases > asdasda </ Aliases >
                 refds.AppendLine($"</Reference>");
             }
 
@@ -676,10 +673,7 @@ namespace CustomizationEditor
                     o.DLLLocation = Path.Combine(o.EpicorClientFolder, r.Key + ".dll");
                 refds.AppendLine($"<Reference Include=\"{r.Value.FullName}\">");
                 refds.AppendLine($@"<HintPath>{Path.Combine(o.EpicorClientFolder,r.Key+".dll")}</HintPath>");
-                if (aliases.Contains(Path.GetFileName(r.Key).ToUpper()))
-                {
-                    refds.AppendLine($"<Aliases>{r.Key.Replace(".", "_")}</Aliases >");
-                }
+                
                 refds.AppendLine($"</Reference>");
             }
 
@@ -689,10 +683,7 @@ namespace CustomizationEditor
                     o.DLLLocation = Path.Combine(o.EpicorClientFolder, r.Key + ".dll");
                 refds.AppendLine($"<Reference Include=\"{r.Value.FullName}\">");
                 refds.AppendLine($@"<HintPath>{Path.Combine(o.EpicorClientFolder, r.Key + ".dll")}</HintPath>");
-                if (aliases.Contains(Path.GetFileName(r.Key).ToUpper()))
-                {
-                    refds.AppendLine($"<Aliases>{r.Key.Replace(".", "_")}</Aliases >");
-                }
+                
                 refds.AppendLine($"</Reference>");
             }
         }
