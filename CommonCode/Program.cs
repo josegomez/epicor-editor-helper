@@ -93,6 +93,17 @@ namespace CustomizationEditor
                                        reSync = false;
                                }
                                break;
+                           case "Download":
+                               {
+                                   epiSession = GetEpiSession(o);
+                                   if (epiSession != null)
+                                   {
+                                       reSync = true;
+                                   }
+                                   else
+                                       reSync = false;
+                               }
+                               break;
                            case "Edit":
                                {
                                    epiSession = GetEpiSession(o);
