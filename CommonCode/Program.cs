@@ -663,14 +663,60 @@ namespace CustomizationEditor
         private static void GenerateRefs(StringBuilder refds, CustomScriptManager csmR, CommandLineParams o, List<string> aliases)
         {
 #if EPICOR_10_1_500
-            foreach(DictionaryEntry entry in csmR.SystemRefAssemblies)
+            foreach (DictionaryEntry entry in csmR.SystemRefAssemblies)
             {
-                /*AssemblyName r = entry.Value as AssemblyName;
+                AssemblyName r = entry.Value as AssemblyName;
                 if (r.FullName.Contains(o.Key1))
-                    o.DLLLocation = r.;
+                    o.DLLLocation = entry.Key + ".dll";
                 refds.AppendLine($"<Reference Include=\"{r.FullName}\">");
-                refds.AppendLine($"<HintPath>{r.Key}.dll</HintPath>");
-                refds.AppendLine($"</Reference>");*/
+                refds.AppendLine($"<HintPath>{entry.Key}.dll</HintPath>");
+                refds.AppendLine($"</Reference>");
+            }
+            foreach (DictionaryEntry entry in csmR.SystemRefAssemblies)
+            {
+                AssemblyName r = entry.Value as AssemblyName;
+                if (r.FullName.Contains(o.Key1))
+                    o.DLLLocation = entry.Key + ".dll";
+                refds.AppendLine($"<Reference Include=\"{r.FullName}\">");
+                refds.AppendLine($"<HintPath>{entry.Key}.dll</HintPath>");
+                refds.AppendLine($"</Reference>");
+            }
+
+            if (csmR.CustomAssembly != null)
+            {
+                refds.AppendLine($"<Reference Include=\"{csmR.CustomAssembly.FullName}\">");
+                refds.AppendLine($"<HintPath>{csmR.CustomAssembly.Location}.dll</HintPath>");
+                refds.AppendLine($"</Reference>");
+                if (csmR.CustomAssembly.FullName.Contains(o.Key1))
+                    o.DLLLocation = csmR.CustomAssembly.Location;
+            }
+
+            foreach (DictionaryEntry entry in csmR.CustRefAssembliesSL)
+            {
+                AssemblyName r = entry.Value as AssemblyName;
+                if (r.FullName.Contains(o.Key1))
+                    o.DLLLocation = Path.Combine(o.EpicorClientFolder, entry.Key + ".dll");
+                refds.AppendLine($"<Reference Include=\"{r.FullName}\">");
+                refds.AppendLine($@"<HintPath>{Path.Combine(o.EpicorClientFolder, entry.Key + ".dll")}</HintPath>");
+
+                refds.AppendLine($"</Reference>");
+            }
+
+            foreach (DictionaryEntry entry in csmR.ReferencedAssembliesHT)
+            {
+                AssemblyName r = entry.Value as AssemblyName;
+                if (r.FullName.Contains(o.Key1))
+                    o.DLLLocation = Path.Combine(o.EpicorClientFolder, entry.Key + ".dll");
+                refds.AppendLine($"<Reference Include=\"{r.FullName}\">");
+                refds.AppendLine($@"<HintPath>{Path.Combine(o.EpicorClientFolder, entry.Key + ".dll")}</HintPath>");
+                refds.AppendLine($"</Reference>");
+            }
+
+            foreach (AssemblyName entry in csmR.ReferencedAssemblies)
+            {
+
+
+                refds.AppendLine($"<Reference Include=\"{entry.FullName}\"/>");
             }
 #else
             foreach (var r in csmR.SystemRefAssemblies)

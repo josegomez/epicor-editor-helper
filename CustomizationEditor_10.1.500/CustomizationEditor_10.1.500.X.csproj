@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{7ba070f6-d947-4cf9-92cc-81ac035c3abe}</ProjectGuid>
+    <ProjectGuid>{7BA070F6-D947-4CF9-92CC-81AC035C3ABE}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>CustomizationEditor</RootNamespace>
     <AssemblyName>CustomizationEditor</AssemblyName>
@@ -112,10 +112,8 @@
       <HintPath>D:\Epicor\10.1.500.X\Infragistics4.Win.UltraWinToolbars.v12.2.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>D:\Epicor\10.1.500.X\Newtonsoft.Json.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
