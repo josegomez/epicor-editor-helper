@@ -22,6 +22,7 @@ using Ice.Lib;
 using Ice.Lib.Deployment;
 using CommonForms.Properties;
 using System.Security.Cryptography;
+using System.Collections;
 
 namespace CustomizationEditor
 {
@@ -661,6 +662,17 @@ namespace CustomizationEditor
 
         private static void GenerateRefs(StringBuilder refds, CustomScriptManager csmR, CommandLineParams o, List<string> aliases)
         {
+#if EPICOR_10_1_500
+            foreach(DictionaryEntry entry in csmR.SystemRefAssemblies)
+            {
+                /*AssemblyName r = entry.Value as AssemblyName;
+                if (r.FullName.Contains(o.Key1))
+                    o.DLLLocation = r.;
+                refds.AppendLine($"<Reference Include=\"{r.FullName}\">");
+                refds.AppendLine($"<HintPath>{r.Key}.dll</HintPath>");
+                refds.AppendLine($"</Reference>");*/
+            }
+#else
             foreach (var r in csmR.SystemRefAssemblies)
             {
                 if (r.Value.FullName.Contains(o.Key1))
@@ -697,6 +709,7 @@ namespace CustomizationEditor
                 
                 refds.AppendLine($"</Reference>");
             }
+#endif
         }
 
         private static void DownloadCustomization(CommandLineParams o, Session epiSession)

@@ -1,0 +1,179 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{7ba070f6-d947-4cf9-92cc-81ac035c3abe}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>CustomizationEditor</RootNamespace>
+    <AssemblyName>CustomizationEditor</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>D:\Epicor\10.1.500.X\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;EPICOR_10_1_500</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\BuiltPackages\10.1.500\</OutputPath>
+    <DefineConstants>TRACE;EPICOR_10_1_500</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="CommandLine, Version=2.2.0.0, Culture=neutral, PublicKeyToken=de6f01bd326f8c32, processorArchitecture=MSIL">
+      <HintPath>..\packages\CommandLineParser.2.2.0\lib\net45\CommandLine.dll</HintPath>
+    </Reference>
+    <Reference Include="Epicor, Version=3.1.500.0, Culture=neutral, PublicKeyToken=5d3fa3c7105d7992, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>D:\Epicor\10.1.500.X\Epicor.exe</HintPath>
+      <Aliases>epi</Aliases>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Epicor.ServiceModel">
+      <HintPath>D:\Epicor\10.1.500.X\Epicor.ServiceModel.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Ice.Adapters.GenXData, Version=3.2.300.0, Culture=neutral, PublicKeyToken=5d3fa3c7105d7992, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>D:\Epicor\10.1.500.X\Ice.Adapters.GenXData.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Ice.Adapters.Menu, Version=3.2.300.0, Culture=neutral, PublicKeyToken=5d3fa3c7105d7992, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>D:\Epicor\10.1.500.X\Ice.Adapters.Menu.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Ice.Contracts.BO.GenXData, Version=3.2.300.0, Culture=neutral, PublicKeyToken=5d3fa3c7105d7992, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>D:\Epicor\10.1.500.X\Ice.Contracts.BO.GenXData.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Ice.Contracts.BO.Menu, Version=3.2.300.0, Culture=neutral, PublicKeyToken=5d3fa3c7105d7992, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>D:\Epicor\10.1.500.X\Ice.Contracts.BO.Menu.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Ice.Core.Session, Version=3.2.300.0, Culture=neutral, PublicKeyToken=5d3fa3c7105d7992, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>D:\Epicor\10.1.500.X\Ice.Core.Session.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Ice.Lib.Deployment, Version=3.1.500.0, Culture=neutral, PublicKeyToken=5d3fa3c7105d7992, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>D:\Epicor\10.1.500.X\Ice.Lib.Deployment.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Ice.Lib.EpiClientLib, Version=3.2.300.0, Culture=neutral, PublicKeyToken=5d3fa3c7105d7992, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>D:\Epicor\10.1.500.X\Ice.Lib.EpiClientLib.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Ice.Lib.EpiReportLib, Version=3.2.300.0, Culture=neutral, PublicKeyToken=5d3fa3c7105d7992, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>D:\Epicor\10.1.500.X\Ice.Lib.EpiReportLib.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Ice.Lib.Startup, Version=3.1.500.0, Culture=neutral, PublicKeyToken=5d3fa3c7105d7992, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>D:\Epicor\10.1.500.X\Ice.Lib.Startup.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Ice.UI.CustomizationMaintEntry, Version=3.2.300.0, Culture=neutral, PublicKeyToken=5d3fa3c7105d7992, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>D:\Epicor\10.1.500.X\Ice.UI.CustomizationMaintEntry.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Ice.UI.Dashboard, Version=3.2.300.0, Culture=neutral, PublicKeyToken=5d3fa3c7105d7992, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>D:\Epicor\10.1.500.X\Ice.UI.Dashboard.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Infragistics4.Win.UltraWinDock.v12.2, Version=12.2.20122.2018, Culture=neutral, PublicKeyToken=7dd5c3163f2cd0cb, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>D:\Epicor\10.1.500.X\Infragistics4.Win.UltraWinDock.v12.2.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Infragistics4.Win.UltraWinToolbars.v12.2, Version=12.2.20122.2018, Culture=neutral, PublicKeyToken=7dd5c3163f2cd0cb, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>D:\Epicor\10.1.500.X\Infragistics4.Win.UltraWinToolbars.v12.2.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>D:\Epicor\10.1.500.X\Newtonsoft.Json.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Console, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Console.4.0.0\lib\net46\System.Console.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Reflection.TypeExtensions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reflection.TypeExtensions.4.1.0\lib\net46\System.Reflection.TypeExtensions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resource.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resource.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\BasicProjc.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CommonClasses\CommonClasses.csproj">
+      <Project>{c69d3d4c-26d3-416b-a253-3ab74b4955d6}</Project>
+      <Name>CommonClasses</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CommonForms\CommonForms.csproj">
+      <Project>{34039205-d2ae-49a3-b152-79f5d575c634}</Project>
+      <Name>CommonForms</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="..\CommonCode\CommonCode.projitems" Label="Shared" />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>del $(TargetDir)..\Zips\CustomizationHelper.10.1.500.X.zip
+powershell.exe -command "&amp; { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::CreateFromDirectory('$(TargetDir)', '$(TargetDir)..\Zips\CustomizationHelper.10.1.500.X.zip'); }"</PostBuildEvent>
+  </PropertyGroup>
+</Project>
