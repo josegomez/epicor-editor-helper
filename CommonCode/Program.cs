@@ -884,9 +884,9 @@ namespace CustomizationEditor
                 thing.GetType().GetMethod("SetUpAssemblyRetrieversAndPossiblyGetNewConfiguration", BindingFlags.Instance | BindingFlags.Public).Invoke(thing, args);
                 WellKnownAssemblyRetrievers.AutoDeployAssemblyRetriever = (IAssemblyRetriever)thing.GetType().GetProperty("AutoDeployAssemblyRetriever", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).GetValue(thing);
                 WellKnownAssemblyRetrievers.SessionlessAssemblyRetriever = (IAssemblyRetriever)thing.GetType().GetProperty("SessionlessAssemblyRetriever", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).GetValue(thing);
-                ses.DisableTheming = true;
+                //ses.DisableTheming = true;
                 Startup.PreStart(ses, true);
-                ses.DisableTheming = false;
+                //ses.DisableTheming = false;
             }
             return ses;
         }
