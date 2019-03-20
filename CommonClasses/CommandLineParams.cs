@@ -1,5 +1,6 @@
 ﻿using CommandLine;
 
+
 namespace CustomizationEditor
 {
     public class CommandLineParams
@@ -46,5 +47,11 @@ namespace CustomizationEditor
         public long Version { get; set; }
         [Option('e', "encrypted", Required = false, HelpText = "Password Encrypted", Default = "false")]
         public string Encrypted { get; set; }
+
+        
+        public string NewConfig { get; set; }
+
+        
+        public string Temp { get; set; }
     }
 }

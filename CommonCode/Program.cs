@@ -23,6 +23,9 @@ using Ice.Lib.Deployment;
 using CommonForms.Properties;
 using System.Security.Cryptography;
 using System.Collections;
+using System.Xml;
+using System.Xml.Linq;
+using Ice.Lib.SecRights;
 
 namespace CustomizationEditor
 {
@@ -141,16 +144,32 @@ namespace CustomizationEditor
                             DownloadAndSync(epiSession, o);
                        }
                        ShowProgressBar(false);
-                   });
+                       
+                       if (epiSession != null)
+                       {
+                           epiSession.OnSessionClosing();
 
-            if(epiSession!=null)
-            {
-                epiSession.OnSessionClosing();
-               
-                epiSession = null;
-                
-            }
-            
+                           epiSession = null;
+
+                       }
+                       if(!string.IsNullOrEmpty(o.NewConfig))
+                       {
+                           try
+                           {
+                               File.Delete(o.NewConfig);
+                           }
+                           catch{ }
+                       }
+                       if (!string.IsNullOrEmpty(o.Temp))
+                       {
+                           try
+                           {
+                               Directory.Delete(o.Temp, true);
+                           }
+                           catch { }
+                       }
+
+                   });
         }
 
         private static void ConvertToEncrypted(CommandLineParams o)
@@ -834,11 +853,20 @@ namespace CustomizationEditor
         {
             string password = o.Password;
             Session ses = null;
-           
+            var newConfig = Path.GetTempFileName().Replace(".tmp", ".sysconfig");
+            File.Copy(o.ConfigFile, newConfig, true);
+            o.NewConfig = newConfig;
+            
+            DirectoryInfo di = Directory.CreateDirectory(Path.Combine(System.IO.Path.GetTempPath(), Guid.NewGuid().ToString()));
+            o.Temp = di.FullName;
+            var x =XElement.Load(newConfig);
+            x.Descendants("appSettings").Elements().Where(r => r.Name == "AlternateCacheFolder").FirstOrDefault().FirstAttribute.Value = di.FullName;
+            x.Save(newConfig);
+
             try
             {
                 password = NeedtoEncrypt(o);
-                ses = new Session(o.Username, password, Session.LicenseType.Default, o.ConfigFile);
+                ses = new Session(o.Username, password, Session.LicenseType.Default, newConfig);
             }
             catch (Exception ex)
             {
@@ -858,7 +886,7 @@ namespace CustomizationEditor
                     
                     try
                     {
-                        ses = new Session(o.Username, password, Session.LicenseType.Default, o.ConfigFile);
+                        ses = new Session(o.Username, password, Session.LicenseType.Default, newConfig);
                     }
                     catch(Exception)
                     {
@@ -872,10 +900,14 @@ namespace CustomizationEditor
 
             if (ses != null)
             {
+                SecRightsHandler.CacheBOSecSettings(ses);
+                
                 Startup.SetupPlugins(ses);
 
 
-                epi.Ice.Lib.Configuration c = new epi.Ice.Lib.Configuration(o.ConfigFile);
+                epi.Ice.Lib.Configuration c = new epi.Ice.Lib.Configuration(newConfig);
+                
+                c.AlternateCacheFolder = di.FullName;
                 Assembly assy = Assembly.LoadFile(Path.Combine(o.EpicorClientFolder, "Epicor.exe"));
                 TypeInfo ty = assy.DefinedTypes.Where(r => r.Name == "ConfigureForAutoDeployment").FirstOrDefault();
                 dynamic thing = Activator.CreateInstance(ty);
