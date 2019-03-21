@@ -47,8 +47,10 @@ namespace CustomizationEditor
         public long Version { get; set; }
         [Option('e', "encrypted", Required = false, HelpText = "Password Encrypted", Default = "false")]
         public string Encrypted { get; set; }
+        [Option('s', "tracing", Required = false, HelpText = "Launch with Tracing", Default = "false")]
+        public string Tracing { get; set; }
 
-        
+
         public string NewConfig { get; set; }
 
         

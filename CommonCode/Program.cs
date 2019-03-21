@@ -26,6 +26,7 @@ using System.Collections;
 using System.Xml;
 using System.Xml.Linq;
 using Ice.Lib.SecRights;
+using CommonCode;
 
 namespace CustomizationEditor
 {
@@ -33,13 +34,14 @@ namespace CustomizationEditor
     {
         private static Thread progBarThread;
         private static string currAction;
-
+        private static EpicorLauncher launcher;
         [STAThread]
         static void Main(string[] args)
         {
             Application.EnableVisualStyles();
             Session epiSession = null;
             bool reSync = false;
+            
             Parser.Default.ParseArguments<CommandLineParams>(args)
                    .WithParsed(o =>
                    {
@@ -51,8 +53,9 @@ namespace CustomizationEditor
                            case "Launch":
                                {
                                    epiSession = GetEpiSession(o);
-                                   if(epiSession!=null)
-                                    LaunchInEpicor(o, epiSession, false);                                   
+                                   if (epiSession != null)
+                                       launcher.LaunchInEpicor(o, epiSession, false, true);
+                                    //LaunchInEpicor(o, epiSession, false,true,false);                                   
                                }
                                break;
                            case "Add":
@@ -113,7 +116,7 @@ namespace CustomizationEditor
                                    epiSession = GetEpiSession(o);
                                    if (epiSession != null)
                                    {
-                                       LaunchInEpicor(o, epiSession, true);
+                                       launcher.LaunchInEpicor(o, epiSession, true);
                                        reSync = true;
                                    }
                                    else
@@ -130,8 +133,23 @@ namespace CustomizationEditor
                                            RunDnSpy(o);
                                        }
 
-                                       LaunchInEpicor(o, epiSession, false, true);
+                                       launcher.LaunchInEpicor(o, epiSession, false, true);
                                    }
+                               }
+                               break;
+                           case "Toolbox":
+                               {
+                                   epiSession = GetEpiSession(o);
+
+                                   if (epiSession != null)
+                                   {
+                                       ShowProgressBar(false);
+                                       NonModalWokIt win = new NonModalWokIt(epiSession, o);
+                                       win.ShowDialog();
+                                       reSync = win.Sync;
+                                       ShowProgressBar(true);
+                                   }
+                                   
                                }
                                break;
                            
@@ -139,9 +157,9 @@ namespace CustomizationEditor
                        if(reSync)
                        {
                            if(o.Key2.Contains("MainController"))//Dashboard
-                            DownloadAndSyncDashboard(epiSession, o);
+                            launcher.DownloadAndSyncDashboard(epiSession, o);
                            else
-                            DownloadAndSync(epiSession, o);
+                            launcher.DownloadAndSync(epiSession, o);
                        }
                        ShowProgressBar(false);
                        
@@ -249,7 +267,7 @@ namespace CustomizationEditor
             }
             return true;
         }
-
+        /*
         private static void DownloadAndSyncDashboard(Session epiSession, CommandLineParams o)
         {
             string file = Path.GetTempFileName();
@@ -320,13 +338,13 @@ namespace CustomizationEditor
                     csm.InitCustomControlsAndProperties(ds, LayerName.CompositeBase, true);
                     CustomScriptManager csmR = csm.CurrentCustomScriptManager;
                     swLog.WriteLine("Generate Refs");
-                    /*List<string> aliases = new List<string>();
-                    Match match = Regex.Match(csmR.CustomCodeAll, "((?<=extern alias )(.*)*(?=;))");
-                    while (match.Success)
-                    {
-                        aliases.Add(match.Value.Replace("_", ".").ToUpper());
-                        match = match.NextMatch();
-                    }*/
+                    //List<string> aliases = new List<string>();
+                    //Match match = Regex.Match(csmR.CustomCodeAll, "((?<=extern alias )(.*)*(?=;))");
+                    //while (match.Success)
+                    //{
+                     //   aliases.Add(match.Value.Replace("_", ".").ToUpper());
+                       // match = match.NextMatch();
+                    //}
                     o.Version = ds.XXXDef[0].SysRevID;
                     GenerateRefs(refds, csmR, o,null);
                     ExportCustmization(nds, ad, o);
@@ -410,10 +428,11 @@ namespace CustomizationEditor
 
             Console.WriteLine(o.ProjectFolder);
             //MessageBox.Show(file);
-        }
+        }*/
 
 
 
+        /*
         private static void DownloadAndSync(Session epiSession, CommandLineParams o)
         {
             string file = Path.GetTempFileName();
@@ -521,13 +540,13 @@ namespace CustomizationEditor
                     csm.InitCustomControlsAndProperties(ds, LayerName.CompositeBase, true);
                     CustomScriptManager csmR = csm.CurrentCustomScriptManager;
                     swLog.WriteLine("Generate Refs");
-                    /*List<string> aliases = new List<string>();
-                    Match match =Regex.Match(csmR.CustomCodeAll, "((?<=extern alias )(.*)*(?=;))");
-                    while(match.Success)
-                    {
-                        aliases.Add(match.Value.Replace("_",".").ToUpper());
-                        match =match.NextMatch();
-                    }*/
+                    //List<string> aliases = new List<string>();
+                    //Match match =Regex.Match(csmR.CustomCodeAll, "((?<=extern alias )(.*)*(?=;))");
+                    //while(match.Success)
+                    //{
+                     //   aliases.Add(match.Value.Replace("_",".").ToUpper());
+                       // match =match.NextMatch();
+                    //}
 
                     GenerateRefs(refds, csmR, o, null);
                     ExportCustmization(nds,ad,o);
@@ -612,7 +631,7 @@ namespace CustomizationEditor
             Console.WriteLine(o.ProjectFolder);
             //MessageBox.Show(file);
         }
-
+        
         public static void ExportCustmization(CustomizationDS nds, Ice.Adapters.GenXDataAdapter ad, CommandLineParams o)
         {
 
@@ -776,7 +795,7 @@ namespace CustomizationEditor
             }
 #endif
         }
-
+        */
         private static void DownloadCustomization(CommandLineParams o, Session epiSession)
         {
             EpiTransaction epiTransaction = new EpiTransaction(new ILauncher(epiSession));
@@ -807,8 +826,8 @@ namespace CustomizationEditor
             }
 
         }
-
-        private static void LaunchInEpicor(CommandLineParams o, Session epiSession, bool edit, bool modal = true)
+        /*
+        private static void LaunchInEpicor(CommandLineParams o, Session epiSession, bool edit, bool modal = true, bool withTracing = false)
         {
             epiSession["Customizing"] = edit;
             EpiTransaction epiTransaction = new EpiTransaction(new ILauncher(epiSession));
@@ -846,20 +865,30 @@ namespace CustomizationEditor
             MenuDataSet mnuds = new MenuDataSet();
             mnuds.Menu.Rows.Add(menuRow.ItemArray);
             lfo.MenuDataSet = mnuds;
-            FormFunctions.Launch(oTrans.currentSession, menuRow, lfo);
+            if (!withTracing)
+            {
+                FormFunctions.Launch(oTrans.currentSession, menuRow, lfo);
+            }
+            
+            
         }
-
+        */
         private static Session GetEpiSession(CommandLineParams o)
         {
             string password = o.Password;
             Session ses = null;
+
+            //Create a copy of the config file so that we can set a temporary cache folder for our instance
             var newConfig = Path.GetTempFileName().Replace(".tmp", ".sysconfig");
             File.Copy(o.ConfigFile, newConfig, true);
             o.NewConfig = newConfig;
-            
+
+            //Create a temp directory to store our epicor cache
             DirectoryInfo di = Directory.CreateDirectory(Path.Combine(System.IO.Path.GetTempPath(), Guid.NewGuid().ToString()));
             o.Temp = di.FullName;
             var x =XElement.Load(newConfig);
+
+            //Set our new Temp Cache location in our new config
             x.Descendants("appSettings").Elements().Where(r => r.Name == "AlternateCacheFolder").FirstOrDefault().FirstAttribute.Value = di.FullName;
             x.Save(newConfig);
 
@@ -901,9 +930,17 @@ namespace CustomizationEditor
             if (ses != null)
             {
                 SecRightsHandler.CacheBOSecSettings(ses);
-                
+
+                dynamic curMRUList= typeof(SecRightsHandler).GetField("_currMRUList", BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic).GetValue(null);
+
                 Startup.SetupPlugins(ses);
 
+                if (!string.IsNullOrEmpty(o.DLLLocation))
+                {
+                    String fineName = Path.GetFileName(o.DLLLocation);
+                    string newPath = Path.GetDirectoryName((string)curMRUList.GetType().GetProperty("SavePath", BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic| BindingFlags.Public).GetValue(curMRUList)).Replace("BOSecMRUList", "CustomDLLs");
+                    o.DLLLocation = Path.Combine(newPath, fineName);
+                }
 
                 epi.Ice.Lib.Configuration c = new epi.Ice.Lib.Configuration(newConfig);
                 
@@ -916,9 +953,10 @@ namespace CustomizationEditor
                 thing.GetType().GetMethod("SetUpAssemblyRetrieversAndPossiblyGetNewConfiguration", BindingFlags.Instance | BindingFlags.Public).Invoke(thing, args);
                 WellKnownAssemblyRetrievers.AutoDeployAssemblyRetriever = (IAssemblyRetriever)thing.GetType().GetProperty("AutoDeployAssemblyRetriever", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).GetValue(thing);
                 WellKnownAssemblyRetrievers.SessionlessAssemblyRetriever = (IAssemblyRetriever)thing.GetType().GetProperty("SessionlessAssemblyRetriever", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).GetValue(thing);
-                //ses.DisableTheming = true;
+                
                 Startup.PreStart(ses, true);
-                //ses.DisableTheming = false;
+                launcher = new EpicorLauncher();
+                
             }
             return ses;
         }
