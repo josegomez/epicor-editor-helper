@@ -221,9 +221,14 @@ namespace CommonCode
                     eu.GetType().GetField("baseExtentionName", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(eu, o.Key3.Replace("BaseExtension^", string.Empty));
 
                     swLog.WriteLine("Get composite Customize Data Set");
+                   // if (o.Company == "")
+                     //   epiSession["Customizing"] = true;
                     var mi = eu.GetType().GetMethod("getCompositeCustomizeDataSet", BindingFlags.Instance | BindingFlags.NonPublic);
                     bool customize = false;
                     mi.Invoke(eu, new object[] { o.Key2, customize, customize, customize });
+                    //if (o.Company == "")
+                      //  epiSession["Customizing"] = false;
+
                     Ice.Adapters.GenXDataAdapter ad = new Ice.Adapters.GenXDataAdapter(epiTransaction);
                     ad.BOConnect();
                     GenXDataImpl i = (GenXDataImpl)ad.BusinessObject;
@@ -232,6 +237,20 @@ namespace CommonCode
                     string beName = o.Key3.Replace("BaseExtension^", string.Empty);
                     string exName = (string)eu.GetType().GetField("extensionName", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(eu);
                     CustomizationDS nds = new CustomizationDS();
+                    if (string.IsNullOrEmpty(o.Company))
+                    {
+                        eu.CustLayerMan.GetType().GetProperty("RetrieveFromCache", BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic).SetValue(eu.CustLayerMan, false);
+                        eu.CustLayerMan.GetType().GetField("custAllCompanies", BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic).SetValue(eu.CustLayerMan, string.IsNullOrEmpty(o.Company));
+                        eu.CustLayerMan.GetType().GetField("selectCompCode", BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic).SetValue(eu.CustLayerMan, o.Company);
+                        eu.CustLayerMan.GetType().GetField("companyCode", BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic).SetValue(eu.CustLayerMan, o.Company);
+                        eu.CustLayerMan.GetType().GetField("loadDeveloperMode", BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic).SetValue(eu.CustLayerMan, string.IsNullOrEmpty(o.Company));
+
+                        bool cancel = false;
+                        eu.CustLayerMan.GetType().GetMethod("GetCompositeCustomDataSet", BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic).Invoke(eu.CustLayerMan, new object[] { o.Key2, exName, o.Key1, cancel });
+                    }
+
+
+
                     PersonalizeCustomizeManager csm = new PersonalizeCustomizeManager(epiBaseForm, epiTransaction, o.ProductType, o.Company, beName, exName, o.Key1, eu.CustLayerMan, DeveloperLicenseType.Partner, LayerType.Customization);
                     swLog.WriteLine("Init Custom Controls");
                     csm.InitCustomControlsAndProperties(ds, LayerName.CompositeBase, true);
@@ -560,6 +579,21 @@ namespace CommonCode
                     string beName = o.Key3.Replace("BaseExtension^", string.Empty);
                     string exName = (string)eu.GetType().GetField("extensionName", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(eu);
                     CustomizationDS nds = new CustomizationDS();
+
+
+                    if (string.IsNullOrEmpty(o.Company))
+                    {
+                        eu.CustLayerMan.GetType().GetProperty("RetrieveFromCache", BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic).SetValue(eu.CustLayerMan, false);
+                        eu.CustLayerMan.GetType().GetField("custAllCompanies", BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic).SetValue(eu.CustLayerMan, string.IsNullOrEmpty(o.Company));
+                        eu.CustLayerMan.GetType().GetField("selectCompCode", BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic).SetValue(eu.CustLayerMan, o.Company);
+                        eu.CustLayerMan.GetType().GetField("companyCode", BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic).SetValue(eu.CustLayerMan, o.Company);
+                        eu.CustLayerMan.GetType().GetField("loadDeveloperMode", BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic).SetValue(eu.CustLayerMan, string.IsNullOrEmpty(o.Company));
+
+                        bool cancel = false;
+                        eu.CustLayerMan.GetType().GetMethod("GetCompositeCustomDataSet", BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic).Invoke(eu.CustLayerMan, new object[] { o.Key2, exName, o.Key1, cancel });
+                    }
+
+
                     PersonalizeCustomizeManager csm = new PersonalizeCustomizeManager(epiBaseForm, epiTransaction, o.ProductType, o.Company, beName, exName, o.Key1, eu.CustLayerMan, DeveloperLicenseType.Partner, LayerType.Customization);
 
                     swLog.WriteLine("Init Custom Controls");
