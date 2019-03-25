@@ -215,20 +215,19 @@ namespace CommonCode
 
 
                     swLog.WriteLine("Initialize EpiUI Utils");
+
+
                     EpiUIUtils eu = new EpiUIUtils(epiBaseForm, epiTransaction, epiBaseForm.MainToolManager, null);
                     eu.GetType().GetField("currentSession", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(eu, epiTransaction.Session);
                     eu.GetType().GetField("customizeName", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(eu, o.Key1);
                     eu.GetType().GetField("baseExtentionName", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(eu, o.Key3.Replace("BaseExtension^", string.Empty));
 
                     swLog.WriteLine("Get composite Customize Data Set");
-                   // if (o.Company == "")
-                     //   epiSession["Customizing"] = true;
+                   
                     var mi = eu.GetType().GetMethod("getCompositeCustomizeDataSet", BindingFlags.Instance | BindingFlags.NonPublic);
                     bool customize = false;
                     mi.Invoke(eu, new object[] { o.Key2, customize, customize, customize });
-                    //if (o.Company == "")
-                      //  epiSession["Customizing"] = false;
-
+                   
                     Ice.Adapters.GenXDataAdapter ad = new Ice.Adapters.GenXDataAdapter(epiTransaction);
                     ad.BOConnect();
                     GenXDataImpl i = (GenXDataImpl)ad.BusinessObject;
@@ -256,13 +255,7 @@ namespace CommonCode
                     csm.InitCustomControlsAndProperties(ds, LayerName.CompositeBase, true);
                     CustomScriptManager csmR = csm.CurrentCustomScriptManager;
                     swLog.WriteLine("Generate Refs");
-                    /*List<string> aliases = new List<string>();
-                    Match match = Regex.Match(csmR.CustomCodeAll, "((?<=extern alias )(.*)*(?=;))");
-                    while (match.Success)
-                    {
-                        aliases.Add(match.Value.Replace("_", ".").ToUpper());
-                        match = match.NextMatch();
-                    }*/
+                   
 
                     GenerateRefs(refds, csmR, o, null);
                     ExportCustmization(nds, ad, o);
@@ -545,7 +538,7 @@ namespace CommonCode
                     var typeTList = assy.DefinedTypes.Where(r => r.BaseType.Name.Equals("EpiTransaction")).ToList();
 
                     epiTransaction = new EpiTransaction(oTrans);
-                    //epiBaseForm = Activator.CreateInstance(typeE, new object[] { epiTransaction });
+                    
 
 
 
@@ -554,7 +547,7 @@ namespace CommonCode
                     refds.AppendLine($"<HintPath>{s}</HintPath>");
                     refds.AppendLine($"</Reference>");
 
-                    //epiBaseForm.GetType().GetMethod("InitializeLaunch", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(epiBaseForm);
+                    
                     var typ = assy.DefinedTypes.Where(r => r.Name == "Launch").FirstOrDefault();
                     dynamic launcher = Activator.CreateInstance(typ);
                     launcher.Session = epiSession;
