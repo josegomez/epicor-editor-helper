@@ -17,7 +17,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonClasses", "CommonClas
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomizationEditor_10.1.500.X", "CustomizationEditor_10.1.500\CustomizationEditor_10.1.500.X.csproj", "{7BA070F6-D947-4CF9-92CC-81AC035C3ABE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomizationEditor_10.2.100.X", "CustomizationEditor_10.2.100.X\CustomizationEditor_10.2.100.X.csproj", "{20DD988F-E57E-428C-820F-FFB95E106166}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomizationEditor_10.2.100.X", "CustomizationEditor_10.2.100\CustomizationEditor_10.2.100.X.csproj", "{20DD988F-E57E-428C-820F-FFB95E106166}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
