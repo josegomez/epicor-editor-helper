@@ -26,6 +26,15 @@ namespace CommonCode
         Form launchedForm;
         CommandLineParams o;
         
+        /// <summary>
+        /// Launches an Epicor Menu with Trasing 
+        /// This is deprecated and not used will be removed shortly.
+        /// </summary>
+        /// <param name="mnuRow">Menu Row</param>
+        /// <param name="ses">Epicor Session</param>
+        /// <param name="lfo">Launch for Options</param>
+        /// <param name="o">Command Line Parameters</param>
+        /// <param name="me">Calling Form</param>
         public void LauncWithTracing(object mnuRow, object ses, object lfo, CommandLineParams o, Form me)
         {
             this.o = o;
@@ -43,6 +52,12 @@ namespace CommonCode
             TracingOptions.ShowTracingOptions(new Form(), session);
         }
 
+        /// <summary>
+        /// This is the standard call back handler for ProcessCaller
+        /// this gets called when a standard transaction occurs on the called form
+        /// </summary>
+        /// <param name="Sender"></param>
+        /// <param name="args"></param>
         void standardCallBackHandler(object Sender, TransactionCallBackArgs args)
         {
             ILaunch il = Sender as ILaunch;
@@ -57,6 +72,10 @@ namespace CommonCode
             }
         }
 
+        /// <summary>
+        /// Launches Epicor Tracing Screen
+        /// </summary>
+        /// <param name="ses">Epicor Session</param>
         public void LaunchTracingOptions(object ses)
         {
             Session session = ses as Session;
@@ -64,6 +83,11 @@ namespace CommonCode
         }
 
 
+        /// <summary>
+        /// Launches Epicor Menu by MenuID
+        /// </summary>
+        /// <param name="ses">Epicor Session</param>
+        /// <param name="menuID">Menu ID</param>
         public void LaunchMenuOptions(object ses, string menuID)
         {
             Session session = ses as Session;
@@ -72,7 +96,13 @@ namespace CommonCode
             ProcessCaller.LaunchForm(new ILauncher(session), menuID);
         }
 
-
+        /// <summary>
+        /// Launches a particular customization in Epicor
+        /// </summary>
+        /// <param name="o">Command Line Parameters</param>
+        /// <param name="epiSession">Epicor Session</param>
+        /// <param name="edit">Edit the Customization? True Flase</param>
+        /// <param name="modal">Show the screen as modal?</param>
         public void LaunchInEpicor(CommandLineParams o, Session epiSession, bool edit, bool modal = true)
         {
             epiSession["Customizing"] = edit;
@@ -115,6 +145,10 @@ namespace CommonCode
             FormFunctions.Launch(oTrans.currentSession, menuRow, lfo);
         }
 
+        /// <summary>
+        /// Runs the DNSpy utility and attaches it to the current process
+        /// </summary>
+        /// <param name="o">Command Line Parameters</param>
         public  void RunDnSpy(CommandLineParams o)
         {
 
@@ -141,7 +175,11 @@ namespace CommonCode
             }).Start();
         }
 
-
+        /// <summary>
+        /// Downloads the customization from Epicor and pushes out to the output project
+        /// </summary>
+        /// <param name="epiSession">Epicor Session</param>
+        /// <param name="o">Command Line Parameters</param>
         public void DownloadAndSync(Session epiSession, CommandLineParams o)
         {
             string file = Path.GetTempFileName();
@@ -279,9 +317,18 @@ namespace CommonCode
             }
 
             Console.WriteLine(o.ProjectFolder);
-            //MessageBox.Show(file);
+            
         }
 
+        /// <summary>
+        /// Writes down any changes to the customization
+        /// </summary>
+        /// <param name="o">Command Line Parameter</param>
+        /// <param name="swLog">Stream Writer for Debugging</param>
+        /// <param name="refds">Collection of References for the VS Code Project</param>
+        /// <param name="ds">XXXDef DatSet</param>
+        /// <param name="nds">CustomizationDS object</param>
+        /// <param name="csmR">CustomScriptManger contains all the customization code</param>
         private void Resync(CommandLineParams o, StreamWriter swLog, StringBuilder refds, GenXDataDataSet ds, CustomizationDS nds, CustomScriptManager csmR)
         {
             int start = csmR.CustomCodeAll.IndexOf("// ** Wizard Insert Location - Do Not Remove 'Begin/End Wizard Added Module Level Variables' Comments! **");
@@ -508,6 +555,12 @@ namespace CommonCode
 #endif
         }
 
+
+        /// <summary>
+        /// Download and sync any changes to a deployed dashboard
+        /// </summary>
+        /// <param name="epiSession">Epicor Session</param>
+        /// <param name="o">Command Line Parameters</param>
         public void DownloadAndSyncDashboard(Session epiSession, CommandLineParams o)
         {
             string file = Path.GetTempFileName();
@@ -628,6 +681,12 @@ namespace CommonCode
             //MessageBox.Show(file);
         }
 
+        /// <summary>
+        /// Updates changes in Epicor from our local project
+        /// </summary>
+        /// <param name="o">Command Line Paramter</param>
+        /// <param name="epiSession">Epicor Session</param>
+        /// <returns></returns>
         public bool UpdateCustomization(CommandLineParams o, Session epiSession)
         {
 

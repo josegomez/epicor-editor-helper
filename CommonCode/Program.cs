@@ -31,6 +31,8 @@ namespace CustomizationEditor
         private static string currAction;
         private static EpicorLauncher launcher;
         [STAThread]
+
+        //Main Program Launched from VS Code
         static void Main(string[] args)
         {
             Application.EnableVisualStyles();
@@ -185,6 +187,10 @@ namespace CustomizationEditor
                    });
         }
 
+        /// <summary>
+        /// Encrypts Epicor Password if it wasn't already, this uses a the DataProtectionScope of CurrentUser
+        /// </summary>
+        /// <param name="o">Command Line Parameter</param>
         private static void ConvertToEncrypted(CommandLineParams o)
         {
             byte[] bytes = Encoding.Unicode.GetBytes(o.Password);
@@ -195,7 +201,10 @@ namespace CustomizationEditor
             Settings.Default.Encrypted = true;
             Settings.Default.Save();
         }
-
+        /// <summary>
+        /// Self explinatory
+        /// </summary>
+        /// <param name="iFlag"></param>
         private static void ShowProgressBar(bool iFlag = true)
         {
             if (iFlag)
@@ -217,6 +226,11 @@ namespace CustomizationEditor
             }
         }
 
+        /// <summary>
+        /// Launches DNSpy
+        /// Deprecated will be removed / replaced shortly.
+        /// </summary>
+        /// <param name="o"></param>
         private static void RunDnSpy(CommandLineParams o)
         {
             new Thread(() =>
@@ -232,7 +246,13 @@ namespace CustomizationEditor
             }).Start();
         }
         
-
+        /// <summary>
+        /// Updates Epicor Customization
+        /// Deprecated will be replaced shortly.
+        /// </summary>
+        /// <param name="o"></param>
+        /// <param name="epiSession"></param>
+        /// <returns></returns>
         private static bool UpdateCustomization(CommandLineParams o, Session epiSession)
         {
       
@@ -263,6 +283,13 @@ namespace CustomizationEditor
             return true;
         }
         
+
+        /// <summary>
+        /// Downloads Epicor Customization
+        /// Deprecated will be replaced shortly.
+        /// </summary>
+        /// <param name="o"></param>
+        /// <param name="epiSession"></param>
         private static void DownloadCustomization(CommandLineParams o, Session epiSession)
         {
             EpiTransaction epiTransaction = new EpiTransaction(new ILauncher(epiSession));
@@ -294,6 +321,17 @@ namespace CustomizationEditor
 
         }
         
+        /// <summary>
+        /// Creates an Epicor Session
+        /// This is a bit of a heavy hitter, it creates a copy of the current system configuration and copies it to a temporary location
+        /// then sets an alternate cache folder in order for us to have our own unique undisturbed cache
+        /// Then it creates an epicor session and instanciates all the apropriate static libraries to allow
+        /// epicor to operate as if it was running a full client, there's quite a bit in here that you probably won't understand without
+        /// digging through the Epicor.exe and other libraries. Just go with it
+        /// 
+        /// </summary>
+        /// <param name="o"></param>
+        /// <returns></returns>
         private static Session GetEpiSession(CommandLineParams o)
         {
             string password = o.Password;
