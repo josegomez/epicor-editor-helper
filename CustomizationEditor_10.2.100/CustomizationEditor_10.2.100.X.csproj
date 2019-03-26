@@ -25,7 +25,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\BuiltPackages\10.2.100\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -165,4 +165,8 @@
   </ItemGroup>
   <Import Project="..\CommonCode\CommonCode.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>del $(TargetDir)..\Zips\CustomizationHelper.10.2.100.X.zip
+powershell.exe -command "&amp; { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::CreateFromDirectory('$(TargetDir)', '$(TargetDir)..\Zips\CustomizationHelper.10.2.100.X.zip'); }"</PostBuildEvent>
+  </PropertyGroup>
 </Project>
