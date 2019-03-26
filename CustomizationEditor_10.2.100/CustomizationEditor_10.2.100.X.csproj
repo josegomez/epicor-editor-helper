@@ -44,6 +44,7 @@
     </Reference>
     <Reference Include="Epicor.ServiceModel">
       <HintPath>..\..\..\Epicor\ERP10.2Client\Client\Epicor.ServiceModel.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Ice.Adapters.GenXData">
       <HintPath>..\..\..\Epicor\ERP10.2Client\Client\Ice.Adapters.GenXData.dll</HintPath>
@@ -63,6 +64,7 @@
     </Reference>
     <Reference Include="Ice.Core.Session">
       <HintPath>..\..\..\Epicor\ERP10.2Client\Client\Ice.Core.Session.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Ice.Lib.Deployment">
       <HintPath>..\..\..\Epicor\ERP10.2Client\Client\Ice.Lib.Deployment.dll</HintPath>
@@ -155,6 +157,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="Resources\BasicProjc.csproj" />
   </ItemGroup>
   <ItemGroup>
