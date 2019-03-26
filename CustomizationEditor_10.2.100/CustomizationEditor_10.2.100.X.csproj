@@ -43,8 +43,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Epicor.ServiceModel">
-      <HintPath>..\..\..\Users\brett\source\repos\Beacon\Global\Third Party dlls\Epicor.ServiceModel.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\..\Epicor\ERP10.2Client\Client\Epicor.ServiceModel.dll</HintPath>
     </Reference>
     <Reference Include="Ice.Adapters.GenXData">
       <HintPath>..\..\..\Epicor\ERP10.2Client\Client\Ice.Adapters.GenXData.dll</HintPath>
@@ -63,8 +62,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Ice.Core.Session">
-      <HintPath>..\..\..\Users\brett\source\repos\Beacon\Global\Third Party dlls\Ice.Core.Session.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\..\Epicor\ERP10.2Client\Client\Ice.Core.Session.dll</HintPath>
     </Reference>
     <Reference Include="Ice.Lib.Deployment">
       <HintPath>..\..\..\Epicor\ERP10.2Client\Client\Ice.Lib.Deployment.dll</HintPath>
