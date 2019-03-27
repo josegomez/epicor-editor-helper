@@ -47,14 +47,6 @@ namespace CustomizationEditor
 
                        switch (o.Action)
                        {
-                           case "Launch":
-                               {
-                                   epiSession = GetEpiSession(o);
-                                   if (epiSession != null)
-                                       launcher.LaunchInEpicor(o, epiSession, false, true);
-                                
-                               }
-                               break;
                            case "Add":
                                {
                                    ShowProgressBar(false);
@@ -106,32 +98,6 @@ namespace CustomizationEditor
                                    }
                                    else
                                        reSync = false;
-                               }
-                               break;
-                           case "Edit":
-                               {
-                                   epiSession = GetEpiSession(o);
-                                   if (epiSession != null)
-                                   {
-                                       launcher.LaunchInEpicor(o, epiSession, true);
-                                       reSync = true;
-                                   }
-                                   else
-                                       reSync = false;
-                               }
-                               break;
-                           case "Debug":
-                               {
-                                   epiSession = GetEpiSession(o);
-                                   if (epiSession != null)
-                                   {
-                                       if (!string.IsNullOrEmpty(o.DNSpy))
-                                       {
-                                           RunDnSpy(o);
-                                       }
-
-                                       launcher.LaunchInEpicor(o, epiSession, false, true);
-                                   }
                                }
                                break;
                            case "Toolbox":
@@ -226,25 +192,7 @@ namespace CustomizationEditor
             }
         }
 
-        /// <summary>
-        /// Launches DNSpy
-        /// Deprecated will be removed / replaced shortly.
-        /// </summary>
-        /// <param name="o"></param>
-        private static void RunDnSpy(CommandLineParams o)
-        {
-            new Thread(() =>
-            {
-                Process process = new Process();
-                process.StartInfo.FileName = "dnSpy-x86.exe";
-                process.StartInfo.WorkingDirectory = o.DNSpy;
-                StringBuilder arguments = new StringBuilder();
-                arguments.Append($"--process-name CustomizationEditor.exe --files {o.DLLLocation} --search-for class --search-in selected --search Script --select T:Script");
-                process.StartInfo.Arguments = arguments.ToString();
-                process.Start();
-                process.WaitForExit();
-            }).Start();
-        }
+      
         
         /// <summary>
         /// Updates Epicor Customization

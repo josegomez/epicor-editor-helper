@@ -332,6 +332,11 @@ namespace CommonCode
         private void Resync(CommandLineParams o, StreamWriter swLog, StringBuilder refds, GenXDataDataSet ds, CustomizationDS nds, CustomScriptManager csmR)
         {
             int start = csmR.CustomCodeAll.IndexOf("// ** Wizard Insert Location - Do Not Remove 'Begin/End Wizard Added Module Level Variables' Comments! **");
+            if (start < 0)
+            {
+                start = 0;
+                MessageBox.Show("We couldn't find the Wizard Insert Location in your source code, this code may not compile properly. Like Epicor we rely on those comments so if you remove them or move them it may not function correctly", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
             int end = csmR.CustomCodeAll.Length - start;
             string allCode;
             string script;
