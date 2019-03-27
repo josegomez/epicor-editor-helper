@@ -40,6 +40,7 @@
             this.chkSyncUp = new System.Windows.Forms.CheckBox();
             this.btnMenu = new System.Windows.Forms.Button();
             this.btnObjectExplorer = new System.Windows.Forms.Button();
+            this.chkAOT = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // btnTracing
@@ -123,7 +124,7 @@
             // chkSyncUp
             // 
             this.chkSyncUp.AutoSize = true;
-            this.chkSyncUp.Location = new System.Drawing.Point(89, 350);
+            this.chkSyncUp.Location = new System.Drawing.Point(15, 353);
             this.chkSyncUp.Name = "chkSyncUp";
             this.chkSyncUp.Size = new System.Drawing.Size(130, 17);
             this.chkSyncUp.TabIndex = 8;
@@ -150,11 +151,23 @@
             this.btnObjectExplorer.UseVisualStyleBackColor = true;
             this.btnObjectExplorer.Click += new System.EventHandler(this.btnObjectExplorer_Click);
             // 
+            // chkAOT
+            // 
+            this.chkAOT.AutoSize = true;
+            this.chkAOT.Location = new System.Drawing.Point(205, 353);
+            this.chkAOT.Name = "chkAOT";
+            this.chkAOT.Size = new System.Drawing.Size(98, 17);
+            this.chkAOT.TabIndex = 11;
+            this.chkAOT.Text = "Always On Top";
+            this.chkAOT.UseVisualStyleBackColor = true;
+            this.chkAOT.CheckedChanged += new System.EventHandler(this.chkAOT_CheckedChanged);
+            // 
             // NonModalWokIt
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(315, 382);
+            this.Controls.Add(this.chkAOT);
             this.Controls.Add(this.btnObjectExplorer);
             this.Controls.Add(this.btnMenu);
             this.Controls.Add(this.chkSyncUp);
@@ -195,5 +208,6 @@
         private System.Windows.Forms.CheckBox chkSyncUp;
         private System.Windows.Forms.Button btnMenu;
         private System.Windows.Forms.Button btnObjectExplorer;
+        private System.Windows.Forms.CheckBox chkAOT;
     }
 }

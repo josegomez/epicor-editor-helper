@@ -3,6 +3,7 @@ using Ice.Core;
 using System;
 using System.Threading;
 using System.Windows.Forms;
+using System.Runtime.InteropServices;
 
 namespace CustomizationEditor
 {
@@ -13,6 +14,15 @@ namespace CustomizationEditor
         EpicorLauncher l;
         CommandLineParams o;
         public bool Sync = false;
+
+        private static readonly IntPtr HWND_TOPMOST = new IntPtr(-1);
+        private static readonly IntPtr HWND_NOTOPMOST = new IntPtr(-2);
+
+        private const UInt32 SWP_NOSIZE = 0x0001;
+        private const UInt32 SWP_NOMOVE = 0x0002;
+        private const UInt32 TOPMOST_FLAGS = SWP_NOMOVE | SWP_NOSIZE;
+
+
         public NonModalWokIt(object session, CommandLineParams o)
         {
             InitializeComponent();
@@ -126,5 +136,17 @@ namespace CustomizationEditor
         {
             l.LaunchObjectExplorer(o,session);
         }
+
+        private void chkAOT_CheckedChanged(object sender, EventArgs e)
+        {
+            if(chkAOT.Checked)
+                SetWindowPos(this.Handle, HWND_TOPMOST, 0, 0, 0, 0, TOPMOST_FLAGS);
+            else
+                SetWindowPos(this.Handle, HWND_NOTOPMOST, 0, 0, 0, 0, TOPMOST_FLAGS);
+        }
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
     }
 }
