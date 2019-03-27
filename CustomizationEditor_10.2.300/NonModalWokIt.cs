@@ -121,5 +121,10 @@ namespace CustomizationEditor
             this.Show();
             this.WindowState = FormWindowState.Normal;
         }
+
+        private void btnObjectExplorer_Click(object sender, EventArgs e)
+        {
+            l.LaunchObjectExplorer(o,session);
+        }
     }
 }

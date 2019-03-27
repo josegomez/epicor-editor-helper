@@ -39,6 +39,7 @@
             this.lblCustom = new System.Windows.Forms.Label();
             this.chkSyncUp = new System.Windows.Forms.CheckBox();
             this.btnMenu = new System.Windows.Forms.Button();
+            this.btnObjectExplorer = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnTracing
@@ -83,7 +84,7 @@
             // 
             // btnTest
             // 
-            this.btnTest.Location = new System.Drawing.Point(89, 236);
+            this.btnTest.Location = new System.Drawing.Point(90, 224);
             this.btnTest.Name = "btnTest";
             this.btnTest.Size = new System.Drawing.Size(129, 23);
             this.btnTest.TabIndex = 4;
@@ -93,7 +94,7 @@
             // 
             // btnDebug
             // 
-            this.btnDebug.Location = new System.Drawing.Point(89, 265);
+            this.btnDebug.Location = new System.Drawing.Point(90, 253);
             this.btnDebug.Name = "btnDebug";
             this.btnDebug.Size = new System.Drawing.Size(129, 23);
             this.btnDebug.TabIndex = 5;
@@ -103,7 +104,7 @@
             // 
             // btnEdit
             // 
-            this.btnEdit.Location = new System.Drawing.Point(89, 294);
+            this.btnEdit.Location = new System.Drawing.Point(90, 282);
             this.btnEdit.Name = "btnEdit";
             this.btnEdit.Size = new System.Drawing.Size(129, 23);
             this.btnEdit.TabIndex = 6;
@@ -122,7 +123,7 @@
             // chkSyncUp
             // 
             this.chkSyncUp.AutoSize = true;
-            this.chkSyncUp.Location = new System.Drawing.Point(89, 323);
+            this.chkSyncUp.Location = new System.Drawing.Point(89, 350);
             this.chkSyncUp.Name = "chkSyncUp";
             this.chkSyncUp.Size = new System.Drawing.Size(130, 17);
             this.chkSyncUp.TabIndex = 8;
@@ -139,11 +140,22 @@
             this.btnMenu.UseVisualStyleBackColor = true;
             this.btnMenu.Click += new System.EventHandler(this.btnMenu_Click);
             // 
+            // btnObjectExplorer
+            // 
+            this.btnObjectExplorer.Location = new System.Drawing.Point(90, 311);
+            this.btnObjectExplorer.Name = "btnObjectExplorer";
+            this.btnObjectExplorer.Size = new System.Drawing.Size(129, 23);
+            this.btnObjectExplorer.TabIndex = 10;
+            this.btnObjectExplorer.Text = "Object Explorer";
+            this.btnObjectExplorer.UseVisualStyleBackColor = true;
+            this.btnObjectExplorer.Click += new System.EventHandler(this.btnObjectExplorer_Click);
+            // 
             // NonModalWokIt
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(315, 350);
+            this.ClientSize = new System.Drawing.Size(315, 382);
+            this.Controls.Add(this.btnObjectExplorer);
             this.Controls.Add(this.btnMenu);
             this.Controls.Add(this.chkSyncUp);
             this.Controls.Add(this.lblCustom);
@@ -182,5 +194,6 @@
         private System.Windows.Forms.Label lblCustom;
         private System.Windows.Forms.CheckBox chkSyncUp;
         private System.Windows.Forms.Button btnMenu;
+        private System.Windows.Forms.Button btnObjectExplorer;
     }
 }

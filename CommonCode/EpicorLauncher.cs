@@ -96,6 +96,100 @@ namespace CommonCode
             ProcessCaller.LaunchForm(new ILauncher(session), menuID);
         }
 
+        public void LaunchObjectExplorer(CommandLineParams pm, object session)
+        {
+            Session epiSession = session as Session;
+            CommandLineParams o = pm as CommandLineParams;
+
+            epiSession["Customizing"] = false;
+            var oTrans = new ILauncher(epiSession);
+            CustomizationVerify cm = new CustomizationVerify(epiSession);
+            string dll = cm.getDllName(o.Key2);
+            dynamic epiBaseForm = null;
+            dynamic epiTransaction = null;
+            if (string.IsNullOrEmpty(dll))
+                dll = "*.UI.*.dll";
+
+            Assembly assy = ClientAssemblyRetriever.ForILaunch(oTrans).RetrieveAssembly(dll);
+            if (assy == null)
+                foreach (string x in Directory.GetFiles(o.EpicorClientFolder, dll))
+                {
+                    assy = Assembly.LoadFile(x);
+                    if (assy.DefinedTypes.Where(r => r.FullName.ToUpper().Contains(o.Key2.ToUpper())).Any())
+                    {
+                        break;
+                    }
+                }
+            var typeE = assy.DefinedTypes.Where(r => r.FullName.ToUpper().Contains(o.Key2.ToUpper())).FirstOrDefault();
+            var typeTList = assy.DefinedTypes.Where(r => r.BaseType.Name.Equals("EpiTransaction") || r.BaseType.Name.Equals("EpiMultiViewTransaction") || r.BaseType.Name.Equals("EpiSingleViewTransaction") || r.BaseType.Name.Equals("UDMultiViewTransaction") || r.BaseType.Name.Equals("UDSingleViewTransaction")).ToList();
+            if (typeTList != null && typeTList.Count > 0)
+                foreach (var typeT in typeTList)
+                {
+                    try
+                    {
+                        if (typeT != null)
+                            epiTransaction = Activator.CreateInstance(typeT, new object[] { oTrans });
+                        else
+                            epiTransaction = new EpiTransaction(oTrans);
+
+                        epiBaseForm = Activator.CreateInstance(typeE, new object[] { epiTransaction });
+                        break;
+                    }
+                    catch (Exception e)
+                    { }
+                }
+            else
+            {
+                epiTransaction = new EpiTransaction(oTrans);
+                epiBaseForm = Activator.CreateInstance(typeE, new object[] { epiTransaction });
+            }
+
+
+
+            epiBaseForm.IsVerificationMode = true;
+            epiBaseForm.CustomizationName = o.Key1;
+            EpiUIUtils eu = new EpiUIUtils(epiBaseForm, epiTransaction, epiBaseForm.MainToolManager, null);
+            eu.GetType().GetField("currentSession", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(eu, epiTransaction.Session);
+            eu.GetType().GetField("customizeName", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(eu, o.Key1);
+            eu.GetType().GetField("baseExtentionName", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(eu, o.Key3.Replace("BaseExtension^", string.Empty));
+            var mi = eu.GetType().GetMethod("getCompositeCustomizeDataSet", BindingFlags.Instance | BindingFlags.NonPublic);
+            bool customize = false;
+            mi.Invoke(eu, new object[] { o.Key2, customize, customize, customize });
+
+            Ice.Adapters.GenXDataAdapter ad = new Ice.Adapters.GenXDataAdapter(epiTransaction);
+            ad.BOConnect();
+            GenXDataImpl i = (GenXDataImpl)ad.BusinessObject;
+            var ds = i.GetByID(o.Company, o.ProductType, o.LayerType, o.CSGCode, o.Key1, o.Key2, o.Key3);
+            string beName = o.Key3.Replace("BaseExtension^", string.Empty);
+            string exName = (string)eu.GetType().GetField("extensionName", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(eu);
+            CustomizationDS nds = new CustomizationDS();
+            if (string.IsNullOrEmpty(o.Company))
+            {
+                eu.CustLayerMan.GetType().GetProperty("RetrieveFromCache", BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic).SetValue(eu.CustLayerMan, false);
+                eu.CustLayerMan.GetType().GetField("custAllCompanies", BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic).SetValue(eu.CustLayerMan, string.IsNullOrEmpty(o.Company));
+                eu.CustLayerMan.GetType().GetField("selectCompCode", BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic).SetValue(eu.CustLayerMan, o.Company);
+                eu.CustLayerMan.GetType().GetField("companyCode", BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic).SetValue(eu.CustLayerMan, o.Company);
+                eu.CustLayerMan.GetType().GetField("loadDeveloperMode", BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic).SetValue(eu.CustLayerMan, string.IsNullOrEmpty(o.Company));
+
+                bool cancel = false;
+                eu.CustLayerMan.GetType().GetMethod("GetCompositeCustomDataSet", BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic).Invoke(eu.CustLayerMan, new object[] { o.Key2, exName, o.Key1, cancel });
+            }
+
+            PersonalizeCustomizeManager csm = new PersonalizeCustomizeManager(epiBaseForm, epiTransaction, o.ProductType, o.Company, beName, exName, o.Key1, eu.CustLayerMan, DeveloperLicenseType.Partner, LayerType.Customization);
+            csm.InitCustomControlsAndProperties(ds, LayerName.CompositeBase, true);
+            CustomScriptManager csmR = csm.CurrentCustomScriptManager;
+            eu.CloseCacheRespinSplash();
+            
+            CustomObjectExplorerDialog coD = new CustomObjectExplorerDialog(csm.TopControl, epiTransaction, csmR);
+            coD.ShowDialog();
+
+            coD.Dispose();
+            ad.Dispose();
+            cm = null;
+
+            eu.Dispose();
+        }
+
         /// <summary>
         /// Launches a particular customization in Epicor
         /// </summary>

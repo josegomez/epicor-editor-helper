@@ -60,8 +60,11 @@ namespace CustomizationEditor
 
         private void btnDebug_Click(object sender, EventArgs e)
         {
-            
-            
+            if (chkSyncUp.Checked)
+            {
+                l.UpdateCustomization(o, (Session)this.session);
+            }
+
             if (!string.IsNullOrEmpty(o.DNSpy))
             {
                 if (chkSyncUp.Checked)
@@ -86,6 +89,10 @@ namespace CustomizationEditor
 
         private void btnEdit_Click(object sender, EventArgs e)
         {
+            if (chkSyncUp.Checked)
+            {
+                l.UpdateCustomization(o, (Session)this.session);
+            }
             l.LaunchInEpicor(o, (Session)this.session, true, true);
             Sync = true;
             if (o.Key2.Contains("MainController"))//Dashboard
@@ -113,6 +120,11 @@ namespace CustomizationEditor
             this.WindowState = FormWindowState.Minimized;
             this.Show();
             this.WindowState = FormWindowState.Normal;
+        }
+
+        private void btnObjectExplorer_Click(object sender, EventArgs e)
+        {
+            l.LaunchObjectExplorer(o,session);
         }
     }
 }

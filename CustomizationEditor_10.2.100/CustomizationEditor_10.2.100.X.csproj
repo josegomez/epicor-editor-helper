@@ -140,7 +140,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NonModalWokIt.resx" />
+    <EmbeddedResource Include="NonModalWokIt.resx">
+      <DependentUpon>NonModalWokIt.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resource.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resource.Designer.cs</LastGenOutput>
