@@ -82,5 +82,17 @@ namespace CommonForms.Properties {
                 this["Encrypted"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool SSO {
+            get {
+                return ((bool)(this["SSO"]));
+            }
+            set {
+                this["SSO"] = value;
+            }
+        }
     }
 }

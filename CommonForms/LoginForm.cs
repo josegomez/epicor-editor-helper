@@ -29,6 +29,7 @@ namespace CustomizationEditor
             cmbEnvironment.DisplayMember = "Name";
             if (!string.IsNullOrEmpty(Settings.Default.Environment) && Settings.Default.Remember)
                 cmbEnvironment.SelectedValue = Settings.Default.Environment;
+            Settings.Default.Upgrade();
             if(Settings.Default.Remember)
             {
                 txtUsername.Text = Settings.Default.Username;
@@ -37,6 +38,7 @@ namespace CustomizationEditor
                 else
                     txtPassword.Text = Settings.Default.Password;
 
+                chkSSO.Checked = Settings.Default.SSO;
                 chkRemember.Checked = true;
             }
 
@@ -64,7 +66,7 @@ namespace CustomizationEditor
             string encryptedString = Convert.ToBase64String(protectedPassword);
             Settings.Default.Encrypted = true;
             Settings.Default.Password = encryptedString;
-
+            Settings.Default.SSO = chkSSO.Checked;
             Settings.Default.Save();
             this.DialogResult = DialogResult.OK;
         }
@@ -74,6 +76,15 @@ namespace CustomizationEditor
             this.DialogResult = DialogResult.Cancel;
         }
 
-        
+        private void chkSSO_CheckedChanged(object sender, EventArgs e)
+        {
+            txtPassword.Enabled = !chkSSO.Checked;
+            if (!txtPassword.Enabled)
+                txtPassword.Text = "~";
+            txtUsername.Enabled = !chkSSO.Checked;
+            if (!txtUsername.Enabled)
+                txtUsername.Text = "~";
+
+        }
     }
 }

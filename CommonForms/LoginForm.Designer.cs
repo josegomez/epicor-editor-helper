@@ -39,6 +39,7 @@
             this.btnCancel = new System.Windows.Forms.Button();
             this.chkRemember = new System.Windows.Forms.CheckBox();
             this.lblInfo = new System.Windows.Forms.Label();
+            this.chkSSO = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // cmbEnvironment
@@ -133,12 +134,24 @@
     "are unable to\r\nfind a *.sysconfig you are looking for please review your Client " +
     "Folder setting.\r\n.";
             // 
+            // chkSSO
+            // 
+            this.chkSSO.AutoSize = true;
+            this.chkSSO.Location = new System.Drawing.Point(283, 142);
+            this.chkSSO.Name = "chkSSO";
+            this.chkSSO.Size = new System.Drawing.Size(48, 17);
+            this.chkSSO.TabIndex = 11;
+            this.chkSSO.Text = "SSO";
+            this.chkSSO.UseVisualStyleBackColor = true;
+            this.chkSSO.CheckedChanged += new System.EventHandler(this.chkSSO_CheckedChanged);
+            // 
             // LoginForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(543, 237);
+            this.Controls.Add(this.chkSSO);
             this.Controls.Add(this.lblInfo);
             this.Controls.Add(this.chkRemember);
             this.Controls.Add(this.btnCancel);
@@ -174,5 +187,6 @@
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.CheckBox chkRemember;
         private System.Windows.Forms.Label lblInfo;
+        private System.Windows.Forms.CheckBox chkSSO;
     }
 }

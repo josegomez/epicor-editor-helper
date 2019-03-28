@@ -66,6 +66,8 @@ namespace CustomizationEditor
             }
 
             l.LaunchInEpicor(o, (Session)this.session, false, false);
+            Thread.Sleep(1000);
+            CheckTM();
         }
 
         private void btnDebug_Click(object sender, EventArgs e)
@@ -95,10 +97,12 @@ namespace CustomizationEditor
             {
                 MessageBox.Show("No DNSpy Location was Supplied", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+           
         }
 
         private void btnEdit_Click(object sender, EventArgs e)
         {
+            Console.WriteLine("EDITMODE");
             if (chkSyncUp.Checked)
             {
                 l.UpdateCustomization(o, (Session)this.session);
@@ -113,6 +117,7 @@ namespace CustomizationEditor
             {
                 l.DownloadAndSync((Session)this.session, o);
             }
+            CheckTM();
         }
 
         private void NonModalWokIt_FormClosing(object sender, FormClosingEventArgs e)
@@ -139,7 +144,12 @@ namespace CustomizationEditor
 
         private void chkAOT_CheckedChanged(object sender, EventArgs e)
         {
-            if(chkAOT.Checked)
+            CheckTM();
+        }
+
+        private void CheckTM()
+        {
+            if (chkAOT.Checked)
                 SetWindowPos(this.Handle, HWND_TOPMOST, 0, 0, 0, 0, TOPMOST_FLAGS);
             else
                 SetWindowPos(this.Handle, HWND_NOTOPMOST, 0, 0, 0, 0, TOPMOST_FLAGS);
@@ -148,5 +158,59 @@ namespace CustomizationEditor
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
+
+        private void btnRefs_Click(object sender, EventArgs e)
+        {
+            Console.Write("EDITMODE");
+            if (chkSyncUp.Checked)
+            {
+                l.UpdateCustomization(o, (Session)this.session);
+            }
+            l.LaunchReferences(o, session);
+            if (o.Key2.Contains("MainController"))//Dashboard
+            {
+                l.DownloadAndSyncDashboard((Session)this.session, o);
+            }
+            else
+            {
+                l.DownloadAndSync((Session)this.session, o);
+            }
+        }
+
+        private void btnCodeWizard_Click(object sender, EventArgs e)
+        {
+            Console.Write("EDITMODE");
+            if (chkSyncUp.Checked)
+            {
+                l.UpdateCustomization(o, (Session)this.session);
+            }
+            l.LaunchWizard(o, session);
+            if (o.Key2.Contains("MainController"))//Dashboard
+            {
+                l.DownloadAndSyncDashboard((Session)this.session, o);
+            }
+            else
+            {
+                l.DownloadAndSync((Session)this.session, o);
+            }
+        }
+
+        private void btnDataTools_Click(object sender, EventArgs e)
+        {
+            Console.Write("EDITMODE");
+            if (chkSyncUp.Checked)
+            {
+                l.UpdateCustomization(o, (Session)this.session);
+            }
+            l.LaunchDataTools(o, session);
+            if (o.Key2.Contains("MainController"))//Dashboard
+            {
+                l.DownloadAndSyncDashboard((Session)this.session, o);
+            }
+            else
+            {
+                l.DownloadAndSync((Session)this.session, o);
+            }
+        }
     }
 }

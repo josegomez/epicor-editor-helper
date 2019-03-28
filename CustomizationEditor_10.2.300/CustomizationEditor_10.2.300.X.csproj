@@ -32,6 +32,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Resources\logoraw_notext_fw_Twv_icon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="CommandLine, Version=2.2.0.0, Culture=neutral, PublicKeyToken=de6f01bd326f8c32, processorArchitecture=MSIL">
       <HintPath>..\packages\CommandLineParser.2.2.0\lib\net45\CommandLine.dll</HintPath>
@@ -111,6 +114,7 @@
       <HintPath>..\..\..\..\..\..\epicor\ERP10.2Client\SG_Development\Client\Infragistics4.Win.UltraWinToolbars.v12.2.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Infragistics4.Win.v12.2, Version=12.2.20122.2018, Culture=neutral, PublicKeyToken=7dd5c3163f2cd0cb" />
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\epicor\ERP10.2Client\SG_Development\Client\Newtonsoft.Json.dll</HintPath>
@@ -207,6 +211,9 @@
       <Project>{34039205-d2ae-49a3-b152-79f5d575c634}</Project>
       <Name>CommonForms</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\logoraw_notext_fw_Twv_icon.ico" />
   </ItemGroup>
   <Import Project="..\CommonCode\CommonCode.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

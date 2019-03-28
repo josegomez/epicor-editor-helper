@@ -100,13 +100,32 @@ namespace CommonCode
         {
             Session epiSession = session as Session;
             CommandLineParams o = pm as CommandLineParams;
+            CustomizationVerify cm;
+            dynamic epiTransaction;
+            EpiUIUtils eu;
+            Ice.Adapters.GenXDataAdapter ad;
+            PersonalizeCustomizeManager csm;
+            CustomScriptManager csmR;
+            GetCSM(epiSession, o, out cm, out epiTransaction, out eu, out ad, out csm, out csmR);
 
+            CustomObjectExplorerDialog coD = new CustomObjectExplorerDialog(csm.TopControl, epiTransaction, csmR);
+            coD.ShowDialog();
+
+            coD.Dispose();
+            ad.Dispose();
+            cm = null;
+
+            eu.Dispose();
+        }
+
+        private static void GetCSM(Session epiSession, CommandLineParams o, out CustomizationVerify cm, out dynamic epiTransaction, out EpiUIUtils eu, out Ice.Adapters.GenXDataAdapter ad, out PersonalizeCustomizeManager csm, out CustomScriptManager csmR)
+        {
             epiSession["Customizing"] = false;
             var oTrans = new ILauncher(epiSession);
-            CustomizationVerify cm = new CustomizationVerify(epiSession);
+            cm = new CustomizationVerify(epiSession);
             string dll = cm.getDllName(o.Key2);
             dynamic epiBaseForm = null;
-            dynamic epiTransaction = null;
+            epiTransaction = null;
             if (string.IsNullOrEmpty(dll))
                 dll = "*.UI.*.dll";
 
@@ -148,7 +167,7 @@ namespace CommonCode
 
             epiBaseForm.IsVerificationMode = true;
             epiBaseForm.CustomizationName = o.Key1;
-            EpiUIUtils eu = new EpiUIUtils(epiBaseForm, epiTransaction, epiBaseForm.MainToolManager, null);
+            eu = new EpiUIUtils(epiBaseForm, epiTransaction, epiBaseForm.MainToolManager, null);
             eu.GetType().GetField("currentSession", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(eu, epiTransaction.Session);
             eu.GetType().GetField("customizeName", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(eu, o.Key1);
             eu.GetType().GetField("baseExtentionName", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(eu, o.Key3.Replace("BaseExtension^", string.Empty));
@@ -156,7 +175,7 @@ namespace CommonCode
             bool customize = false;
             mi.Invoke(eu, new object[] { o.Key2, customize, customize, customize });
 
-            Ice.Adapters.GenXDataAdapter ad = new Ice.Adapters.GenXDataAdapter(epiTransaction);
+            ad = new Ice.Adapters.GenXDataAdapter(epiTransaction);
             ad.BOConnect();
             GenXDataImpl i = (GenXDataImpl)ad.BusinessObject;
             var ds = i.GetByID(o.Company, o.ProductType, o.LayerType, o.CSGCode, o.Key1, o.Key2, o.Key3);
@@ -174,20 +193,73 @@ namespace CommonCode
                 bool cancel = false;
                 eu.CustLayerMan.GetType().GetMethod("GetCompositeCustomDataSet", BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic).Invoke(eu.CustLayerMan, new object[] { o.Key2, exName, o.Key1, cancel });
             }
-
-            PersonalizeCustomizeManager csm = new PersonalizeCustomizeManager(epiBaseForm, epiTransaction, o.ProductType, o.Company, beName, exName, o.Key1, eu.CustLayerMan, DeveloperLicenseType.Partner, LayerType.Customization);
+            typeof(EpiBaseForm).GetField("utils", BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic).SetValue(epiBaseForm,eu );
+            csm = new PersonalizeCustomizeManager(epiBaseForm, epiTransaction, o.ProductType, o.Company, beName, exName, o.Key1, eu.CustLayerMan, DeveloperLicenseType.Partner, LayerType.Customization);
             csm.InitCustomControlsAndProperties(ds, LayerName.CompositeBase, true);
-            CustomScriptManager csmR = csm.CurrentCustomScriptManager;
+            csmR = csm.CurrentCustomScriptManager;
             eu.CloseCacheRespinSplash();
+        }
+
+        internal void LaunchDataTools(CommandLineParams oo, object session)
+        {
+            Session epiSession = session as Session;
+            CommandLineParams o = oo as CommandLineParams;
+            CustomizationVerify cm;
+            dynamic epiTransaction;
+            EpiUIUtils eu;
+            Ice.Adapters.GenXDataAdapter ad;
+            PersonalizeCustomizeManager csm;
+            CustomScriptManager csmR;
+            GetCSM(epiSession, o, out cm, out epiTransaction, out eu, out ad, out csm, out csmR);
+
+            csm.GetType().GetMethod("EnterEditMode", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance).Invoke(csm, null);
             
-            CustomObjectExplorerDialog coD = new CustomObjectExplorerDialog(csm.TopControl, epiTransaction, csmR);
-            coD.ShowDialog();
+            CustomToolsDialog cmd = (CustomToolsDialog)csm.GetType().GetField("uiToolsDialog", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance).GetValue(csm);
+            cmd.Hide();
+            cmd.GetType().GetMethod("mnuToolsDataTools_Click", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance).Invoke(cmd, new object[] { null, null });
+            cmd.GetType().GetMethod("SaveCustomization", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance).Invoke(cmd, null);
+        }
 
-            coD.Dispose();
-            ad.Dispose();
-            cm = null;
+        internal void LaunchWizard(CommandLineParams oo, object session)
+        {
+            Session epiSession = session as Session;
+            CommandLineParams o = oo as CommandLineParams;
+            CustomizationVerify cm;
+            dynamic epiTransaction;
+            EpiUIUtils eu;
+            Ice.Adapters.GenXDataAdapter ad;
+            PersonalizeCustomizeManager csm;
+            CustomScriptManager csmR;
+            GetCSM(epiSession, o, out cm, out epiTransaction, out eu, out ad, out csm, out csmR);
 
-            eu.Dispose();
+            csm.GetType().GetMethod("EnterEditMode", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance).Invoke(csm, null);
+            CustomToolsDialog cmd = (CustomToolsDialog)csm.GetType().GetField("uiToolsDialog", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance).GetValue(csm);
+            cmd.Hide();
+            cmd.GetType().Assembly.DefinedTypes.Where(t => t.Name == "CustomCodeWizardManager").FirstOrDefault().GetMethod("LaunchWizardDialog", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance).Invoke(null, new object[] { csm, cmd.GetType().GetField("customScriptEditorPanel1", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance).GetValue(cmd)});
+            cmd.GetType().GetMethod("SaveCustomization", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance).Invoke(cmd, null);
+
+            
+        }
+
+        public void LaunchReferences(CommandLineParams oo, object session)
+        {
+            Session epiSession = session as Session;
+            CommandLineParams o = oo as CommandLineParams;
+            CustomizationVerify cm;
+            dynamic epiTransaction;
+            EpiUIUtils eu;
+            Ice.Adapters.GenXDataAdapter ad;
+            PersonalizeCustomizeManager csm;
+            CustomScriptManager csmR;
+            GetCSM(epiSession, o, out cm, out epiTransaction, out eu, out ad, out csm, out csmR);
+            
+            csm.GetType().GetMethod("EnterEditMode", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance).Invoke(csm, null);
+            
+            CustomToolsDialog cmd = (CustomToolsDialog)csm.GetType().GetField("uiToolsDialog", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance).GetValue(csm);
+            cmd.Hide();
+            cmd.GetType().GetMethod("mnuToolsAssemblyRefs_Click", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance).Invoke(cmd, new object[] { null, null });
+            cmd.GetType().GetMethod("SaveCustomization", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance).Invoke(cmd, null);
+
         }
 
         /// <summary>
@@ -235,8 +307,11 @@ namespace CommonCode
             MenuDataSet mnuds = new MenuDataSet();
             mnuds.Menu.Rows.Add(menuRow.ItemArray);
             lfo.MenuDataSet = mnuds;
-            
-            FormFunctions.Launch(oTrans.currentSession, menuRow, lfo);
+            try
+            {
+                FormFunctions.Launch(oTrans.currentSession, menuRow, lfo);
+            }
+            catch { }
         }
 
         /// <summary>
