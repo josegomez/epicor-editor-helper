@@ -218,6 +218,12 @@ namespace CommonCode
             cmd.Hide();
             cmd.GetType().GetMethod("mnuToolsDataTools_Click", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance).Invoke(cmd, new object[] { null, null });
             cmd.GetType().GetMethod("SaveCustomization", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance).Invoke(cmd, null);
+
+            cmd.Close();
+            csm.TopControl.Dispose();
+            ad.Dispose();
+            eu.Dispose();
+
         }
 
         internal void LaunchWizard(CommandLineParams oo, object session)
@@ -238,6 +244,14 @@ namespace CommonCode
             cmd.GetType().Assembly.DefinedTypes.Where(t => t.Name == "CustomCodeWizardManager").FirstOrDefault().GetMethod("LaunchWizardDialog", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance).Invoke(null, new object[] { csm, cmd.GetType().GetField("customScriptEditorPanel1", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance).GetValue(cmd)});
             cmd.GetType().GetMethod("SaveCustomization", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance).Invoke(cmd, null);
 
+            cmd.Close();
+            csm.TopControl.Dispose();
+            ad.Dispose();
+            eu.Dispose();
+            
+            
+
+            
             
         }
 
@@ -259,6 +273,10 @@ namespace CommonCode
             cmd.Hide();
             cmd.GetType().GetMethod("mnuToolsAssemblyRefs_Click", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance).Invoke(cmd, new object[] { null, null });
             cmd.GetType().GetMethod("SaveCustomization", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance).Invoke(cmd, null);
+            cmd.Close();
+            csm.TopControl.Dispose();
+            ad.Dispose();
+            eu.Dispose();
 
         }
 

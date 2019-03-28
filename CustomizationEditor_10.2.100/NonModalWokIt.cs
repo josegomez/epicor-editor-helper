@@ -102,7 +102,7 @@ namespace CustomizationEditor
 
         private void btnEdit_Click(object sender, EventArgs e)
         {
-            Console.WriteLine("EDITMODE");
+            Console.Write("EDITMODE");
             if (chkSyncUp.Checked)
             {
                 l.UpdateCustomization(o, (Session)this.session);
