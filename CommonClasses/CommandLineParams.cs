@@ -14,6 +14,8 @@ namespace CustomizationEditor
         private string _company;
         private string _dLLLocation;
         private string _dNSpy;
+        private string _username;
+        private string _password;
 
         //Epicor Configuration File
         [Option('c', "config", Required = false, HelpText = "Epicor config file")]
@@ -21,11 +23,11 @@ namespace CustomizationEditor
 
         //Epicor Username
         [Option('u', "username", Required = false, HelpText = "Epicor username")]
-        public string Username { get; set; }
+        public string Username { get => _username; set => _username = value=="~"?"":value; }
 
         //Epicor Password (encrypted)
         [Option('p', "password", Required = false, HelpText = "Epicor password")]
-        public string Password { get; set; }
+        public string Password { get => _password; set => _password = value; }
 
         //Customization Product Type Key Typical :EP
         [Option('t', "producttype", Required = false, HelpText = "Epicor Product Type Default EP")]
@@ -94,7 +96,7 @@ namespace CustomizationEditor
 
         public string NewConfig { get; set; }
 
-        
+
         public string Temp { get; set; }
     }
 }

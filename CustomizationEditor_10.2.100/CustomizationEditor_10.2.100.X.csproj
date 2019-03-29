@@ -101,6 +101,11 @@
       <HintPath>..\..\..\Epicor\ERP10.2Client\Client\Infragistics4.Win.UltraWinToolbars.v12.2.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Infragistics4.Win.v12.2, Version=12.2.20122.2018, Culture=neutral, PublicKeyToken=7dd5c3163f2cd0cb, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\epicor\ERP10.2Client\SG_Development\Client\Infragistics4.Win.v12.2.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Epicor\ERP10.2Client\Client\Newtonsoft.Json.dll</HintPath>
