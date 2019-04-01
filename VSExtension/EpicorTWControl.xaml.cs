@@ -92,8 +92,7 @@
             process.Start();
             process.BeginOutputReadLine();
             process.BeginErrorReadLine();
-            if (wait)
-                process.WaitForExit();
+            
             
         }
 
@@ -115,16 +114,14 @@
                 }
                 else
                 {
-                    
-                    
-                        Application.Current.Dispatcher.Invoke(DispatcherPriority.Background, new ThreadStart(delegate
-                        {
+                    Application.Current.Dispatcher.Invoke(DispatcherPriority.Background, new ThreadStart(delegate
+                    {
 
-                            //Update UI here
-                            InfoBarService.Instance.CloseInfoBar();
-                            DTE dte = Package.GetGlobalService(typeof(SDTE)) as DTE;
-                            dte.ExecuteCommand("File.OpenProject", Directory.GetFiles(outLine.Data, "*.csproj").FirstOrDefault());
-                        }));
+                        //Update UI here
+                        InfoBarService.Instance.CloseInfoBar();
+                        DTE dte = Package.GetGlobalService(typeof(SDTE)) as DTE;
+                        dte.ExecuteCommand("File.OpenProject", $"\"{Directory.GetFiles(outLine.Data, "*.csproj").FirstOrDefault()}\"");
+                    }));
                     
 
                 }
@@ -143,40 +140,43 @@
                     if (projs != null && ((projs as Object[]).Length>0))
                     {
                         p = (projs as Object[])[0] as Project;
-                        var dyn = Newtonsoft.Json.JsonConvert.DeserializeObject<CustomizationInfo>(File.ReadAllText(Path.Combine(Path.GetDirectoryName(p.FileName), "CustomizationInfo.json")));
-                        StringBuilder args = new StringBuilder();
-                        args.Append($"-c \"{dyn.ConfigFile}\"");
-                        args.Append(" ");
-                        args.Append($"-u \"{(string.IsNullOrEmpty(dyn.Username)?"~":dyn.Username)}\"");
-                        args.Append(" ");
-                        args.Append($"-p \"{dyn.Password}\"");
-                        args.Append(" ");
-                        args.Append($"-t \"{dyn.ProductType}\"");
-                        args.Append(" ");
-                        args.Append($"-l \"{dyn.LayerType}\"");
-                        args.Append(" ");
-                        args.Append($"-k \"{dyn.Key1}\"");
-                        args.Append(" ");
-                        args.Append($"-m \"{dyn.Key2}\"");
-                        args.Append(" ");
-                        args.Append($"-n \"{(string.IsNullOrEmpty(dyn.Key3)?"~":dyn.Key3)}\"");
-                        args.Append(" ");
-                        args.Append($"-g \"{(string.IsNullOrEmpty(dyn.CSGCode) ? "~" : dyn.CSGCode)}\"");
-                        args.Append(" ");
-                        args.Append($"-f \"{Settings.Default.EpicorFolder}\"");
-                        args.Append(" ");
-                        args.Append($"-o \"{(string.IsNullOrEmpty(dyn.Company) ? "~" : dyn.Company)}\"");
-                        args.Append(" ");
-                        args.Append($"-r \"{dyn.Folder}\"");
-                        args.Append(" ");
-                        args.Append($"-j \"{dyn.ProjectFolder}\"");
-                        args.Append(" ");
-                        args.Append($"-e \"{dyn.Encrypted}\"");
-                        args.Append(" ");
-                        args.Append($"-v \"{dyn.Version}\"");
-                        args.Append(" -a Download");
-                        editMode = true;
-                        runCommand(args, true); 
+                        if (File.Exists(Path.Combine(Path.GetDirectoryName(p.FileName), "CustomizationInfo.json")))
+                        {
+                            var dyn = Newtonsoft.Json.JsonConvert.DeserializeObject<CustomizationInfo>(File.ReadAllText(Path.Combine(Path.GetDirectoryName(p.FileName), "CustomizationInfo.json")));
+                            StringBuilder args = new StringBuilder();
+                            args.Append($"-c \"{dyn.ConfigFile}\"");
+                            args.Append(" ");
+                            args.Append($"-u \"{(string.IsNullOrEmpty(dyn.Username) ? "~" : dyn.Username)}\"");
+                            args.Append(" ");
+                            args.Append($"-p \"{dyn.Password}\"");
+                            args.Append(" ");
+                            args.Append($"-t \"{dyn.ProductType}\"");
+                            args.Append(" ");
+                            args.Append($"-l \"{dyn.LayerType}\"");
+                            args.Append(" ");
+                            args.Append($"-k \"{dyn.Key1}\"");
+                            args.Append(" ");
+                            args.Append($"-m \"{dyn.Key2}\"");
+                            args.Append(" ");
+                            args.Append($"-n \"{(string.IsNullOrEmpty(dyn.Key3) ? "~" : dyn.Key3)}\"");
+                            args.Append(" ");
+                            args.Append($"-g \"{(string.IsNullOrEmpty(dyn.CSGCode) ? "~" : dyn.CSGCode)}\"");
+                            args.Append(" ");
+                            args.Append($"-f \"{Settings.Default.EpicorFolder}\"");
+                            args.Append(" ");
+                            args.Append($"-o \"{(string.IsNullOrEmpty(dyn.Company) ? "~" : dyn.Company)}\"");
+                            args.Append(" ");
+                            args.Append($"-r \"{dyn.Folder}\"");
+                            args.Append(" ");
+                            args.Append($"-j \"{dyn.ProjectFolder}\"");
+                            args.Append(" ");
+                            args.Append($"-e \"{dyn.Encrypted}\"");
+                            args.Append(" ");
+                            args.Append($"-v \"{dyn.Version}\"");
+                            args.Append(" -a Download");
+                            editMode = true;
+                            runCommand(args, true);
+                        }
                     }
                 }));
                 /*dte.act
@@ -207,40 +207,43 @@
                     if (projs != null && ((projs as Object[]).Length > 0))
                     {
                         p = (projs as Object[])[0] as Project;
-                        var dyn = Newtonsoft.Json.JsonConvert.DeserializeObject<CustomizationInfo>(File.ReadAllText(Path.Combine(Path.GetDirectoryName(p.FileName), "CustomizationInfo.json")));
-                        StringBuilder args = new StringBuilder();
-                        args.Append($"-c \"{dyn.ConfigFile}\"");
-                        args.Append(" ");
-                        args.Append($"-u \"{(string.IsNullOrEmpty(dyn.Username) ? "~" : dyn.Username)}\"");
-                        args.Append(" ");
-                        args.Append($"-p \"{dyn.Password}\"");
-                        args.Append(" ");
-                        args.Append($"-t \"{dyn.ProductType}\"");
-                        args.Append(" ");
-                        args.Append($"-l \"{dyn.LayerType}\"");
-                        args.Append(" ");
-                        args.Append($"-k \"{dyn.Key1}\"");
-                        args.Append(" ");
-                        args.Append($"-m \"{dyn.Key2}\"");
-                        args.Append(" ");
-                        args.Append($"-n \"{(string.IsNullOrEmpty(dyn.Key3) ? "~" : dyn.Key3)}\"");
-                        args.Append(" ");
-                        args.Append($"-g \"{(string.IsNullOrEmpty(dyn.CSGCode) ? "~" : dyn.CSGCode)}\"");
-                        args.Append(" ");
-                        args.Append($"-f \"{Settings.Default.EpicorFolder}\"");
-                        args.Append(" ");
-                        args.Append($"-o \"{(string.IsNullOrEmpty(dyn.Company) ? "~" : dyn.Company)}\"");
-                        args.Append(" ");
-                        args.Append($"-r \"{dyn.Folder}\"");
-                        args.Append(" ");
-                        args.Append($"-j \"{dyn.ProjectFolder}\"");
-                        args.Append(" ");
-                        args.Append($"-e \"{dyn.Encrypted}\"");
-                        args.Append(" ");
-                        args.Append($"-v \"{dyn.Version}\"");
-                        args.Append(" -a Toolbox");
-                        editMode = true;
-                        runCommand(args);
+                        if (File.Exists(Path.Combine(Path.GetDirectoryName(p.FileName), "CustomizationInfo.json")))
+                        {
+                            var dyn = Newtonsoft.Json.JsonConvert.DeserializeObject<CustomizationInfo>(File.ReadAllText(Path.Combine(Path.GetDirectoryName(p.FileName), "CustomizationInfo.json")));
+                            StringBuilder args = new StringBuilder();
+                            args.Append($"-c \"{dyn.ConfigFile}\"");
+                            args.Append(" ");
+                            args.Append($"-u \"{(string.IsNullOrEmpty(dyn.Username) ? "~" : dyn.Username)}\"");
+                            args.Append(" ");
+                            args.Append($"-p \"{dyn.Password}\"");
+                            args.Append(" ");
+                            args.Append($"-t \"{dyn.ProductType}\"");
+                            args.Append(" ");
+                            args.Append($"-l \"{dyn.LayerType}\"");
+                            args.Append(" ");
+                            args.Append($"-k \"{dyn.Key1}\"");
+                            args.Append(" ");
+                            args.Append($"-m \"{dyn.Key2}\"");
+                            args.Append(" ");
+                            args.Append($"-n \"{(string.IsNullOrEmpty(dyn.Key3) ? "~" : dyn.Key3)}\"");
+                            args.Append(" ");
+                            args.Append($"-g \"{(string.IsNullOrEmpty(dyn.CSGCode) ? "~" : dyn.CSGCode)}\"");
+                            args.Append(" ");
+                            args.Append($"-f \"{Settings.Default.EpicorFolder}\"");
+                            args.Append(" ");
+                            args.Append($"-o \"{(string.IsNullOrEmpty(dyn.Company) ? "~" : dyn.Company)}\"");
+                            args.Append(" ");
+                            args.Append($"-r \"{dyn.Folder}\"");
+                            args.Append(" ");
+                            args.Append($"-j \"{dyn.ProjectFolder}\"");
+                            args.Append(" ");
+                            args.Append($"-e \"{dyn.Encrypted}\"");
+                            args.Append(" ");
+                            args.Append($"-v \"{dyn.Version}\"");
+                            args.Append(" -a Toolbox");
+                            editMode = true;
+                            runCommand(args);
+                        }
                     }
                 }));
                 /*dte.act
@@ -271,40 +274,44 @@
                     if (projs != null && ((projs as Object[]).Length > 0))
                     {
                         p = (projs as Object[])[0] as Project;
-                        var dyn = Newtonsoft.Json.JsonConvert.DeserializeObject<CustomizationInfo>(File.ReadAllText(Path.Combine(Path.GetDirectoryName(p.FileName), "CustomizationInfo.json")));
-                        StringBuilder args = new StringBuilder();
-                        args.Append($"-c \"{dyn.ConfigFile}\"");
-                        args.Append(" ");
-                        args.Append($"-u \"{(string.IsNullOrEmpty(dyn.Username) ? "~" : dyn.Username)}\"");
-                        args.Append(" ");
-                        args.Append($"-p \"{dyn.Password}\"");
-                        args.Append(" ");
-                        args.Append($"-t \"{dyn.ProductType}\"");
-                        args.Append(" ");
-                        args.Append($"-l \"{dyn.LayerType}\"");
-                        args.Append(" ");
-                        args.Append($"-k \"{dyn.Key1}\"");
-                        args.Append(" ");
-                        args.Append($"-m \"{dyn.Key2}\"");
-                        args.Append(" ");
-                        args.Append($"-n \"{(string.IsNullOrEmpty(dyn.Key3) ? "~" : dyn.Key3)}\"");
-                        args.Append(" ");
-                        args.Append($"-g \"{(string.IsNullOrEmpty(dyn.CSGCode) ? "~" : dyn.CSGCode)}\"");
-                        args.Append(" ");
-                        args.Append($"-f \"{Settings.Default.EpicorFolder}\"");
-                        args.Append(" ");
-                        args.Append($"-o \"{(string.IsNullOrEmpty(dyn.Company) ? "~" : dyn.Company)}\"");
-                        args.Append(" ");
-                        args.Append($"-r \"{dyn.Folder}\"");
-                        args.Append(" ");
-                        args.Append($"-j \"{dyn.ProjectFolder}\"");
-                        args.Append(" ");
-                        args.Append($"-e \"{dyn.Encrypted}\"");
-                        args.Append(" ");
-                        args.Append($"-v \"{dyn.Version}\"");
-                        args.Append(" -a Update");
-                        editMode = true;
-                        runCommand(args, true);
+                        if (File.Exists(Path.Combine(Path.GetDirectoryName(p.FileName), "CustomizationInfo.json")))
+                        {
+                            
+                            var dyn = Newtonsoft.Json.JsonConvert.DeserializeObject<CustomizationInfo>(File.ReadAllText(Path.Combine(Path.GetDirectoryName(p.FileName), "CustomizationInfo.json")));
+                            StringBuilder args = new StringBuilder();
+                            args.Append($"-c \"{dyn.ConfigFile}\"");
+                            args.Append(" ");
+                            args.Append($"-u \"{(string.IsNullOrEmpty(dyn.Username) ? "~" : dyn.Username)}\"");
+                            args.Append(" ");
+                            args.Append($"-p \"{dyn.Password}\"");
+                            args.Append(" ");
+                            args.Append($"-t \"{dyn.ProductType}\"");
+                            args.Append(" ");
+                            args.Append($"-l \"{dyn.LayerType}\"");
+                            args.Append(" ");
+                            args.Append($"-k \"{dyn.Key1}\"");
+                            args.Append(" ");
+                            args.Append($"-m \"{dyn.Key2}\"");
+                            args.Append(" ");
+                            args.Append($"-n \"{(string.IsNullOrEmpty(dyn.Key3) ? "~" : dyn.Key3)}\"");
+                            args.Append(" ");
+                            args.Append($"-g \"{(string.IsNullOrEmpty(dyn.CSGCode) ? "~" : dyn.CSGCode)}\"");
+                            args.Append(" ");
+                            args.Append($"-f \"{Settings.Default.EpicorFolder}\"");
+                            args.Append(" ");
+                            args.Append($"-o \"{(string.IsNullOrEmpty(dyn.Company) ? "~" : dyn.Company)}\"");
+                            args.Append(" ");
+                            args.Append($"-r \"{dyn.Folder}\"");
+                            args.Append(" ");
+                            args.Append($"-j \"{dyn.ProjectFolder}\"");
+                            args.Append(" ");
+                            args.Append($"-e \"{dyn.Encrypted}\"");
+                            args.Append(" ");
+                            args.Append($"-v \"{dyn.Version}\"");
+                            args.Append(" -a Update");
+                            editMode = true;
+                            runCommand(args, true);
+                        }
                     }
                 }));
                 /*dte.act
