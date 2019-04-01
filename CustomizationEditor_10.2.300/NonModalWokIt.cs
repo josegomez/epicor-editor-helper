@@ -102,7 +102,7 @@ namespace CustomizationEditor
 
         private void btnEdit_Click(object sender, EventArgs e)
         {
-            Console.Write("EDITMODE");
+            Console.WriteLine("EDITMODE");
             if (chkSyncUp.Checked)
             {
                 l.UpdateCustomization(o, (Session)this.session);
@@ -161,7 +161,7 @@ namespace CustomizationEditor
 
         private void btnRefs_Click(object sender, EventArgs e)
         {
-            Console.Write("EDITMODE");
+            Console.WriteLine("EDITMODE");
             if (chkSyncUp.Checked)
             {
                 l.UpdateCustomization(o, (Session)this.session);
@@ -179,7 +179,7 @@ namespace CustomizationEditor
 
         private void btnCodeWizard_Click(object sender, EventArgs e)
         {
-            Console.Write("EDITMODE");
+            Console.WriteLine("EDITMODE");
             if (chkSyncUp.Checked)
             {
                 l.UpdateCustomization(o, (Session)this.session);
@@ -197,7 +197,7 @@ namespace CustomizationEditor
 
         private void btnDataTools_Click(object sender, EventArgs e)
         {
-            Console.Write("EDITMODE");
+            Console.WriteLine("EDITMODE");
             if (chkSyncUp.Checked)
             {
                 l.UpdateCustomization(o, (Session)this.session);

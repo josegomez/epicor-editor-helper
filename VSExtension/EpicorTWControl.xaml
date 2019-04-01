@@ -1,0 +1,101 @@
+﻿<UserControl x:Class="VSExtension.EpicorTWControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             
+
+             xmlns:vsshell="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"
+             Background="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"
+             Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300"
+             Name="MyToolWindow">
+    <Grid>
+        <StackPanel  >
+            <TextBlock Margin="10" HorizontalAlignment="Center">Epicor Customization Tools</TextBlock>
+            <Grid ShowGridLines="False">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition ></ColumnDefinition>
+                    <ColumnDefinition ></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <Button  VerticalAlignment="Center"   Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="32" Width="32" Click="Button_Click" Margin="10,0,0,0">
+                    <Image x:Name="btnSettings" Source="Resources/font-awesome_4-7-0_cog_256_0_007dff_none.png" Width="25" Height="25" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0"/>
+                </Button>
+                <Button x:Name="btnOpen" HorizontalAlignment="Center" VerticalAlignment="Top" Width="127" Grid.Row="2" Grid.ColumnSpan="3" Margin="0,10,0,0" Click="BtnOpen_Click" >
+                <Grid Width="127">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="38"  ></ColumnDefinition>
+                        <ColumnDefinition  Width="Auto" ></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition ></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Image Source="Resources/font-awesome_4-7-0_folder-open_15_0_007dff_none.png" Width="15" Height="15" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Right" />
+                    <TextBlock Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="2">
+                               Open
+                    </TextBlock>
+                </Grid>
+                </Button>
+                <Button x:Name="btnUpdate"  HorizontalAlignment="Center" VerticalAlignment="Top" Width="127" Grid.Row="3" Grid.ColumnSpan="3"  Margin="0,10,0,0" Click="BtnUpdate_Click" >
+                    <Grid x:Name="btnUp" Width="127">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="38"  ></ColumnDefinition>
+                            <ColumnDefinition  Width="Auto" ></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition ></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Image Source="Resources/font-awesome_4-7-0_download_15_0_007dff_none.png" Width="15" Height="15" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Right" />
+                        <TextBlock Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="2">
+                                Upload
+                        </TextBlock>
+                    </Grid>
+                </Button>
+                <Button x:Name="btnDown"  HorizontalAlignment="Center" VerticalAlignment="Top" Width="127" Grid.Row="4" Grid.ColumnSpan="3" Margin="0,10,0,0" Click="BtnDown_Click"  >
+                    <Grid Width="127">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="38"  ></ColumnDefinition>
+                            <ColumnDefinition  Width="Auto" ></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition ></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Image Source="Resources/font-awesome_4-7-0_upload_15_0_007dff_none.png" Width="15" Height="15" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Right" />
+                        <TextBlock Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="2">
+                                Download
+                        </TextBlock>
+                    </Grid>
+                </Button>
+                <Button x:Name="btnTools"  HorizontalAlignment="Center" VerticalAlignment="Top" Width="127" Grid.Row="5" Grid.ColumnSpan="3"  Margin="0,10,0,0" Click="BtnTools_Click" >
+                    <Grid Width="127">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="38"  ></ColumnDefinition>
+                            <ColumnDefinition  Width="Auto" ></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition ></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Image Source="Resources/octicons_4-3-0_tools_15_0_007dff_none.png" Width="15" Height="15" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Right" />
+                        <TextBlock Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="2">
+                                ToolBox
+                        </TextBlock>
+                    </Grid>
+                </Button>
+
+            </Grid>
+            <Image Source="Resources/Logo-128x128.fw.png" Stretch="None"/>
+
+
+        </StackPanel>
+    </Grid>
+</UserControl>

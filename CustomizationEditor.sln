@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomizationEditor_10.1.50
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomizationEditor_10.2.100.X", "CustomizationEditor_10.2.100\CustomizationEditor_10.2.100.X.csproj", "{20DD988F-E57E-428C-820F-FFB95E106166}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSExtension", "VSExtension\VSExtension.csproj", "{D89291C5-EB9F-4F51-ACD9-8856158174B9}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		CommonCode\CommonCode.projitems*{20dd988f-e57e-428c-820f-ffb95e106166}*SharedItemsImports = 4
@@ -61,6 +63,10 @@ Global
 		{20DD988F-E57E-428C-820F-FFB95E106166}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{20DD988F-E57E-428C-820F-FFB95E106166}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{20DD988F-E57E-428C-820F-FFB95E106166}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D89291C5-EB9F-4F51-ACD9-8856158174B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D89291C5-EB9F-4F51-ACD9-8856158174B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D89291C5-EB9F-4F51-ACD9-8856158174B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D89291C5-EB9F-4F51-ACD9-8856158174B9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
