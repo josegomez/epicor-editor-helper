@@ -55,7 +55,7 @@
                         <Grid.RowDefinitions>
                             <RowDefinition ></RowDefinition>
                         </Grid.RowDefinitions>
-                        <Image Source="Resources/font-awesome_4-7-0_download_15_0_007dff_none.png" Width="15" Height="15" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Right" />
+                        <Image Source="Resources/font-awesome_4-7-0_upload_15_0_007dff_none.png" Width="15" Height="15" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Right" />
                         <TextBlock Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="2">
                                 Upload
                         </TextBlock>
@@ -70,7 +70,7 @@
                         <Grid.RowDefinitions>
                             <RowDefinition ></RowDefinition>
                         </Grid.RowDefinitions>
-                        <Image Source="Resources/font-awesome_4-7-0_upload_15_0_007dff_none.png" Width="15" Height="15" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Right" />
+                        <Image Source="Resources/font-awesome_4-7-0_download_15_0_007dff_none.png" Width="15" Height="15" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Right" />
                         <TextBlock Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="2">
                                 Download
                         </TextBlock>

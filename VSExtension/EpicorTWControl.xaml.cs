@@ -92,8 +92,22 @@
             process.Start();
             process.BeginOutputReadLine();
             process.BeginErrorReadLine();
+            process.EnableRaisingEvents = true;
+            process.Exited += Process_Exited;
             
-            
+        }
+
+        private void Process_Exited(object sender, EventArgs e)
+        {
+            Application.Current.Dispatcher.Invoke(DispatcherPriority.Background, new ThreadStart(delegate
+            {
+                DTE dte = Package.GetGlobalService(typeof(SDTE)) as DTE;
+                dte.Properties["Environment", "Documents"].Item("DetectFileChangesOutsideIDE").Value = 1;
+                if(dte.Solution.IsOpen)
+                {
+                    dte.Solution.Open(dte.Solution.FileName);
+                }
+            }));
         }
 
         public void OutputHandler(object sendingProcess, DataReceivedEventArgs outLine)
@@ -108,7 +122,9 @@
                 {
                     Application.Current.Dispatcher.Invoke(DispatcherPriority.Background, new ThreadStart(delegate
                     {
-
+                        DTE dte = Package.GetGlobalService(typeof(SDTE)) as DTE;
+                        dte.ExecuteCommand("File.SaveAll");
+                        dte.Properties["Environment", "Documents"].Item("DetectFileChangesOutsideIDE").Value = 0;
                         InfoBarService.Instance.ShowInfoBar("You are editing the customization in Epicor, do not make changes in Visual Studio until you are done and this message has been dismissed");
                     }));
                 }
@@ -120,7 +136,21 @@
                         //Update UI here
                         InfoBarService.Instance.CloseInfoBar();
                         DTE dte = Package.GetGlobalService(typeof(SDTE)) as DTE;
-                        dte.ExecuteCommand("File.OpenProject", $"\"{Directory.GetFiles(outLine.Data, "*.csproj").FirstOrDefault()}\"");
+                        
+                        var sol = Directory.GetFiles(outLine.Data, "*.sln").FirstOrDefault();
+                        if (sol == null)
+                        {
+                            sol = Directory.GetFiles(outLine.Data, "*.csproj").FirstOrDefault();
+                            
+                            dte.Solution.Create(Path.GetDirectoryName(sol), $"{Path.GetFileNameWithoutExtension(sol)}.sln");
+                            dte.ExecuteCommand("File.AddExistingProject", $"\"{sol}\"");
+                            dte.ExecuteCommand("File.SaveAll");
+                        }
+                        else
+                            dte.Solution.Open(sol);
+
+                        dte.Properties["Environment", "Documents"].Item("DetectFileChangesOutsideIDE").Value = 1;
+
                     }));
                     
 
@@ -179,17 +209,7 @@
                         }
                     }
                 }));
-                /*dte.act
-
-                StringBuilder args = new StringBuilder();
-                args.Append($"-f \"{Settings.Default.EpicorFolder}\"");
-                args.Append(" ");
-                args.Append($"-r \"{Settings.Default.CustomiationPath}\"");
-                args.Append(" -a Add");
-
-                runCommand(args);*/
-
-
+     
 
 
             }
@@ -314,18 +334,7 @@
                         }
                     }
                 }));
-                /*dte.act
-
-                StringBuilder args = new StringBuilder();
-                args.Append($"-f \"{Settings.Default.EpicorFolder}\"");
-                args.Append(" ");
-                args.Append($"-r \"{Settings.Default.CustomiationPath}\"");
-                args.Append(" -a Add");
-
-                runCommand(args);*/
-
-
-
+   
 
             }
         }

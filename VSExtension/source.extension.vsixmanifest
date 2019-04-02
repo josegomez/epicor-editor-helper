@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="VSExtension.68c7c3c4-f278-4e5a-a90b-882a2f7dc5af" Version="1.3" Language="en-US" Publisher="josecgomez" />
+        <Identity Id="VSExtension.68c7c3c4-f278-4e5a-a90b-882a2f7dc5af" Version="1.4" Language="en-US" Publisher="josecgomez" />
         <DisplayName>Epicor Customization Editor for Visual Studio</DisplayName>
         <Description xml:space="preserve">This is an experimental Visual Studio Code Extension which allows you to Edit, Test and Debug Epicor Customizations right from VS Code
 
@@ -26,5 +26,6 @@
     </Prerequisites>
     <Assets>
         <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
+        <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="File" Path="Newtonsoft.Json.dll" AssemblyName="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed" />
     </Assets>
 </PackageManifest>
