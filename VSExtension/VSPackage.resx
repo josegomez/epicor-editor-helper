@@ -160,4 +160,13 @@
   <data name="octicons_4-3-0_tools_256_0_007dff_none" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\octicons_4-3-0_tools_256_0_007dff_none.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="iconBTM" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\iconBTM.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Logo-16x16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Logo-16x16.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Logo-16x16.fw" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Logo-16x16.fw.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

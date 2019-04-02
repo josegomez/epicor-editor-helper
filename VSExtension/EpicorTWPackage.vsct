@@ -44,9 +44,9 @@
           If you do not want an image next to your command, remove the Icon node /> -->
       <Button guid="guidEpicorTWPackageCmdSet" id="EpicorTWCommandId" priority="0x0100" type="Button">
         <Parent guid="guidSHLMainMenu" id="IDG_VS_WNDO_OTRWNDWS1"/>
-        <Icon guid="guidImages" id="bmpPic1" />
+        <Icon guid="epicIcons" id="epiIcon1" />
         <Strings>
-          <ButtonText>EpicorTW</ButtonText>
+          <ButtonText>Epicor Customization Tools</ButtonText>
         </Strings>
       </Button>
     </Buttons>
@@ -59,6 +59,7 @@
             inside a button definition. An important aspect of this declaration is that the element id
             must be the actual index (1-based) of the bitmap inside the bitmap strip. -->
       <Bitmap guid="guidImages" href="Resources\EpicorTWCommand.png" usedList="bmpPic1, bmpPic2, bmpPicSearch, bmpPicX, bmpPicArrows, bmpPicStrikethrough"/>
+      <Bitmap guid="epicIcons" href="Resources\Logo-16x16.fw.png" usedList="epiIcon1"/>
     </Bitmaps>
   </Commands>
 
@@ -79,5 +80,9 @@
       <IDSymbol name="bmpPicArrows" value="5" />
       <IDSymbol name="bmpPicStrikethrough" value="6" />
     </GuidSymbol>
+    <GuidSymbol name="epicIcons" value="{9160F783-05E9-419F-9AA3-AFAB54DD4839}">
+      <IDSymbol name="epiIcon1" value="1" />
+    </GuidSymbol>
+
   </Symbols>
 </CommandTable>
