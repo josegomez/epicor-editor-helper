@@ -36,6 +36,7 @@ namespace CustomizationEditor
         private void NonModalWokIt_Load(object sender, EventArgs e)
         {
             lblCustom.Text = $"{o.Key1}-{o.Key2}";
+            chkSyncUp.Checked = true;
         }
 
         private void btnTracing_Click(object sender, EventArgs e)

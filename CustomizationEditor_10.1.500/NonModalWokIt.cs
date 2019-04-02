@@ -36,6 +36,7 @@ namespace CustomizationEditor
         private void NonModalWokIt_Load(object sender, EventArgs e)
         {
             lblCustom.Text = $"{o.Key1}-{o.Key2}";
+            chkSyncUp.Checked = true;
         }
 
         private void btnTracing_Click(object sender, EventArgs e)
@@ -102,7 +103,7 @@ namespace CustomizationEditor
 
         private void btnEdit_Click(object sender, EventArgs e)
         {
-            Console.Write("EDITMODE");
+            Console.WriteLine("EDITMODE");
             if (chkSyncUp.Checked)
             {
                 l.UpdateCustomization(o, (Session)this.session);
@@ -161,7 +162,7 @@ namespace CustomizationEditor
 
         private void btnRefs_Click(object sender, EventArgs e)
         {
-            Console.Write("EDITMODE");
+            Console.WriteLine("EDITMODE");
             if (chkSyncUp.Checked)
             {
                 l.UpdateCustomization(o, (Session)this.session);
@@ -179,7 +180,7 @@ namespace CustomizationEditor
 
         private void btnCodeWizard_Click(object sender, EventArgs e)
         {
-            Console.Write("EDITMODE");
+            Console.WriteLine("EDITMODE");
             if (chkSyncUp.Checked)
             {
                 l.UpdateCustomization(o, (Session)this.session);
@@ -197,7 +198,7 @@ namespace CustomizationEditor
 
         private void btnDataTools_Click(object sender, EventArgs e)
         {
-            Console.Write("EDITMODE");
+            Console.WriteLine("EDITMODE");
             if (chkSyncUp.Checked)
             {
                 l.UpdateCustomization(o, (Session)this.session);

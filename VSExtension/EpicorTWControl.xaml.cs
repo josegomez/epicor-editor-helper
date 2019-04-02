@@ -73,29 +73,56 @@
             }
             return rturn;
         }
-
+        System.Diagnostics.Process process;
         public void runCommand(StringBuilder args, bool wait=false)
         {
             //* Create your Process
-            System.Diagnostics.Process process = new System.Diagnostics.Process();
-            process.StartInfo.FileName = Path.Combine(Settings.Default.EpicorFolder,"CustomizationEditor.exe");
-            process.StartInfo.Arguments = args.ToString();
-            process.StartInfo.WorkingDirectory = Settings.Default.EpicorFolder;
-            process.StartInfo.UseShellExecute = false;
-            process.StartInfo.RedirectStandardOutput = true;
-            process.StartInfo.RedirectStandardError = true;
-            process.StartInfo.CreateNoWindow = true;
-            //* Set your output and error (asynchronous) handlers
-            process.OutputDataReceived += new DataReceivedEventHandler(OutputHandler);
-            process.ErrorDataReceived += new DataReceivedEventHandler(OutputHandler);
-            //* Start process and handlers
-            process.Start();
-            process.BeginOutputReadLine();
-            process.BeginErrorReadLine();
-            process.EnableRaisingEvents = true;
-            process.Exited += Process_Exited;
+            if (process != null && !process.HasExited)
+            {
+                BringProcessToFront(process);
+            }
+            else
+            {
+                process = new System.Diagnostics.Process();
+                process.StartInfo.FileName = Path.Combine(Settings.Default.EpicorFolder, "CustomizationEditor.exe");
+                process.StartInfo.Arguments = args.ToString();
+                process.StartInfo.WorkingDirectory = Settings.Default.EpicorFolder;
+                process.StartInfo.UseShellExecute = false;
+                process.StartInfo.RedirectStandardOutput = true;
+                process.StartInfo.RedirectStandardError = true;
+                process.StartInfo.CreateNoWindow = true;
+                //* Set your output and error (asynchronous) handlers
+                process.OutputDataReceived += new DataReceivedEventHandler(OutputHandler);
+                process.ErrorDataReceived += new DataReceivedEventHandler(OutputHandler);
+                //* Start process and handlers
+                process.Start();
+                process.BeginOutputReadLine();
+                process.BeginErrorReadLine();
+                process.EnableRaisingEvents = true;
+                process.Exited += Process_Exited;
+            }
             
         }
+
+        public static void BringProcessToFront(System.Diagnostics.Process process)
+        {
+            IntPtr handle = process.MainWindowHandle;
+            if (IsIconic(handle))
+            {
+                ShowWindow(handle, SW_RESTORE);
+            }
+
+            SetForegroundWindow(handle);
+        }
+
+        const int SW_RESTORE = 9;
+
+        [System.Runtime.InteropServices.DllImport("User32.dll")]
+        private static extern bool SetForegroundWindow(IntPtr handle);
+        [System.Runtime.InteropServices.DllImport("User32.dll")]
+        private static extern bool ShowWindow(IntPtr handle, int nCmdShow);
+        [System.Runtime.InteropServices.DllImport("User32.dll")]
+        private static extern bool IsIconic(IntPtr handle);
 
         private void Process_Exited(object sender, EventArgs e)
         {

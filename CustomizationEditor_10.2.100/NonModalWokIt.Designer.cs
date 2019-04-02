@@ -94,6 +94,7 @@
             this.btnTest.TabIndex = 4;
             this.btnTest.Text = "Run (Test)";
             this.btnTest.UseVisualStyleBackColor = true;
+            this.btnTest.Visible = false;
             this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
             // 
             // btnDebug
@@ -112,7 +113,7 @@
             this.btnEdit.Name = "btnEdit";
             this.btnEdit.Size = new System.Drawing.Size(129, 23);
             this.btnEdit.TabIndex = 6;
-            this.btnEdit.Text = "&Edit";
+            this.btnEdit.Text = "&Edit/Run";
             this.btnEdit.UseVisualStyleBackColor = true;
             this.btnEdit.Click += new System.EventHandler(this.btnEdit_Click);
             // 
