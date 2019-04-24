@@ -109,7 +109,7 @@ namespace CustomizationEditor
                 l.UpdateCustomization(o, (Session)this.session);
             }
             l.LaunchInEpicor(o, (Session)this.session, true, true);
-            Sync = true;
+            
             if (o.Key2.Contains("MainController"))//Dashboard
             {
                 l.DownloadAndSyncDashboard((Session)this.session, o);

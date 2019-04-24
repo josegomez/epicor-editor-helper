@@ -1,0 +1,437 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Ice.Contracts.BO.DashboardMaint</name>
+    </assembly>
+    <members>
+        <member name="T:Ice.BO.DashboardMaintDataSet">
+             <summary>
+            Represents a strongly typed in-memory cache of data.
+            </summary>
+        </member>
+        <member name="T:Ice.BO.DashboardMaintDataSet.DashboardMaintDataTable">
+             <summary>
+            Represents the strongly named DataTable class.
+            </summary>
+        </member>
+        <member name="T:Ice.BO.DashboardMaintDataSet.DashBdBAQDataTable">
+             <summary>
+            Represents the strongly named DataTable class.
+            </summary>
+        </member>
+        <member name="T:Ice.BO.DashboardMaintDataSet.DashboardMaintRow">
+             <summary>
+            Represents strongly named DataRow class.
+            </summary>
+        </member>
+        <member name="T:Ice.BO.DashboardMaintDataSet.DashBdBAQRow">
+             <summary>
+            Represents strongly named DataRow class.
+            </summary>
+        </member>
+        <member name="T:Ice.BO.DashboardMaintDataSet.DashboardMaintRowChangeEvent">
+             <summary>
+            Row event argument class
+            </summary>
+        </member>
+        <member name="T:Ice.BO.DashboardMaintDataSet.DashBdBAQRowChangeEvent">
+             <summary>
+            Row event argument class
+            </summary>
+        </member>
+        <member name="T:Ice.BO.DashboardMaintListDataSet">
+             <summary>
+            Represents a strongly typed in-memory cache of data.
+            </summary>
+        </member>
+        <member name="T:Ice.BO.DashboardMaintListDataSet.DashboardMaintListDataTable">
+             <summary>
+            Represents the strongly named DataTable class.
+            </summary>
+        </member>
+        <member name="T:Ice.BO.DashboardMaintListDataSet.DashboardMaintListRow">
+             <summary>
+            Represents strongly named DataRow class.
+            </summary>
+        </member>
+        <member name="T:Ice.BO.DashboardMaintListDataSet.DashboardMaintListRowChangeEvent">
+             <summary>
+            Row event argument class
+            </summary>
+        </member>
+        <member name="T:Ice.BO.UpdExtDashboardMaintDataSet">
+             <summary>
+            Represents a strongly typed in-memory cache of data.
+            </summary>
+        </member>
+        <member name="T:Ice.BO.UpdExtDashboardMaintDataSet.DashboardMaintDataTable">
+             <summary>
+            Represents the strongly named DataTable class.
+            </summary>
+        </member>
+        <member name="T:Ice.BO.UpdExtDashboardMaintDataSet.DashBdBAQDataTable">
+             <summary>
+            Represents the strongly named DataTable class.
+            </summary>
+        </member>
+        <member name="T:Ice.BO.UpdExtDashboardMaintDataSet.DashboardMaintRow">
+             <summary>
+            Represents strongly named DataRow class.
+            </summary>
+        </member>
+        <member name="T:Ice.BO.UpdExtDashboardMaintDataSet.DashBdBAQRow">
+             <summary>
+            Represents strongly named DataRow class.
+            </summary>
+        </member>
+        <member name="T:Ice.BO.UpdExtDashboardMaintDataSet.DashboardMaintRowChangeEvent">
+             <summary>
+            Row event argument class
+            </summary>
+        </member>
+        <member name="T:Ice.BO.UpdExtDashboardMaintDataSet.DashBdBAQRowChangeEvent">
+             <summary>
+            Row event argument class
+            </summary>
+        </member>
+        <member name="M:Ice.Contracts.DashboardMaintSvcContract.GetNewDashboardMaint(Ice.Tablesets.DashboardMaintTableset@,System.String,System.String,System.String)">
+            <summary>
+            Inserts a new row in the DataSet with defaults populated.
+            </summary>
+        </member>
+        <member name="M:Ice.Contracts.DashboardMaintSvcContract.GetNewDashBdBAQ(Ice.Tablesets.DashboardMaintTableset@,System.String,System.String,System.String,System.String)">
+            <summary>
+            Inserts a new row in the DataSet with defaults populated.
+            </summary>
+        </member>
+        <member name="M:Ice.Contracts.DashboardMaintSvcContract.DeleteByID(System.String,System.String,System.String,System.String)">
+            <summary>
+            Deletes a row given its ID.
+            </summary>
+        </member>
+        <member name="M:Ice.Contracts.DashboardMaintSvcContract.GetByID(System.String,System.String,System.String,System.String)">
+            <summary>
+            Returns a DataSet given the primary key.
+            </summary>
+            <returns>The DataSet.</returns>
+        </member>
+        <member name="M:Ice.Contracts.DashboardMaintSvcContract.GetList(System.String,System.Int32,System.Int32,System.Boolean@)">
+            <summary>
+            Returns a list of rows that satisfy the where clause.
+            </summary>
+            <param name="whereClause">An expression used to filter the rows. Can be left blank for all rows.</param>
+            <param name="pageSize">The maximum number of rows to return. Leave as zero for no maximum.</param>
+            <param name="absolutePage">Page of rows to return.</param>
+            <param name="morePages">Whether there are more pages of rows available.</param>
+            <returns>The list DataSet.</returns>
+        </member>
+        <member name="M:Ice.Contracts.DashboardMaintSvcContract.GetRows(System.String,System.String,System.Int32,System.Int32,System.Boolean@)">
+            <summary>
+            Returns a dataset containing all rows that satisfy the where clauses.
+            </summary>
+            <returns>The full DataSet.</returns>
+        </member>
+        <member name="M:Ice.Contracts.DashboardMaintSvcContract.GetBySysRowID(System.Guid)">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:Ice.Contracts.DashboardMaintSvcContract.GetBySysRowIDs(System.Collections.Generic.List{System.Guid})">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:Ice.Contracts.DashboardMaintSvcContract.Update(Ice.Tablesets.DashboardMaintTableset@)">
+            <summary>
+            Commits the DataSet changes to the data store.
+            </summary>
+            <param name="ds">The full DataSet.</param>
+        </member>
+        <member name="M:Ice.Contracts.DashboardMaintSvcContract.UpdateExt(Ice.Tablesets.UpdExtDashboardMaintTableset@,System.Boolean,System.Boolean,System.Boolean@)">
+            <summary>
+            Apply input data to BO by calling GetByID/GetNew/Update methods.
+            </summary>
+            <returns>The dataset with list of errors occurred during update process.</returns>
+        </member>
+        <member name="P:Ice.Tablesets.DashboardMaintRow.Company">
+            <summary>
+            Company Identifier.
+            </summary>
+        </member>
+        <member name="P:Ice.Tablesets.DashboardMaintRow.ProductID">
+            <summary>
+            VN - Vantage, VS - Vista
+            </summary>
+        </member>
+        <member name="P:Ice.Tablesets.DashboardMaintRow.GlbCompany">
+            <summary>
+            Global Company identifier.  Used in identify from whch company this BAQ originated.
+            </summary>
+        </member>
+        <member name="P:Ice.Tablesets.DashboardMaintRow.DefinitionID">
+            <summary>
+            Dashboard Definition ID
+            </summary>
+        </member>
+        <member name="P:Ice.Tablesets.DashboardMaintRow.Description">
+            <summary>
+            Description
+            </summary>
+        </member>
+        <member name="P:Ice.Tablesets.DashboardMaintRow.LastUpdated">
+            <summary>
+            Last Updated Date
+            </summary>
+        </member>
+        <member name="P:Ice.Tablesets.DashboardMaintRow.LastUpdatedBy">
+            <summary>
+            Last Update By
+            </summary>
+        </member>
+        <member name="P:Ice.Tablesets.DashboardMaintRow.DashBdVersion">
+            <summary>
+            Dashboard Version
+            </summary>
+        </member>
+        <member name="P:Ice.Tablesets.DashboardMaintRow.DataBaseVersion">
+            <summary>
+            Database Version
+            </summary>
+        </member>
+        <member name="P:Ice.Tablesets.DashboardMaintRow.Delivered">
+             <summary>
+             Indicates this dashboard is a system dashboard and any changes will be wiped with the next service pack.
+            
+             </summary>
+        </member>
+        <member name="P:Ice.Tablesets.DashboardMaintRow.MobileAccess">
+            <summary>
+            Indicates whether this Dashboard is available on the mobile menu.
+            </summary>
+        </member>
+        <member name="P:Ice.Tablesets.DashboardMaintRow.CGCCode">
+            <summary>
+            Country Group Code / Country Code for CSF
+            </summary>
+        </member>
+        <member name="P:Ice.Tablesets.DashboardMaintRow.LastDeployedDate">
+            <summary>
+            LastDeployedDate
+            </summary>
+        </member>
+        <member name="P:Ice.Tablesets.DashboardMaintRow.LastDeployedBy">
+            <summary>
+            LastDeployedBy
+            </summary>
+        </member>
+        <member name="P:Ice.Tablesets.DashboardMaintRow.SysRevID">
+            <summary>
+            Revision identifier for this row. It is incremented upon each write.
+            </summary>
+        </member>
+        <member name="P:Ice.Tablesets.DashboardMaintRow.SysRowID">
+            <summary>
+            Unique identifier for this row. The value is a GUID.
+            </summary>
+        </member>
+        <member name="P:Ice.Tablesets.DashboardMaintRow.Deployed">
+            <summary>
+            Deployed
+            </summary>
+        </member>
+        <member name="P:Ice.Tablesets.DashboardMaintRow.Error">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Ice.Tablesets.DashboardMaintRow.Generated">
+            <summary>
+            Generated
+            </summary>
+        </member>
+        <member name="P:Ice.Tablesets.DashboardMaintRow.Selected">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Ice.Tablesets.DashboardMaintRow.BitFlag">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Ice.Tablesets.DashboardMaintRow.RowMod">
+            <summary>
+            RowMod
+            </summary>
+        </member>
+        <member name="P:Ice.Tablesets.DashboardMaintRow.SpecifiedProperties">
+            <summary>
+            SpecifiedProperties
+            </summary>
+        </member>
+        <member name="P:Ice.Tablesets.DashBdBAQRow.Company">
+            <summary>
+            Company Identifier.
+            </summary>
+        </member>
+        <member name="P:Ice.Tablesets.DashBdBAQRow.ProductID">
+            <summary>
+            VN - Vantage, VS - Vista
+            </summary>
+        </member>
+        <member name="P:Ice.Tablesets.DashBdBAQRow.GlbCompany">
+            <summary>
+            Global Company identifier.  Used in identify from whch company this BAQ originated.
+            </summary>
+        </member>
+        <member name="P:Ice.Tablesets.DashBdBAQRow.DefinitionID">
+            <summary>
+            Dashboard Definition ID
+            </summary>
+        </member>
+        <member name="P:Ice.Tablesets.DashBdBAQRow.QueryID">
+            <summary>
+            Query ID
+            </summary>
+        </member>
+        <member name="P:Ice.Tablesets.DashBdBAQRow.CGCCode">
+            <summary>
+            Country Group / Country Code for CSF
+            </summary>
+        </member>
+        <member name="P:Ice.Tablesets.DashBdBAQRow.SysRevID">
+            <summary>
+            Revision identifier for this row. It is incremented upon each write.
+            </summary>
+        </member>
+        <member name="P:Ice.Tablesets.DashBdBAQRow.SysRowID">
+            <summary>
+            Unique identifier for this row. The value is a GUID.
+            </summary>
+        </member>
+        <member name="P:Ice.Tablesets.DashBdBAQRow.BitFlag">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Ice.Tablesets.DashBdBAQRow.RowMod">
+            <summary>
+            RowMod
+            </summary>
+        </member>
+        <member name="P:Ice.Tablesets.DashBdBAQRow.SpecifiedProperties">
+            <summary>
+            SpecifiedProperties
+            </summary>
+        </member>
+        <member name="P:Ice.Tablesets.DashboardMaintListRow.Company">
+            <summary>
+            Company Identifier.
+            </summary>
+        </member>
+        <member name="P:Ice.Tablesets.DashboardMaintListRow.ProductID">
+            <summary>
+            VN - Vantage, VS - Vista
+            </summary>
+        </member>
+        <member name="P:Ice.Tablesets.DashboardMaintListRow.GlbCompany">
+            <summary>
+            Global Company identifier.  Used in identify from whch company this BAQ originated.
+            </summary>
+        </member>
+        <member name="P:Ice.Tablesets.DashboardMaintListRow.DefinitionID">
+            <summary>
+            Dashboard Definition ID
+            </summary>
+        </member>
+        <member name="P:Ice.Tablesets.DashboardMaintListRow.Description">
+            <summary>
+            Description
+            </summary>
+        </member>
+        <member name="P:Ice.Tablesets.DashboardMaintListRow.LastUpdated">
+            <summary>
+            Last Updated Date
+            </summary>
+        </member>
+        <member name="P:Ice.Tablesets.DashboardMaintListRow.LastUpdatedBy">
+            <summary>
+            Last Update By
+            </summary>
+        </member>
+        <member name="P:Ice.Tablesets.DashboardMaintListRow.DashBdVersion">
+            <summary>
+            Dashboard Version
+            </summary>
+        </member>
+        <member name="P:Ice.Tablesets.DashboardMaintListRow.DataBaseVersion">
+            <summary>
+            Database Version
+            </summary>
+        </member>
+        <member name="P:Ice.Tablesets.DashboardMaintListRow.Delivered">
+             <summary>
+             Indicates this dashboard is a system dashboard and any changes will be wiped with the next service pack.
+            
+             </summary>
+        </member>
+        <member name="P:Ice.Tablesets.DashboardMaintListRow.MobileAccess">
+            <summary>
+            Indicates whether this Dashboard is available on the mobile menu.
+            </summary>
+        </member>
+        <member name="P:Ice.Tablesets.DashboardMaintListRow.CGCCode">
+            <summary>
+            Country Group Code / Country Code for CSF
+            </summary>
+        </member>
+        <member name="P:Ice.Tablesets.DashboardMaintListRow.LastDeployedDate">
+            <summary>
+            LastDeployedDate
+            </summary>
+        </member>
+        <member name="P:Ice.Tablesets.DashboardMaintListRow.LastDeployedBy">
+            <summary>
+            LastDeployedBy
+            </summary>
+        </member>
+        <member name="P:Ice.Tablesets.DashboardMaintListRow.SysRevID">
+            <summary>
+            Revision identifier for this row. It is incremented upon each write.
+            </summary>
+        </member>
+        <member name="P:Ice.Tablesets.DashboardMaintListRow.SysRowID">
+            <summary>
+            Unique identifier for this row. The value is a GUID.
+            </summary>
+        </member>
+        <member name="P:Ice.Tablesets.DashboardMaintListRow.Deployed">
+            <summary>
+            Deployed
+            </summary>
+        </member>
+        <member name="P:Ice.Tablesets.DashboardMaintListRow.Error">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Ice.Tablesets.DashboardMaintListRow.Generated">
+            <summary>
+            Generated
+            </summary>
+        </member>
+        <member name="P:Ice.Tablesets.DashboardMaintListRow.Selected">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Ice.Tablesets.DashboardMaintListRow.RowMod">
+            <summary>
+            RowMod
+            </summary>
+        </member>
+        <member name="P:Ice.Tablesets.DashboardMaintListRow.SpecifiedProperties">
+            <summary>
+            SpecifiedProperties
+            </summary>
+        </member>
+    </members>
+</doc>

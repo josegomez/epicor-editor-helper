@@ -3,6 +3,7 @@ using Ice.BO;
 using Ice.Core;
 using Ice.Lib;
 using Ice.Lib.Customization;
+using Ice.Lib.Deployment;
 using Ice.Lib.Framework;
 using Ice.Lib.Searches;
 using Ice.Proxy.BO;
@@ -18,6 +19,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
+using System.Xml;
 
 namespace CommonCode
 {
@@ -106,7 +108,11 @@ namespace CommonCode
             Ice.Adapters.GenXDataAdapter ad;
             PersonalizeCustomizeManager csm;
             CustomScriptManager csmR;
-            GetCSM(epiSession, o, out cm, out epiTransaction, out eu, out ad, out csm, out csmR);
+            if(!o.Key2.Contains("MainController"))
+                GetCSM(epiSession, o, out cm, out epiTransaction, out eu, out ad, out csm, out csmR);
+            else
+                GetCSMDB(epiSession, o, out cm, out epiTransaction, out eu, out ad, out csm, out csmR);
+            
 
             CustomObjectExplorerDialog coD = new CustomObjectExplorerDialog(csm.TopControl, epiTransaction, csmR);
             coD.ShowDialog();
@@ -123,6 +129,7 @@ namespace CommonCode
             epiSession["Customizing"] = false;
             var oTrans = new ILauncher(epiSession);
             cm = new CustomizationVerify(epiSession);
+
             string dll = cm.getDllName(o.Key2);
             dynamic epiBaseForm = null;
             epiTransaction = null;
@@ -200,6 +207,71 @@ namespace CommonCode
             eu.CloseCacheRespinSplash();
         }
 
+
+        private static void GetCSMDB(Session epiSession, CommandLineParams o, out CustomizationVerify cm, out dynamic epiTransaction, out EpiUIUtils eu, out Ice.Adapters.GenXDataAdapter ad, out PersonalizeCustomizeManager csm, out CustomScriptManager csmR)
+        {
+            epiSession["Customizing"] = false;
+            var oTrans = new ILauncher(epiSession);
+            cm = new CustomizationVerify(epiSession);
+            CompositeAssemblyRetriever caR = (CompositeAssemblyRetriever)typeof(ClientAssemblyRetriever).GetMethod("GetOrCreateAssemblyRetriever", BindingFlags.Static | BindingFlags.NonPublic).Invoke(null, new object[] { epiSession });
+            Assembly asy = caR.RetrieveAssembly($"Ice.UI.App.{(o.Key2.Replace("App.", "").Replace(".MainController", ""))}.dll");
+            string dll = cm.getDllName(o.Key2);
+            dynamic epiBaseForm = null;
+            epiTransaction = null;
+            if (string.IsNullOrEmpty(dll))
+                dll = "*.UI.*.dll";
+
+            Assembly assy = ClientAssemblyRetriever.ForILaunch(oTrans).RetrieveAssembly(dll);
+            
+            var typeE = assy.DefinedTypes.Where(r => r.FullName.ToUpper().Contains(o.Key2.ToUpper())).FirstOrDefault();
+            var typeTList = assy.DefinedTypes.Where(r => r.BaseType.Name.Equals("EpiTransaction") || r.BaseType.Name.Equals("EpiMultiViewTransaction") || r.BaseType.Name.Equals("EpiSingleViewTransaction") || r.BaseType.Name.Equals("UDMultiViewTransaction") || r.BaseType.Name.Equals("UDSingleViewTransaction")).ToList();
+            epiTransaction = new EpiTransaction(oTrans);
+            var typ = assy.DefinedTypes.Where(r => r.Name == "Launch").FirstOrDefault();
+            dynamic launcher = Activator.CreateInstance(typ);
+            launcher.Session = epiSession;
+            launcher.GetType().GetMethod("InitializeLaunch", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(launcher, null);
+
+            epiBaseForm = launcher.GetType().GetField("lForm", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(launcher);
+
+
+
+            epiBaseForm.IsVerificationMode = true;
+            epiBaseForm.CustomizationName = o.Key1;
+            eu = epiBaseForm.GetType().GetField("utils", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(epiBaseForm);
+            eu.GetType().GetField("currentSession", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(eu, epiTransaction.Session);
+            eu.GetType().GetField("customizeName", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(eu, o.Key1);
+            eu.GetType().GetField("baseExtentionName", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(eu, o.Key3.Replace("BaseExtension^", string.Empty));
+            eu.ParentForm = epiBaseForm;
+            var mi = eu.GetType().GetMethod("getCompositeCustomizeDataSet", BindingFlags.Instance | BindingFlags.NonPublic);
+            bool customize = false;
+            mi.Invoke(eu, new object[] { o.Key2, customize, customize, customize });
+
+            ad = new Ice.Adapters.GenXDataAdapter(epiTransaction);
+            ad.BOConnect();
+            GenXDataImpl i = (GenXDataImpl)ad.BusinessObject;
+            var ds = i.GetByID(o.Company, o.ProductType, o.LayerType, o.CSGCode, o.Key1, o.Key2, o.Key3);
+            string beName = o.Key3.Replace("BaseExtension^", string.Empty);
+            string exName = (string)eu.GetType().GetField("extensionName", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(eu);
+            CustomizationDS nds = new CustomizationDS();
+            if (string.IsNullOrEmpty(o.Company))
+            {
+                eu.CustLayerMan.GetType().GetProperty("RetrieveFromCache", BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic).SetValue(eu.CustLayerMan, false);
+                eu.CustLayerMan.GetType().GetField("custAllCompanies", BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic).SetValue(eu.CustLayerMan, string.IsNullOrEmpty(o.Company));
+                eu.CustLayerMan.GetType().GetField("selectCompCode", BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic).SetValue(eu.CustLayerMan, o.Company);
+                eu.CustLayerMan.GetType().GetField("companyCode", BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic).SetValue(eu.CustLayerMan, o.Company);
+                eu.CustLayerMan.GetType().GetField("loadDeveloperMode", BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic).SetValue(eu.CustLayerMan, string.IsNullOrEmpty(o.Company));
+
+                bool cancel = false;
+                eu.CustLayerMan.GetType().GetMethod("GetCompositeCustomDataSet", BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic).Invoke(eu.CustLayerMan, new object[] { o.Key2, exName, o.Key1, cancel });
+            }
+            typeof(EpiBaseForm).GetField("utils", BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic).SetValue(epiBaseForm, eu);
+            csm = new PersonalizeCustomizeManager(epiBaseForm, epiTransaction, o.ProductType, o.Company, beName, exName, o.Key1, eu.CustLayerMan, DeveloperLicenseType.Partner, LayerType.Customization);
+            csm.InitCustomControlsAndProperties(ds, LayerName.CompositeBase, true);
+            csmR = csm.CurrentCustomScriptManager;
+            eu.CloseCacheRespinSplash();
+        }
+
+
         internal void LaunchDataTools(CommandLineParams oo, object session)
         {
             Session epiSession = session as Session;
@@ -210,7 +282,10 @@ namespace CommonCode
             Ice.Adapters.GenXDataAdapter ad;
             PersonalizeCustomizeManager csm;
             CustomScriptManager csmR;
-            GetCSM(epiSession, o, out cm, out epiTransaction, out eu, out ad, out csm, out csmR);
+            if (!o.Key2.Contains("MainController"))
+                GetCSM(epiSession, o, out cm, out epiTransaction, out eu, out ad, out csm, out csmR);
+            else
+                GetCSMDB(epiSession, o, out cm, out epiTransaction, out eu, out ad, out csm, out csmR);
 
             csm.GetType().GetMethod("EnterEditMode", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance).Invoke(csm, null);
             
@@ -236,7 +311,10 @@ namespace CommonCode
             Ice.Adapters.GenXDataAdapter ad;
             PersonalizeCustomizeManager csm;
             CustomScriptManager csmR;
-            GetCSM(epiSession, o, out cm, out epiTransaction, out eu, out ad, out csm, out csmR);
+            if (!o.Key2.Contains("MainController"))
+                GetCSM(epiSession, o, out cm, out epiTransaction, out eu, out ad, out csm, out csmR);
+            else
+                GetCSMDB(epiSession, o, out cm, out epiTransaction, out eu, out ad, out csm, out csmR);
 
             csm.GetType().GetMethod("EnterEditMode", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance).Invoke(csm, null);
             CustomToolsDialog cmd = (CustomToolsDialog)csm.GetType().GetField("uiToolsDialog", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance).GetValue(csm);
@@ -265,8 +343,11 @@ namespace CommonCode
             Ice.Adapters.GenXDataAdapter ad;
             PersonalizeCustomizeManager csm;
             CustomScriptManager csmR;
-            GetCSM(epiSession, o, out cm, out epiTransaction, out eu, out ad, out csm, out csmR);
-            
+            if (!o.Key2.Contains("MainController"))
+                GetCSM(epiSession, o, out cm, out epiTransaction, out eu, out ad, out csm, out csmR);
+            else
+                GetCSMDB(epiSession, o, out cm, out epiTransaction, out eu, out ad, out csm, out csmR);
+
             csm.GetType().GetMethod("EnterEditMode", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance).Invoke(csm, null);
             
             CustomToolsDialog cmd = (CustomToolsDialog)csm.GetType().GetField("uiToolsDialog", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance).GetValue(csm);
@@ -763,6 +844,34 @@ namespace CommonCode
                 {
                     epiSession["Customizing"] = false;
                     var oTrans = new ILauncher(epiSession);
+
+                    /*Ice.UI.App.DashboardMaintEntry.Transaction t = new Ice.UI.App.DashboardMaintEntry.Transaction(oTrans);
+                    Ice.UI.App.DashboardMaintEntry.DashboardForm f = new Ice.UI.App.DashboardMaintEntry.DashboardForm(t);
+                    //f.Show();
+                    t.GetByID(o.Key2.Replace("App.", "").Replace(".MainController",""));
+                    t.GetType().GetMethod("AddDashboardsToList", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(t, null);
+
+                    Type tt = t.GetType().Assembly.GetTypes().Where(tlp => tlp.Name == "DashboardDeploymentStatus").FirstOrDefault();
+                    dynamic dps = (dynamic)t.GetType().GetField("dashboardsToProcess", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(t);
+                    var d = Activator.CreateInstance(tt, dps[0]);
+                    t.GetType().GetMethod("ProcessDashboard", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(t, null);
+
+                    f.RunningMaint = true;
+                    t.RunMaint(DashboardPanelAction.DeployAssembly, false);*/
+
+                    CompositeAssemblyRetriever caR = (CompositeAssemblyRetriever)typeof(ClientAssemblyRetriever).GetMethod("GetOrCreateAssemblyRetriever", BindingFlags.Static | BindingFlags.NonPublic).Invoke(null,new object[] { epiSession });
+                    Assembly asy = caR.RetrieveAssembly($"Ice.UI.App.{(o.Key2.Replace("App.", "").Replace(".MainController", ""))}.dll");
+                    /*
+                     * SearchOptions opts = new SearchOptions(SearchMode.AutoSearch)
+        {
+            DataSetMode = DataSetMode.RowsDataSet,
+            SelectMode = SelectMode.SingleSelect
+
+        };
+        opts.NamedSearch.WhereClauses.Add("XXXDef", $"Key1='{o.Key1}' and Key2 ='{o.Key2}' and Key3='{o.Key3}' and TypeCode='{o.LayerType}' and ProductID='{o.ProductType}'");
+        oTrans.InvokeSearch(opts);
+        */
+
                     CustomizationVerify cm = new CustomizationVerify(epiSession);
                     swLog.WriteLine("Customization Verify");
                     string dll = cm.getDllName(o.Key2);
@@ -860,7 +969,7 @@ namespace CommonCode
                     eu.CloseCacheRespinSplash();
                     eu.Dispose();
 
-
+                    Console.WriteLine(o.ProjectFolder);
                 }
                 catch (Exception ee)
                 {

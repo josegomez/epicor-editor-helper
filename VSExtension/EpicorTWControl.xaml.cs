@@ -132,6 +132,7 @@
                 dte.Properties["Environment", "Documents"].Item("DetectFileChangesOutsideIDE").Value = 1;
                 if(dte.Solution.IsOpen)
                 {
+                    dte.ExecuteCommand("File.SaveAll");
                     dte.Solution.Open(dte.Solution.FileName);
                 }
             }));

@@ -49,6 +49,10 @@
       <HintPath>..\..\..\..\..\..\epicor\ERP10.2Client\SG_Development\Client\Epicor.ServiceModel.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Ice.Adapters.DashboardMaint, Version=3.2.300.0, Culture=neutral, PublicKeyToken=5d3fa3c7105d7992, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\epicor\ERP10.2Client\SG_Development\Client\Ice.Adapters.DashboardMaint.dll</HintPath>
+    </Reference>
     <Reference Include="Ice.Adapters.GenXData, Version=3.2.300.0, Culture=neutral, PublicKeyToken=5d3fa3c7105d7992, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\epicor\ERP10.2Client\SG_Development\Client\Ice.Adapters.GenXData.dll</HintPath>
@@ -58,6 +62,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\epicor\ERP10.2Client\SG_Development\Client\Ice.Adapters.Menu.dll</HintPath>
       <Private>False</Private>
+    </Reference>
+    <Reference Include="Ice.Contracts.BO.DashboardMaint, Version=3.2.300.0, Culture=neutral, PublicKeyToken=5d3fa3c7105d7992, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\epicor\ERP10.2Client\SG_Development\Client\Ice.Contracts.BO.DashboardMaint.dll</HintPath>
     </Reference>
     <Reference Include="Ice.Contracts.BO.GenXData, Version=3.2.300.0, Culture=neutral, PublicKeyToken=5d3fa3c7105d7992, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -97,11 +105,6 @@
     <Reference Include="Ice.UI.CustomizationMaintEntry, Version=3.2.300.0, Culture=neutral, PublicKeyToken=5d3fa3c7105d7992, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\epicor\ERP10.2Client\SG_Development\Client\Ice.UI.CustomizationMaintEntry.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Ice.UI.Dashboard, Version=3.2.300.0, Culture=neutral, PublicKeyToken=5d3fa3c7105d7992, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\epicor\ERP10.2Client\SG_Development\Client\Ice.UI.Dashboard.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Infragistics4.Win.UltraWinDock.v12.2, Version=12.2.20122.2018, Culture=neutral, PublicKeyToken=7dd5c3163f2cd0cb, processorArchitecture=MSIL">
