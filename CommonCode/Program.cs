@@ -22,6 +22,7 @@ using System.Security.Cryptography;
 using System.Xml.Linq;
 using Ice.Lib.SecRights;
 using CommonCode;
+using System.Security.Permissions;
 
 namespace CustomizationEditor
 {
@@ -171,9 +172,11 @@ namespace CustomizationEditor
         /// Self explinatory
         /// </summary>
         /// <param name="iFlag"></param>
+        /// [SecurityPermissionAttribute(SecurityAction.Demand, ControlThread = true)]
+        [SecurityPermissionAttribute(SecurityAction.Demand, ControlThread = true)]
         private static void ShowProgressBar(bool iFlag = true)
         {
-           /* try
+            try
             {
                 if (iFlag)
                 {
@@ -193,7 +196,7 @@ namespace CustomizationEditor
                     }
                 }
             }
-            catch { }*/
+            catch { }
         }
 
       
@@ -298,7 +301,7 @@ namespace CustomizationEditor
             DirectoryInfo di = Directory.CreateDirectory(Path.Combine(System.IO.Path.GetTempPath(), Guid.NewGuid().ToString()));
             o.Temp = di.FullName;
             var x =XElement.Load(newConfig);
-
+            string currentCache = x.Descendants("appSettings").Elements().Where(r => r.Name == "AlternateCacheFolder").FirstOrDefault().FirstAttribute.Value;
             //Set our new Temp Cache location in our new config
             x.Descendants("appSettings").Elements().Where(r => r.Name == "AlternateCacheFolder").FirstOrDefault().FirstAttribute.Value = di.FullName;
             x.Save(newConfig);
@@ -341,6 +344,31 @@ namespace CustomizationEditor
             if (ses != null)
             {
                 SecRightsHandler.CacheBOSecSettings(ses);
+
+
+                //Cause Brandon likes  hot keys... like a douche here's a BUNCHA un-necesary code... sigh!
+                if(string.IsNullOrEmpty(currentCache))
+                {
+                    currentCache = $"{Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.CommonApplicationData))}";    
+                }
+                string deepPath = "";
+                var s = Directory.GetDirectories(Path.Combine(o.Temp, "Epicor"))[0];
+                deepPath = Path.Combine("Epicor", Path.GetFileName(s));
+                s = Directory.GetDirectories(s)[0];
+                deepPath = Path.Combine(deepPath, Path.GetFileName(s));
+                s = Directory.GetDirectories(s)[0];
+                deepPath = Path.Combine(deepPath, Path.GetFileName(s));
+                deepPath = Path.Combine(deepPath, "Customization");
+                foreach(string gk in Directory.GetFiles(Path.Combine(currentCache,deepPath),"AllForms*.xml"))
+                {
+                    string newPat = Path.Combine(Path.Combine(o.Temp, deepPath), Path.GetFileName(gk));
+                    if (!Directory.Exists(Path.GetDirectoryName(newPat)))
+                    {
+                        Directory.CreateDirectory(Path.GetDirectoryName(newPat));
+                    }
+                    File.Copy(gk,newPat);
+                }
+
 
                 dynamic curMRUList= typeof(SecRightsHandler).GetField("_currMRUList", BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic).GetValue(null);
 

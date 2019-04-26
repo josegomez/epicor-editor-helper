@@ -371,6 +371,10 @@ namespace CommonCode
         public void LaunchInEpicor(CommandLineParams o, Session epiSession, bool edit, bool modal = true)
         {
             epiSession["Customizing"] = edit;
+            if (o.Key2.Contains("MainController")) { 
+                CompositeAssemblyRetriever caR = (CompositeAssemblyRetriever)typeof(ClientAssemblyRetriever).GetMethod("GetOrCreateAssemblyRetriever", BindingFlags.Static | BindingFlags.NonPublic).Invoke(null, new object[] { epiSession });
+                Assembly asy = caR.RetrieveAssembly($"Ice.UI.App.{(o.Key2.Replace("App.", "").Replace(".MainController", ""))}.dll");
+            }
             EpiTransaction epiTransaction = new EpiTransaction(new ILauncher(epiSession));
             Ice.UI.App.CustomizationMaintEntry.Transaction oTrans = new Ice.UI.App.CustomizationMaintEntry.Transaction(epiTransaction);
             Ice.UI.App.CustomizationMaintEntry.CustomizationMaintForm custData = new Ice.UI.App.CustomizationMaintEntry.CustomizationMaintForm(oTrans);
@@ -904,7 +908,12 @@ namespace CommonCode
                     
                     var typ = assy.DefinedTypes.Where(r => r.Name == "Launch").FirstOrDefault();
                     dynamic launcher = Activator.CreateInstance(typ);
+#if EPICOR_10_1_600 || EPICOR_10_1_500
+                    //launcher.Session = epiSession;
+                    //launcher.GetType().GetProperty("Session", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public).SetValue(launcher, epiSession);
+#else
                     launcher.Session = epiSession;
+#endif
                     launcher.GetType().GetMethod("InitializeLaunch", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(launcher, null);
 
                     epiBaseForm = launcher.GetType().GetField("lForm", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(launcher);
