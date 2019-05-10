@@ -232,6 +232,7 @@
                             args.Append(" ");
                             args.Append($"-v \"{dyn.Version}\"");
                             args.Append(" -a Download");
+                            
                             editMode = true;
                             runCommand(args, true);
                         }
@@ -289,6 +290,11 @@
                             args.Append(" ");
                             args.Append($"-v \"{dyn.Version}\"");
                             args.Append(" -a Toolbox");
+                            if (!string.IsNullOrEmpty(Settings.Default.DnSpy))
+                            {
+                                args.Append($"-y \"{Settings.Default.DnSpy}\"");
+                            }
+
                             editMode = true;
                             runCommand(args);
                         }
