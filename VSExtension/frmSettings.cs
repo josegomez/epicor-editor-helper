@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Input;
 
 namespace VSExtension
 {
@@ -32,6 +34,13 @@ namespace VSExtension
             Settings.Default.CustomiationPath = txtDownFldr.Text;
             Settings.Default.EpicorFolder=txtEpicorClientFolder.Text ;
             Settings.Default.Save();
+            if(Keyboard.IsKeyDown(Key.LeftCtrl))
+            {
+                var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoaming);
+
+                MessageBox.Show(config.FilePath);
+
+            }
             this.DialogResult = DialogResult.OK;
         }
 
