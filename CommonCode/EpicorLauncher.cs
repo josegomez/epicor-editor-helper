@@ -399,7 +399,7 @@ namespace CommonCode
                 epiSession["Customizing"] = false;
             if (edit)
             {
-#if EPICOR_10_2_300
+#if EPICOR_10_2_300 || EPICOR_10_2_400
                 oTrans.GetType().GetMethod("addFormnameToArguments", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(oTrans, new object[] { menuRow });
 #endif
             }
