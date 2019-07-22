@@ -63,8 +63,8 @@ namespace CustomizationEditor
                                        epiSession = GetEpiSession(o);
                                        if (epiSession != null)
                                        {
-                                           DownloadCustomization(o, epiSession);
-                                           reSync = true;
+                                           if(DownloadCustomization(o, epiSession))
+                                            reSync = true;
                                        }
                                        else
                                         reSync = false;
@@ -245,12 +245,12 @@ namespace CustomizationEditor
         /// </summary>
         /// <param name="o"></param>
         /// <param name="epiSession"></param>
-        private static void DownloadCustomization(CommandLineParams o, Session epiSession)
+        private static bool DownloadCustomization(CommandLineParams o, Session epiSession)
         {
             EpiTransaction epiTransaction = new EpiTransaction(new ILauncher(epiSession));
             Ice.UI.App.CustomizationMaintEntry.Transaction oTrans = new Ice.UI.App.CustomizationMaintEntry.Transaction(epiTransaction);
             Ice.UI.App.CustomizationMaintEntry.CustomizationMaintForm custData = new Ice.UI.App.CustomizationMaintEntry.CustomizationMaintForm(oTrans);
-
+            bool found = false;
             oTrans = (Ice.UI.App.CustomizationMaintEntry.Transaction)custData.GetType().GetField("trans", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(custData);
 
             SearchOptions opts = new SearchOptions(SearchMode.ShowDialog)
@@ -272,7 +272,10 @@ namespace CustomizationEditor
                 o.Key3 = r.Key3;
                 o.LayerType = r.TypeCode;
                 o.ProductType = r.ProductID;
+                found = true;
             }
+
+            return found;
 
         }
         

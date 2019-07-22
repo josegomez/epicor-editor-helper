@@ -144,7 +144,7 @@
 
             //* Do your stuff with the output (write to console/log/StringBuilder)
             //Console.WriteLine(outLine.Data);
-            if (outLine.Data != null)
+            if (outLine.Data != null && !string.IsNullOrEmpty(outLine.Data) && !outLine.Data.Contains("Exception"))
             {
                 if (outLine.Data.Trim() == "EDITMODE")
                 {
