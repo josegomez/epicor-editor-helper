@@ -22,7 +22,7 @@ namespace VSExtension
 
         private void frmSettings_Load(object sender, EventArgs e)
         {
-            Settings.Default.Upgrade();
+            //Settings.Default.Upgrade();
             txtDNSpy.Text = Settings.Default.DnSpy;
             txtDownFldr.Text = Settings.Default.CustomiationPath;
             txtEpicorClientFolder.Text = Settings.Default.EpicorFolder;
@@ -36,7 +36,7 @@ namespace VSExtension
             Settings.Default.Save();
             if(Keyboard.IsKeyDown(Key.LeftCtrl))
             {
-                var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoaming);
+                var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal);
 
                 MessageBox.Show(config.FilePath);
 

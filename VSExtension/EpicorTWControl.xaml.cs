@@ -292,7 +292,7 @@
                             args.Append(" -a Toolbox");
                             if (!string.IsNullOrEmpty(Settings.Default.DnSpy))
                             {
-                                args.Append($"-y \"{Settings.Default.DnSpy}\"");
+                                args.Append($" -y \"{Settings.Default.DnSpy}\"");
                             }
 
                             editMode = true;
