@@ -157,3 +157,6 @@ Initial release
 
 ### 0.44.0
 * Added support for 10.2.400.X
+
+### 0.45.0
+* Fixed a bunch of github issues and added loggin

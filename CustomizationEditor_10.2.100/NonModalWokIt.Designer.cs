@@ -44,6 +44,7 @@
             this.btnRefs = new System.Windows.Forms.Button();
             this.btnCodeWizard = new System.Windows.Forms.Button();
             this.btnDataTools = new System.Windows.Forms.Button();
+            this.btnProcessCalling = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnTracing
@@ -88,7 +89,7 @@
             // 
             // btnTest
             // 
-            this.btnTest.Location = new System.Drawing.Point(100, 224);
+            this.btnTest.Location = new System.Drawing.Point(100, 237);
             this.btnTest.Name = "btnTest";
             this.btnTest.Size = new System.Drawing.Size(129, 23);
             this.btnTest.TabIndex = 4;
@@ -99,7 +100,7 @@
             // 
             // btnDebug
             // 
-            this.btnDebug.Location = new System.Drawing.Point(100, 253);
+            this.btnDebug.Location = new System.Drawing.Point(100, 266);
             this.btnDebug.Name = "btnDebug";
             this.btnDebug.Size = new System.Drawing.Size(129, 23);
             this.btnDebug.TabIndex = 5;
@@ -109,7 +110,7 @@
             // 
             // btnEdit
             // 
-            this.btnEdit.Location = new System.Drawing.Point(100, 282);
+            this.btnEdit.Location = new System.Drawing.Point(100, 295);
             this.btnEdit.Name = "btnEdit";
             this.btnEdit.Size = new System.Drawing.Size(129, 23);
             this.btnEdit.TabIndex = 6;
@@ -195,11 +196,22 @@
             this.btnDataTools.UseVisualStyleBackColor = true;
             this.btnDataTools.Click += new System.EventHandler(this.btnDataTools_Click);
             // 
+            // btnProcessCalling
+            // 
+            this.btnProcessCalling.Location = new System.Drawing.Point(14, 202);
+            this.btnProcessCalling.Name = "btnProcessCalling";
+            this.btnProcessCalling.Size = new System.Drawing.Size(129, 23);
+            this.btnProcessCalling.TabIndex = 15;
+            this.btnProcessCalling.Text = "&Process Calling";
+            this.btnProcessCalling.UseVisualStyleBackColor = true;
+            this.btnProcessCalling.Click += new System.EventHandler(this.BtnProcessCalling_Click);
+            // 
             // NonModalWokIt
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(315, 364);
+            this.Controls.Add(this.btnProcessCalling);
             this.Controls.Add(this.btnDataTools);
             this.Controls.Add(this.btnCodeWizard);
             this.Controls.Add(this.btnRefs);
@@ -248,5 +260,6 @@
         private System.Windows.Forms.Button btnRefs;
         private System.Windows.Forms.Button btnCodeWizard;
         private System.Windows.Forms.Button btnDataTools;
+        private System.Windows.Forms.Button btnProcessCalling;
     }
 }

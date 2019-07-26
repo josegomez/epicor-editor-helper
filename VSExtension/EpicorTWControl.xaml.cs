@@ -90,6 +90,7 @@
                 process.StartInfo.UseShellExecute = false;
                 process.StartInfo.RedirectStandardOutput = true;
                 process.StartInfo.RedirectStandardError = true;
+                process.StartInfo.RedirectStandardInput = true;
                 process.StartInfo.CreateNoWindow = true;
                 //* Set your output and error (asynchronous) handlers
                 process.OutputDataReceived += new DataReceivedEventHandler(OutputHandler);
@@ -151,10 +152,26 @@
                     Application.Current.Dispatcher.Invoke(DispatcherPriority.Background, new ThreadStart(delegate
                     {
                         DTE dte = Package.GetGlobalService(typeof(SDTE)) as DTE;
-                        dte.ExecuteCommand("File.SaveAll");
+                 //       dte.ExecuteCommand("File.SaveAll");
+                        foreach(Project p in dte.Solution.Projects)
+                        {
+                            if(!p.Saved)
+                            {
+                                p.Save();
+                            }
+                            foreach(ProjectItem pi in p.ProjectItems)
+                            {
+                                if(!pi.Saved)
+                                {
+                                    pi.Save();
+                                }
+                            }
+                        }
+                        
                         dte.Properties["Environment", "Documents"].Item("DetectFileChangesOutsideIDE").Value = 0;
                         InfoBarService.Instance.ShowInfoBar("You are editing the customization in Epicor, do not make changes in Visual Studio until you are done and this message has been dismissed");
                     }));
+                    ((System.Diagnostics.Process)sendingProcess).StandardInput.WriteLine("ALLDONE");
                 }
                 else
                 {

@@ -5,6 +5,8 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using System.Security.Cryptography;
+using System.Configuration;
+
 namespace CustomizationEditor
 {
     public partial class LoginForm : Form
@@ -29,7 +31,7 @@ namespace CustomizationEditor
             cmbEnvironment.DisplayMember = "Name";
             if (!string.IsNullOrEmpty(Settings.Default.Environment) && Settings.Default.Remember)
                 cmbEnvironment.SelectedValue = Settings.Default.Environment;
-            Settings.Default.Upgrade();
+
             if(Settings.Default.Remember)
             {
                 txtUsername.Text = Settings.Default.Username;
@@ -68,8 +70,12 @@ namespace CustomizationEditor
             Settings.Default.Password = encryptedString;
             Settings.Default.SSO = chkSSO.Checked;
             Settings.Default.Save();
+            var path = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal).FilePath;
+
             this.DialogResult = DialogResult.OK;
         }
+
+
 
         private void btnCancel_Click(object sender, EventArgs e)
         {

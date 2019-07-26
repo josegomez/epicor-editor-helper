@@ -4,6 +4,7 @@ using System;
 using System.Threading;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 
 namespace CustomizationEditor
 {
@@ -22,6 +23,13 @@ namespace CustomizationEditor
         private const UInt32 SWP_NOMOVE = 0x0002;
         private const UInt32 TOPMOST_FLAGS = SWP_NOMOVE | SWP_NOSIZE;
 
+        const int STD_INPUT_HANDLE = -10;
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        internal static extern IntPtr GetStdHandle(int nStdHandle);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        static extern bool CancelIoEx(IntPtr handle, IntPtr lpOverlapped);
 
         public NonModalWokIt(object session, CommandLineParams o)
         {
@@ -101,12 +109,61 @@ namespace CustomizationEditor
            
         }
 
-        private void btnEdit_Click(object sender, EventArgs e)
+        private async Task<string> GetInputAsync()
+        {
+            return await Task.Run(() =>
+            {
+                try
+                {
+                    return Console.ReadLine();
+                }
+                catch (Exception e)
+                {
+                    return "";
+                }
+            });
+        }
+
+
+        private async void  btnEdit_Click(object sender, EventArgs e)
         {
             Console.WriteLine("EDITMODE");
             if (chkSyncUp.Checked)
             {
-                l.UpdateCustomization(o, (Session)this.session);
+                //var line = Console.ReadLine();
+
+                DateTime start = DateTime.Now;
+
+                var taskt = GetInputAsync();
+                if(await Task.WhenAny(taskt, Task.Delay(10000)) == taskt)
+                {
+                    if (taskt.Result == "ALLDONE")
+                    {
+                        l.UpdateCustomization(o, (Session)this.session);
+                    }
+                }
+                else
+                {
+                     var hWnd = System.Diagnostics.Process.GetCurrentProcess().MainWindowHandle;
+
+                    var handle = GetStdHandle(STD_INPUT_HANDLE);
+                    CancelIoEx(handle, IntPtr.Zero);
+                    CancelIoEx(hWnd, IntPtr.Zero);
+                    MessageBox.Show("The Visual Studio Project failed to save automatically in the alloted time, please go manually save your project and click OK when ready. Clicking OK wihtout saving will cause your pending data to be deleted!", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    l.UpdateCustomization(o, (Session)this.session);
+                }
+
+               /* while (Console.In.Peek()<=0 && (start-DateTime.Now).TotalSeconds<15)
+                    Thread.Sleep(200);
+                string line = "";
+                if (Console.In.Peek() > 0)
+                    line = Console.In.ReadLine();
+                
+                else
+                {
+                    MessageBox.Show("The Visual Studio Project failed to save automatically in the alloted time, please go manually save your project and click OK when ready. Clicking OK wihtout saving will cause your pending data to be deleted!", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    l.UpdateCustomization(o, (Session)this.session);
+                }*/
             }
             l.LaunchInEpicor(o, (Session)this.session, true, true);
             
@@ -212,6 +269,11 @@ namespace CustomizationEditor
             {
                 l.DownloadAndSync((Session)this.session, o);
             }
+        }
+
+        private void BtnProcessCalling_Click(object sender, EventArgs e)
+        {
+            l.LaunchMenuOptions(this.session, "Ice.UI.ProcessCallXRefEntry.dll");
         }
     }
 }
