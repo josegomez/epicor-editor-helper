@@ -577,8 +577,8 @@ namespace CommonCode
                     bool cancel = false;
                     eu.CustLayerMan.GetType().GetMethod("GetCompositeCustomDataSet", BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic).Invoke(eu.CustLayerMan, new object[] { o.Key2, exName, o.Key1, cancel });
                 }
-
-
+                Log.Debug("Get composite Customize Data Set");
+                eu.CloseCacheRespinSplash();
 
                 PersonalizeCustomizeManager csm = new PersonalizeCustomizeManager(epiBaseForm, epiTransaction, o.ProductType, o.Company, beName, exName, o.Key1, eu.CustLayerMan, DeveloperLicenseType.Partner, LayerType.Customization);
                 Log.Debug("Init Custom Controls");
@@ -600,13 +600,13 @@ namespace CommonCode
                 GenerateRefs(refds, csmR, o, netver);
                 ExportCustmization(nds, ad, o);
                 Resync(o, refds, ds, nds, csmR, netver);
-
+                eu.CloseCacheRespinSplash();
                 epiBaseForm.Dispose();
 
 
                 ad.Dispose();
                 cm = null;
-                eu.CloseCacheRespinSplash();
+              
                 eu.Dispose();
 
 

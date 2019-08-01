@@ -41,7 +41,7 @@ namespace CustomizationEditor
             Session epiSession = null;
             bool reSync = false;
             Log.Logger = new LoggerConfiguration()
-              .MinimumLevel.Information()
+              .MinimumLevel.Debug()
               .WriteTo.File("CustomizationEditor.log",Serilog.Events.LogEventLevel.Verbose,rollingInterval: RollingInterval.Day, retainedFileCountLimit:10,shared:true,fileSizeLimitBytes:10000000)
               .CreateLogger();
             Log.Information("===========================================Application Launch==================================");
