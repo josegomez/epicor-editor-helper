@@ -830,6 +830,12 @@ namespace CommonCode
                 refds.AppendLine($"<Reference Include=\"{entry.FullName}\"/>");
             }
 #else
+#if EPICOR_10_2_400 || EPICOR_10_2_300  
+            aliases.Add(4.7m,"v4.7.2");
+#endif
+#if EPICOR_10_1_500 || EPICOR_10_1_600 || EPICOR_10_2_100 || EPICOR_10_2_200
+            aliases.Add(4.6m, "v4.6.1");
+#endif
             foreach (var r in csmR.SystemRefAssemblies)
             {
                 
@@ -916,6 +922,7 @@ namespace CommonCode
                 catch { }
             }
 #endif
+            
         }
 
         private static void GenerateVersion(Dictionary<decimal, string> aliases, TargetFrameworkAttribute runver)
