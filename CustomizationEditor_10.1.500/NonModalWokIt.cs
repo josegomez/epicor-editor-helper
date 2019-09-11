@@ -69,12 +69,11 @@ namespace CustomizationEditor
 
         private void btnTest_Click(object sender, EventArgs e)
         {
-            if (chkSyncUp.Checked)
-            {
-                l.UpdateCustomization(o, (Session)this.session);
-            }
-
+            string tempId = "_" + Guid.NewGuid().ToString().Substring(0, o.Key1.Length - 1);
+            l.CreateTemporaryCustomization(o, (Session)this.session, tempId);
+            o.Key1 = o.Key1 + tempId;
             l.LaunchInEpicor(o, (Session)this.session, false, false);
+            l.DeleteTemporaryCustomization(o, (Session)this.session, tempId);
             Thread.Sleep(1000);
             CheckTM();
         }

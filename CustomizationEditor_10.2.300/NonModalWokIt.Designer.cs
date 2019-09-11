@@ -95,7 +95,6 @@
             this.btnTest.TabIndex = 4;
             this.btnTest.Text = "Run (Test)";
             this.btnTest.UseVisualStyleBackColor = true;
-            this.btnTest.Visible = false;
             this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
             // 
             // btnDebug
