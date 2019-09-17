@@ -1125,6 +1125,64 @@ namespace CommonCode
             return true;
         }
 
+        /// <summary>
+        /// Save the working customization into a new temporary copy
+        /// </summary>
+        /// <param name="o">Command Line Paramter</param>
+        /// <param name="epiSession">Epicor Session</param>
+        /// <param name="customizationSuffix">Suffix to append to the end of the customization name to make it unique</param>
+        /// <returns></returns>
+        public bool CreateTemporaryCustomization(CommandLineParams o, Session epiSession, string customizationSuffix)
+        {
+
+            using (StreamReader sr = new StreamReader($@"{o.ProjectFolder}\Script.cs"))
+            {
+                var oTrans = new ILauncher(epiSession);
+                Ice.Adapters.GenXDataAdapter ad = new Ice.Adapters.GenXDataAdapter(oTrans);
+                ad.BOConnect();
+
+                GenXDataImpl i = (GenXDataImpl)ad.BusinessObject;
+                string script = (sr.ReadToEnd().Replace("public partial class Script", "public class Script").Replace("public static partial class Script", "public static class Script"));
+                var ds = i.GetByID(o.Company, o.ProductType, o.LayerType, o.CSGCode, o.Key1, o.Key2, o.Key3);
+                i.GetNewXXXDef(ds, o.Company, o.ProductType, o.LayerType, o.CSGCode, o.Key1 + customizationSuffix, o.Key2);
+                var chunk = ds.XXXDef[0];
+                if (chunk.SysRevID != o.Version && o.Version > 0)
+                {
+                    if (MessageBox.Show("The customization appears to have been updated internally within Epicor, this means that if you continue you may be over-writing some changes made. Would you like to continue?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
+                    {
+                        return false;
+                    }
+
+                }
+                string content = ad.GetDechunkedStringByIDWithCompany(o.Company, o.ProductType, o.LayerType, o.CSGCode, o.Key1, o.Key2, o.Key3);
+                XDocument doc = XDocument.Load(new StringReader(content));
+                XNamespace ns = "http://tempuri.org/XMLSchema.xsd";
+                var elList = doc.Descendants(ns + "PropertyName").ToList().Where(xm => xm.Value == "Script").FirstOrDefault();
+                (elList.NextNode as XElement).Value = script;
+                
+                ad.ChunkNSaveUncompressedStringByID(o.Company, o.ProductType, o.LayerType, o.CSGCode, o.Key1 + customizationSuffix, o.Key2, o.Key3, chunk.Description, chunk.Version, false, doc.ToString());
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Delete the temporary customization
+        /// </summary>
+        /// <param name="o">Command Line Paramter</param>
+        /// <param name="epiSession">Epicor Session</param>
+        /// <param name="customizationSuffix">Suffix to append to the end of the customization name to make it unique</param>
+        /// <returns></returns>
+        public bool DeleteTemporaryCustomization(CommandLineParams o, Session epiSession, string customizationSuffix)
+        {
+            var oTrans = new ILauncher(epiSession);
+            Ice.Adapters.GenXDataAdapter ad = new Ice.Adapters.GenXDataAdapter(oTrans);
+            ad.BOConnect();
+
+            GenXDataImpl i = (GenXDataImpl)ad.BusinessObject;
+            i.DeleteByID(o.Company, o.ProductType, o.LayerType, o.CSGCode, o.Key1, o.Key2, o.Key3);
+
+            return true;
+        }
 
     }
 }
