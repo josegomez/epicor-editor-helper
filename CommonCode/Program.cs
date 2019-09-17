@@ -417,6 +417,7 @@ namespace CustomizationEditor
                 s = Directory.GetDirectories(s)[0];
                 deepPath = Path.Combine(deepPath, Path.GetFileName(s));
                 deepPath = Path.Combine(deepPath, "Customization");
+                if(File.Exists(Path.Combine(currentCache, deepPath)))
                 foreach(string gk in Directory.GetFiles(Path.Combine(currentCache,deepPath),"AllForms*.xml"))
                 {
                     string newPat = Path.Combine(Path.Combine(o.Temp, deepPath), Path.GetFileName(gk));
@@ -447,10 +448,16 @@ namespace CustomizationEditor
                 dynamic thing = Activator.CreateInstance(ty);
 
                 object[] args = { c };
-                thing.GetType().GetMethod("SetUpAssemblyRetrieversAndPossiblyGetNewConfiguration", BindingFlags.Instance | BindingFlags.Public).Invoke(thing, args);
-                WellKnownAssemblyRetrievers.AutoDeployAssemblyRetriever = (IAssemblyRetriever)thing.GetType().GetProperty("AutoDeployAssemblyRetriever", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).GetValue(thing);
-                WellKnownAssemblyRetrievers.SessionlessAssemblyRetriever = (IAssemblyRetriever)thing.GetType().GetProperty("SessionlessAssemblyRetriever", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).GetValue(thing);
-                
+                try
+                {
+                    thing.GetType().GetMethod("SetUpAssemblyRetrieversAndPossiblyGetNewConfiguration", BindingFlags.Instance | BindingFlags.Public).Invoke(thing, args);
+                    WellKnownAssemblyRetrievers.AutoDeployAssemblyRetriever = (IAssemblyRetriever)thing.GetType().GetProperty("AutoDeployAssemblyRetriever", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).GetValue(thing);
+                    WellKnownAssemblyRetrievers.SessionlessAssemblyRetriever = (IAssemblyRetriever)thing.GetType().GetProperty("SessionlessAssemblyRetriever", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).GetValue(thing);
+                }
+                catch(Exception ee)
+                {
+                    Log.Error(ee.ToString());
+                }
                 Startup.PreStart(ses, true);
                 launcher = new EpicorLauncher();
                 

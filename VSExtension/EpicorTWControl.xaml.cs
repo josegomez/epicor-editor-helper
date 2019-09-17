@@ -175,28 +175,35 @@
                 }
                 else
                 {
-                    Application.Current.Dispatcher.Invoke(DispatcherPriority.Background, new ThreadStart(delegate
+                    try
                     {
+                        Application.Current.Dispatcher.Invoke(DispatcherPriority.Background, new ThreadStart(delegate
+                        {
 
                         //Update UI here
                         InfoBarService.Instance.CloseInfoBar();
-                        DTE dte = Package.GetGlobalService(typeof(SDTE)) as DTE;
-                        
-                        var sol = Directory.GetFiles(outLine.Data, "*.sln").FirstOrDefault();
-                        if (sol == null)
-                        {
-                            sol = Directory.GetFiles(outLine.Data, "*.csproj").FirstOrDefault();
-                            
-                            dte.Solution.Create(Path.GetDirectoryName(sol), $"{Path.GetFileNameWithoutExtension(sol)}.sln");
-                            dte.ExecuteCommand("File.AddExistingProject", $"\"{sol}\"");
-                            dte.ExecuteCommand("File.SaveAll");
-                        }
-                        else
-                            dte.Solution.Open(sol);
+                            DTE dte = Package.GetGlobalService(typeof(SDTE)) as DTE;
 
-                        dte.Properties["Environment", "Documents"].Item("DetectFileChangesOutsideIDE").Value = 1;
+                            var sol = Directory.GetFiles(outLine.Data, "*.sln").FirstOrDefault();
+                            if (sol == null)
+                            {
+                                sol = Directory.GetFiles(outLine.Data, "*.csproj").FirstOrDefault();
 
-                    }));
+                                dte.Solution.Create(Path.GetDirectoryName(sol), $"{Path.GetFileNameWithoutExtension(sol)}.sln");
+                                dte.ExecuteCommand("File.AddExistingProject", $"\"{sol}\"");
+                                dte.ExecuteCommand("File.SaveAll");
+                            }
+                            else
+                                dte.Solution.Open(sol);
+
+                            dte.Properties["Environment", "Documents"].Item("DetectFileChangesOutsideIDE").Value = 1;
+
+                        }));
+                    }
+                    catch(Exception ex)
+                    {
+                        MessageBox.Show($"Error Encountered: {outLine.Data} Error: {ex.ToString()}");
+                    }
                     
 
                 }
