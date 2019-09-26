@@ -143,12 +143,16 @@ namespace CustomizationEditor
                 }
                 else
                 {
-                     var hWnd = System.Diagnostics.Process.GetCurrentProcess().MainWindowHandle;
+                    // Test for the Visual Studio Project saving only if this is being run from the full Visual Studio.
+                    // We can tell by looking for the presence of alert.txt (which is created only for the VS Code extension)
+                    if (!System.IO.File.Exists($@"{o.ProjectFolder}\alert.txt")) {
+                        var hWnd = System.Diagnostics.Process.GetCurrentProcess().MainWindowHandle;
 
-                    var handle = GetStdHandle(STD_INPUT_HANDLE);
-                    CancelIoEx(handle, IntPtr.Zero);
-                    CancelIoEx(hWnd, IntPtr.Zero);
-                    MessageBox.Show("The Visual Studio Project failed to save automatically in the alloted time, please go manually save your project and click OK when ready. Clicking OK wihtout saving will cause your pending data to be deleted!", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        var handle = GetStdHandle(STD_INPUT_HANDLE);
+                        CancelIoEx(handle, IntPtr.Zero);
+                        CancelIoEx(hWnd, IntPtr.Zero);
+                        MessageBox.Show("The Visual Studio Project failed to save automatically in the alloted time, please go manually save your project and click OK when ready. Clicking OK wihtout saving will cause your pending data to be deleted!", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
                     l.UpdateCustomization(o, (Session)this.session);
                 }
 
