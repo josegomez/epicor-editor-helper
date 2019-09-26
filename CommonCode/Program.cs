@@ -370,9 +370,7 @@ namespace CustomizationEditor
             catch (Exception ex)
             {
                 Log.Error(ex,$"Failed to Login");
-                ShowProgressBar(false);
-                MessageBox.Show("Failed to Authenticate","Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                
+                ShowProgressBar(false);                
                 
                 LoginForm frm = new LoginForm(o.EpicorClientFolder);
                 if (frm.ShowDialog() == DialogResult.OK)
