@@ -164,7 +164,7 @@ namespace CommonCode
                         epiBaseForm = Activator.CreateInstance(typeE, new object[] { epiTransaction });
                         break;
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     { }
                 }
             else
@@ -524,7 +524,7 @@ namespace CommonCode
                             epiBaseForm = Activator.CreateInstance(typeE, new object[] { epiTransaction });
                             break;
                         }
-                        catch (Exception e)
+                        catch (Exception)
                         { }
                     }
                 else
@@ -779,25 +779,34 @@ namespace CommonCode
                 AssemblyName r = entry.Value as AssemblyName;
                 if (r.FullName.Contains(o.Key1))
                     o.DLLLocation = entry.Key + ".dll";
-                refds.AppendLine($"<Reference Include=\"{r.FullName}\">");
-                refds.AppendLine($"<HintPath>{entry.Key}.dll</HintPath>");
-                refds.AppendLine($"</Reference>");
+                if (!refds.ToString().ToUpper().Contains(r.FullName.ToUpper()))
+                {
+                    refds.AppendLine($"<Reference Include=\"{r.FullName}\">");
+                    refds.AppendLine($"<HintPath>{entry.Key}.dll</HintPath>");
+                    refds.AppendLine($"</Reference>");
+                }
             }
             foreach (DictionaryEntry entry in csmR.SystemRefAssemblies)
             {
                 AssemblyName r = entry.Value as AssemblyName;
                 if (r.FullName.Contains(o.Key1))
                     o.DLLLocation = entry.Key + ".dll";
-                refds.AppendLine($"<Reference Include=\"{r.FullName}\">");
-                refds.AppendLine($"<HintPath>{entry.Key}.dll</HintPath>");
-                refds.AppendLine($"</Reference>");
+                if (!refds.ToString().ToUpper().Contains(r.FullName.ToUpper()))
+                {
+                    refds.AppendLine($"<Reference Include=\"{r.FullName}\">");
+                    refds.AppendLine($"<HintPath>{entry.Key}.dll</HintPath>");
+                    refds.AppendLine($"</Reference>");
+                }
             }
 
             if (csmR.CustomAssembly != null)
             {
-                refds.AppendLine($"<Reference Include=\"{csmR.CustomAssembly.FullName}\">");
-                refds.AppendLine($"<HintPath>{csmR.CustomAssembly.Location}.dll</HintPath>");
-                refds.AppendLine($"</Reference>");
+                if (!refds.ToString().ToUpper().Contains(csmR.CustomAssembly.FullName.ToUpper()))
+                {
+                    refds.AppendLine($"<Reference Include=\"{csmR.CustomAssembly.FullName}\">");
+                    refds.AppendLine($"<HintPath>{csmR.CustomAssembly.Location}.dll</HintPath>");
+                    refds.AppendLine($"</Reference>");
+                }
                 if (csmR.CustomAssembly.FullName.Contains(o.Key1))
                     o.DLLLocation = csmR.CustomAssembly.Location;
             }
@@ -807,10 +816,13 @@ namespace CommonCode
                 AssemblyName r = entry.Value as AssemblyName;
                 if (r.FullName.Contains(o.Key1))
                     o.DLLLocation = Path.Combine(o.EpicorClientFolder, entry.Key + ".dll");
-                refds.AppendLine($"<Reference Include=\"{r.FullName}\">");
-                refds.AppendLine($@"<HintPath>{Path.Combine(o.EpicorClientFolder, entry.Key + ".dll")}</HintPath>");
+                if (!refds.ToString().ToUpper().Contains(r.FullName.ToUpper()))
+                {
+                    refds.AppendLine($"<Reference Include=\"{r.FullName}\">");
+                    refds.AppendLine($@"<HintPath>{Path.Combine(o.EpicorClientFolder, entry.Key + ".dll")}</HintPath>");
 
-                refds.AppendLine($"</Reference>");
+                    refds.AppendLine($"</Reference>");
+                }
             }
 
             foreach (DictionaryEntry entry in csmR.ReferencedAssembliesHT)
@@ -818,19 +830,24 @@ namespace CommonCode
                 AssemblyName r = entry.Value as AssemblyName;
                 if (r.FullName.Contains(o.Key1))
                     o.DLLLocation = Path.Combine(o.EpicorClientFolder, entry.Key + ".dll");
-                refds.AppendLine($"<Reference Include=\"{r.FullName}\">");
-                refds.AppendLine($@"<HintPath>{Path.Combine(o.EpicorClientFolder, entry.Key + ".dll")}</HintPath>");
-                refds.AppendLine($"</Reference>");
+                if (!refds.ToString().ToUpper().Contains(r.FullName.ToUpper()))
+                {
+                    refds.AppendLine($"<Reference Include=\"{r.FullName}\">");
+                    refds.AppendLine($@"<HintPath>{Path.Combine(o.EpicorClientFolder, entry.Key + ".dll")}</HintPath>");
+                    refds.AppendLine($"</Reference>");
+                }
             }
 
             foreach (AssemblyName entry in csmR.ReferencedAssemblies)
             {
 
-
-                refds.AppendLine($"<Reference Include=\"{entry.FullName}\"/>");
+                if (!refds.ToString().ToUpper().Contains(entry.FullName.ToUpper()))
+                {
+                    refds.AppendLine($"<Reference Include=\"{entry.FullName}\"/>");
+                }
             }
 #else
-#if EPICOR_10_2_400 || EPICOR_10_2_300  
+#if EPICOR_10_2_400 || EPICOR_10_2_300 ||  EPICOR_10_2_500
             aliases.Add(4.7m,"v4.7.2");
 #endif
 #if EPICOR_10_1_500 || EPICOR_10_1_600 || EPICOR_10_2_100 || EPICOR_10_2_200
@@ -839,30 +856,36 @@ namespace CommonCode
             foreach (var r in csmR.SystemRefAssemblies)
             {
                 
-                if (r.Value.FullName.Contains(o.Key1))
-                    o.DLLLocation = r.Key;
-                refds.AppendLine($"<Reference Include=\"{r.Value.FullName}\">");
-                refds.AppendLine($"<HintPath>{r.Key}.dll</HintPath>");
-                refds.AppendLine($"</Reference>");
-                try
+                    if (r.Value.FullName.Contains(o.Key1))
+                        o.DLLLocation = r.Key;
+                if (!refds.ToString().ToUpper().Contains(r.Value.FullName.ToUpper()))
                 {
-                    var runver = System.Reflection.Assembly.LoadFrom($"{r.Key}.dll").GetCustomAttributes(true).OfType<TargetFrameworkAttribute>().FirstOrDefault();
-                    if (runver != null)
+                    refds.AppendLine($"<Reference Include=\"{r.Value.FullName}\">");
+                    refds.AppendLine($"<HintPath>{r.Key}.dll</HintPath>");
+                    refds.AppendLine($"</Reference>");
+                    try
                     {
-                        GenerateVersion(aliases, runver);
+                        var runver = System.Reflection.Assembly.LoadFrom($"{r.Key}.dll").GetCustomAttributes(true).OfType<TargetFrameworkAttribute>().FirstOrDefault();
+                        if (runver != null)
+                        {
+                            GenerateVersion(aliases, runver);
 
-                        //!aliases.Contains(runver.FrameworkName))
-                        //aliases.Add(runver.FrameworkName);
+                            //!aliases.Contains(runver.FrameworkName))
+                            //aliases.Add(runver.FrameworkName);
+                        }
                     }
+                    catch { }
                 }
-                catch { }
             }
 
             if (csmR.CustomAssembly != null)
             {
-                refds.AppendLine($"<Reference Include=\"{csmR.CustomAssembly.FullName}\">");
-                refds.AppendLine($"<HintPath>{csmR.CustomAssembly.Location}.dll</HintPath>");
-                refds.AppendLine($"</Reference>");
+                if (!refds.ToString().ToUpper().Contains(csmR.CustomAssembly.FullName.ToUpper()))
+                {
+                    refds.AppendLine($"<Reference Include=\"{csmR.CustomAssembly.FullName}\">");
+                    refds.AppendLine($"<HintPath>{csmR.CustomAssembly.Location}.dll</HintPath>");
+                    refds.AppendLine($"</Reference>");
+                }
                 
                 if (csmR.CustomAssembly.FullName.Contains(o.Key1))
                     o.DLLLocation = csmR.CustomAssembly.Location;
@@ -883,10 +906,13 @@ namespace CommonCode
             {
                 if (r.Value.FullName.Contains(o.Key1))
                     o.DLLLocation = Path.Combine(o.EpicorClientFolder, r.Key + ".dll");
-                refds.AppendLine($"<Reference Include=\"{r.Value.FullName}\">");
-                refds.AppendLine($@"<HintPath>{Path.Combine(o.EpicorClientFolder, r.Key + ".dll")}</HintPath>");
-                
-                refds.AppendLine($"</Reference>");
+                if (!refds.ToString().ToUpper().Contains(r.Value.FullName.ToUpper()))
+                {
+                    refds.AppendLine($"<Reference Include=\"{r.Value.FullName}\">");
+                    refds.AppendLine($@"<HintPath>{Path.Combine(o.EpicorClientFolder, r.Key + ".dll")}</HintPath>");
+
+                    refds.AppendLine($"</Reference>");
+                }
                 try
                 {
                     var runver = System.Reflection.Assembly.LoadFrom($"{Path.Combine(o.EpicorClientFolder, r.Key + ".dll")}").GetCustomAttributes(true).OfType<TargetFrameworkAttribute>().FirstOrDefault();
@@ -904,10 +930,13 @@ namespace CommonCode
             {
                 if (r.Value.FullName.Contains(o.Key1))
                     o.DLLLocation = Path.Combine(o.EpicorClientFolder, r.Key + ".dll");
-                refds.AppendLine($"<Reference Include=\"{r.Value.FullName}\">");
-                refds.AppendLine($@"<HintPath>{Path.Combine(o.EpicorClientFolder, r.Key + ".dll")}</HintPath>");
-                
-                refds.AppendLine($"</Reference>");
+                if (!refds.ToString().ToUpper().Contains(r.Value.FullName.ToUpper()))
+                {
+                    refds.AppendLine($"<Reference Include=\"{r.Value.FullName}\">");
+                    refds.AppendLine($@"<HintPath>{Path.Combine(o.EpicorClientFolder, r.Key + ".dll")}</HintPath>");
+
+                    refds.AppendLine($"</Reference>");
+                }
                 try
                 {
                     var runver = System.Reflection.Assembly.LoadFrom($"{Path.Combine(o.EpicorClientFolder, r.Key + ".dll")}").GetCustomAttributes(true).OfType<TargetFrameworkAttribute>().FirstOrDefault();

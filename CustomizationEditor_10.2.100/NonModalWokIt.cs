@@ -116,7 +116,7 @@ namespace CustomizationEditor
                 {
                     return Console.ReadLine();
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     return "";
                 }

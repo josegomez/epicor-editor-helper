@@ -388,7 +388,7 @@ namespace CustomizationEditor
                     {
                         ses = new Session(o.Username, password, Session.LicenseType.Default, newConfig);
                     }
-                    catch(Exception ee)
+                    catch(Exception)
                     {
                         Log.Error(ex, $"Failed to Login Again");
                         MessageBox.Show("Failed to Authenticate", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
