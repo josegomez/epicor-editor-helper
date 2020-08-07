@@ -19,7 +19,7 @@
         public string ProjectFolder { get; set; }
         public string DLLLocation { get; set; }
         public string DNSpy { get; set; }
-        public int Version { get; set; }
+        public long Version { get; set; }
         public string Encrypted { get; set; }
         public string Tracing { get; set; }
         public string NewConfig { get; set; }
