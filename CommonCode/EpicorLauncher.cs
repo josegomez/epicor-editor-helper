@@ -150,7 +150,7 @@ namespace CommonCode
                     }
                 }
             var typeE = assy.DefinedTypes.Where(r => r.FullName.ToUpper().Contains(o.Key2.ToUpper())).FirstOrDefault();
-            var typeTList = assy.DefinedTypes.Where(r => r.BaseType.Name.Equals("EpiTransaction") || r.BaseType.Name.Equals("EpiMultiViewTransaction") || r.BaseType.Name.Equals("EpiSingleViewTransaction") || r.BaseType.Name.Equals("UDMultiViewTransaction") || r.BaseType.Name.Equals("UDSingleViewTransaction") ||  r.BaseType.Name.Equals("EpiReportTransaction") || r.BaseType.Name.Equals("EpiSchedulingTransaction")).ToList();
+            var typeTList = assy.DefinedTypes.Where(r => r.BaseType!=null && (r.BaseType.Name.Equals("EpiTransaction") || r.BaseType.Name.Equals("EpiMultiViewTransaction") || r.BaseType.Name.Equals("EpiSingleViewTransaction") || r.BaseType.Name.Equals("UDMultiViewTransaction") || r.BaseType.Name.Equals("UDSingleViewTransaction") ||  r.BaseType.Name.Equals("EpiReportTransaction") || r.BaseType.Name.Equals("EpiSchedulingTransaction"))).ToList();
             if (typeTList != null && typeTList.Count > 0)
                 foreach (var typeT in typeTList)
                 {
@@ -161,7 +161,10 @@ namespace CommonCode
                         else
                             epiTransaction = new EpiTransaction(oTrans);
 
-                        epiBaseForm = Activator.CreateInstance(typeE, new object[] { epiTransaction });
+                        if (typeE.Name.Contains("DynamicCriteriaReportForm"))
+                            epiBaseForm = Activator.CreateInstance(typeE, new object[] { epiTransaction, true });
+                        else
+                            epiBaseForm = Activator.CreateInstance(typeE, new object[] { epiTransaction });
                         break;
                     }
                     catch (Exception)
@@ -236,7 +239,7 @@ namespace CommonCode
             Assembly assy = ClientAssemblyRetriever.ForILaunch(oTrans).RetrieveAssembly(dll);
 
             var typeE = assy.DefinedTypes.Where(r => r.FullName.ToUpper().Contains(o.Key2.ToUpper())).FirstOrDefault();
-            var typeTList = assy.DefinedTypes.Where(r => r.BaseType.Name.Equals("EpiTransaction") || r.BaseType.Name.Equals("EpiMultiViewTransaction") || r.BaseType.Name.Equals("EpiSingleViewTransaction") || r.BaseType.Name.Equals("UDMultiViewTransaction") || r.BaseType.Name.Equals("UDSingleViewTransaction")).ToList();
+            var typeTList = assy.DefinedTypes.Where(r => r.BaseType!=null && (r.BaseType.Name.Equals("EpiTransaction") || r.BaseType.Name.Equals("EpiMultiViewTransaction") || r.BaseType.Name.Equals("EpiSingleViewTransaction") || r.BaseType.Name.Equals("UDMultiViewTransaction") || r.BaseType.Name.Equals("UDSingleViewTransaction"))).ToList();
             epiTransaction = new EpiTransaction(oTrans);
             var typ = assy.DefinedTypes.Where(r => r.Name == "Launch").FirstOrDefault();
             dynamic launcher = Activator.CreateInstance(typ);
@@ -1010,7 +1013,7 @@ namespace CommonCode
 
                 s = assy.Location;
                 var typeE = assy.DefinedTypes.Where(r => r.FullName.ToUpper().Contains(o.Key2.ToUpper())).FirstOrDefault();
-                var typeTList = assy.DefinedTypes.Where(r => r.BaseType.Name.Equals("EpiTransaction")).ToList();
+                var typeTList = assy.DefinedTypes.Where(r => r.BaseType!=null && r.BaseType.Name.Equals("EpiTransaction")).ToList();
 
                 epiTransaction = new EpiTransaction(oTrans);
 
