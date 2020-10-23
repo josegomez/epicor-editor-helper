@@ -18,7 +18,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\..\..\..\epicor\ERP10.2Client\Upgrade\Client\</OutputPath>
+    <OutputPath>..\..\..\..\..\..\epicor\ERP10.2Client\SG_Production\Client\</OutputPath>
     <DefineConstants>TRACE;DEBUG;EPICOR_10_2_500</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
