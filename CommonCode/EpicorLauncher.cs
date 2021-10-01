@@ -30,6 +30,7 @@ namespace CommonCode
     {
         Form launchedForm;
         CommandLineParams o;
+        private static char separator = Convert.ToChar(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator); // Get CurrentCulture dot separator
 
         /// <summary>
         /// Launches an Epicor Menu with Trasing 
@@ -879,7 +880,10 @@ namespace CommonCode
                             //aliases.Add(runver.FrameworkName);
                         }
                     }
-                    catch { }
+                    catch (Exception e)
+                    {
+                        Log.Debug("GenRef: " + e.ToString() + System.Environment.NewLine + e.StackTrace);
+                    }
                 }
             }
 
@@ -965,12 +969,19 @@ namespace CommonCode
             var match = regex.Matches(runver.FrameworkName);
             if (match.Count > 0)
             {
-                decimal ver = decimal.Parse(match[0].Value);
-                if (!aliases.ContainsKey(ver))
+                decimal ver;
+                if (decimal.TryParse(match[0].Value.Replace('.', separator), out ver))
                 {
-                    regex = new Regex(@"(v[0-9]\.[0-9\.]+)");
-                    match = regex.Matches(runver.FrameworkName);
-                    aliases.Add(ver, match[0].Value);
+                    if (!aliases.ContainsKey(ver))
+                    {
+                        regex = new Regex(@"(v[0-9]\.[0-9\.]+)");
+                        match = regex.Matches(runver.FrameworkName);
+                        aliases.Add(ver, match[0].Value);
+                    }
+                }
+                else
+                {
+                    Log.Debug($"runver.FrameWorkName: {runver.FrameworkName}");
                 }
             }
         }
