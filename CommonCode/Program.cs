@@ -45,147 +45,154 @@ namespace CustomizationEditor
               .WriteTo.File("CustomizationEditor.log",Serilog.Events.LogEventLevel.Verbose,rollingInterval: RollingInterval.Day, retainedFileCountLimit:10,shared:true,fileSizeLimitBytes:10000000)
               .CreateLogger();
             Log.Information("===========================================Application Launch==================================");
-            Parser.Default.ParseArguments<CommandLineParams>(args)
-                   .WithParsed(o =>
-                   {
-                       try
+            try
+            {
+                Parser.Default.ParseArguments<CommandLineParams>(args)
+                       .WithParsed(o =>
                        {
-                           currAction = o.Action;
-                           ShowProgressBar();
-
-                           switch (o.Action)
+                           try
                            {
-                               case "Add":
-                                   {
-                                       Log.Information("Action was Add");
-                                       ShowProgressBar(false);
-                                       LoginForm frm = new LoginForm(o.EpicorClientFolder);
-                                       if (frm.ShowDialog() == DialogResult.OK)
-                                       {
-                                           ShowProgressBar();
-                                           o.Username = Settings.Default.Username;
-                                           o.Password = Settings.Default.Password;
-                                           o.ConfigFile = Settings.Default.Environment;
-                                           o.Encrypted = "true";
+                               currAction = o.Action;
+                               ShowProgressBar();
 
+                               switch (o.Action)
+                               {
+                                   case "Add":
+                                       {
+                                           Log.Information("Action was Add");
+                                           ShowProgressBar(false);
+                                           LoginForm frm = new LoginForm(o.EpicorClientFolder);
+                                           if (frm.ShowDialog() == DialogResult.OK)
+                                           {
+                                               ShowProgressBar();
+                                               o.Username = Settings.Default.Username;
+                                               o.Password = Settings.Default.Password;
+                                               o.ConfigFile = Settings.Default.Environment;
+                                               o.Encrypted = "true";
+
+                                               epiSession = GetEpiSession(o);
+                                               if (epiSession != null)
+                                               {
+                                                   Log.Information("Got a valid Epicor Session");
+                                                   if (DownloadCustomization(o, epiSession))
+                                                       reSync = true;
+                                               }
+                                               else
+                                                   reSync = false;
+                                           }
+                                           else
+                                               reSync = false;
+
+                                       }
+                                       break;
+                                   case "Update":
+                                       {
+                                           Log.Information("Action was Update");
                                            epiSession = GetEpiSession(o);
                                            if (epiSession != null)
                                            {
                                                Log.Information("Got a valid Epicor Session");
-                                               if (DownloadCustomization(o, epiSession))
-                                                   reSync = true;
+                                               reSync = true;
+                                               if (!UpdateCustomization(o, epiSession))
+                                               {
+                                                   if (MessageBox.Show("You've canceled the sync operation, would you like to download the latest copy of the customization from Epicor? This will over-write any changes you have made to the custom script since the last sync.", "Re-Download?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                                                       reSync = false;
+                                               }
                                            }
                                            else
                                                reSync = false;
                                        }
-                                       else
-                                           reSync = false;
-
-                                   }
-                                   break;
-                               case "Update":
-                                   {
-                                       Log.Information("Action was Update");
-                                       epiSession = GetEpiSession(o);
-                                       if (epiSession != null)
+                                       break;
+                                   case "Download":
                                        {
-                                           Log.Information("Got a valid Epicor Session");
-                                           reSync = true;
-                                           if (!UpdateCustomization(o, epiSession))
+                                           Log.Information("Action was Update");
+                                           epiSession = GetEpiSession(o);
+                                           if (epiSession != null)
                                            {
-                                               if (MessageBox.Show("You've canceled the sync operation, would you like to download the latest copy of the customization from Epicor? This will over-write any changes you have made to the custom script since the last sync.", "Re-Download?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
-                                                   reSync = false;
+                                               Log.Information("Got a valid Epicor Session");
+                                               reSync = true;
                                            }
+                                           else
+                                               reSync = false;
                                        }
-                                       else
-                                           reSync = false;
-                                   }
-                                   break;
-                               case "Download":
-                                   {
-                                       Log.Information("Action was Update");
-                                       epiSession = GetEpiSession(o);
-                                       if (epiSession != null)
+                                       break;
+                                   case "Toolbox":
                                        {
-                                           Log.Information("Got a valid Epicor Session");
-                                           reSync = true;
+                                           Log.Information("Action was ToolBox");
+                                           epiSession = GetEpiSession(o);
+
+                                           if (epiSession != null)
+                                           {
+                                               Log.Information("Got a valid Epicor Session");
+                                               ShowProgressBar(false);
+                                               NonModalWokIt win = new NonModalWokIt(epiSession, o);
+                                               win.ShowDialog();
+                                               reSync = win.Sync;
+                                               ShowProgressBar(true);
+                                           }
+
                                        }
-                                       else
-                                           reSync = false;
-                                   }
-                                   break;
-                               case "Toolbox":
+                                       break;
+
+                               }
+                               if (reSync)
+                               {
+                                   Log.Information("Sync down is True");
+                                   if (o.Key2.Contains("MainController"))
                                    {
-                                       Log.Information("Action was ToolBox");
-                                       epiSession = GetEpiSession(o);
-
-                                       if (epiSession != null)
-                                       {
-                                           Log.Information("Got a valid Epicor Session");
-                                           ShowProgressBar(false);
-                                           NonModalWokIt win = new NonModalWokIt(epiSession, o);
-                                           win.ShowDialog();
-                                           reSync = win.Sync;
-                                           ShowProgressBar(true);
-                                       }
-
+                                       Log.Information("Download and Sync a Deployed Dashboard");
+                                       launcher.DownloadAndSyncDashboard(epiSession, o);
                                    }
-                                   break;
+                                   else
+                                   {
+                                       Log.Information("Download and Sync a regular customization");
 
-                           }
-                           if (reSync)
-                           {
-                               Log.Information("Sync down is True");
-                               if (o.Key2.Contains("MainController"))
-                               {
-                                   Log.Information("Download and Sync a Deployed Dashboard");
-                                   launcher.DownloadAndSyncDashboard(epiSession, o);
+                                       launcher.DownloadAndSync(epiSession, o);
+                                   }
                                }
-                               else
+                               ShowProgressBar(false);
+
+                               if (epiSession != null)
                                {
-                                   Log.Information("Download and Sync a regular customization");
-                                   
-                                   launcher.DownloadAndSync(epiSession, o);
+                                   epiSession.OnSessionClosing();
+
+                                   epiSession = null;
+
+                               }
+                               if (!string.IsNullOrEmpty(o.NewConfig))
+                               {
+                                   try
+                                   {
+                                       File.Delete(o.NewConfig);
+                                   }
+                                   catch { }
+                               }
+                               if (!string.IsNullOrEmpty(o.Temp))
+                               {
+                                   try
+                                   {
+                                       Directory.Delete(o.Temp, true);
+                                   }
+                                   catch { }
                                }
                            }
-                           ShowProgressBar(false);
-
-                           if (epiSession != null)
+                           catch (Exception ex)
                            {
-                               epiSession.OnSessionClosing();
-
-                               epiSession = null;
+                               Log.Error(ex, "Main Application Error");
+                           }
+                           finally
+                           {
+                               Log.Information("========================Application Close=====================");
+                               Log.CloseAndFlush();
 
                            }
-                           if (!string.IsNullOrEmpty(o.NewConfig))
-                           {
-                               try
-                               {
-                                   File.Delete(o.NewConfig);
-                               }
-                               catch { }
-                           }
-                           if (!string.IsNullOrEmpty(o.Temp))
-                           {
-                               try
-                               {
-                                   Directory.Delete(o.Temp, true);
-                               }
-                               catch { }
-                           }
-                       }
-                       catch(Exception ex)
-                       {
-                           Log.Error(ex, "Main Application Error");
-                       }
-                       finally
-                       {
-                           Log.Information("========================Application Close=====================");
-                           Log.CloseAndFlush();
 
-                       }
-
-                   });
+                       });
+            }
+            catch(Exception ar)
+            {
+                Console.WriteLine("Issue parsing Command Line" + ar.ToString());
+            }
         }
 
         /// <summary>
