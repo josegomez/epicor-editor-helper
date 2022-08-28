@@ -33,11 +33,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomizationEditor_2021.1.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomizationEditor_2021.2.X", "CustomizationEditor_2021.2\CustomizationEditor_2021.2.X.csproj", "{5AA528C3-84E3-4B96-9D1E-2A1EF107D318}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomizationEditor_2022.1.X", "CustomizationEditor_2022.1\CustomizationEditor_2022.1.X.csproj", "{3BC114BF-9C40-47F3-A9D9-7CC226EF38C6}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		CommonCode\CommonCode.projitems*{1e0a1518-5f6a-4ba5-b459-10abf9263ec8}*SharedItemsImports = 4
 		CommonCode\CommonCode.projitems*{20dd988f-e57e-428c-820f-ffb95e106166}*SharedItemsImports = 4
 		CommonCode\CommonCode.projitems*{277e9582-188a-4fec-9ad1-6b6d11ac8992}*SharedItemsImports = 4
+		CommonCode\CommonCode.projitems*{3bc114bf-9c40-47f3-a9d9-7cc226ef38c6}*SharedItemsImports = 4
 		CommonCode\CommonCode.projitems*{469a9fcb-d09c-407b-baf1-e9f0963468f4}*SharedItemsImports = 4
 		CommonCode\CommonCode.projitems*{5aa528c3-84e3-4b96-9d1e-2a1ef107d318}*SharedItemsImports = 4
 		CommonCode\CommonCode.projitems*{608d7f65-576f-4fca-845e-1d4149099654}*SharedItemsImports = 4
@@ -109,6 +112,10 @@ Global
 		{5AA528C3-84E3-4B96-9D1E-2A1EF107D318}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5AA528C3-84E3-4B96-9D1E-2A1EF107D318}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5AA528C3-84E3-4B96-9D1E-2A1EF107D318}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3BC114BF-9C40-47F3-A9D9-7CC226EF38C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3BC114BF-9C40-47F3-A9D9-7CC226EF38C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3BC114BF-9C40-47F3-A9D9-7CC226EF38C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3BC114BF-9C40-47F3-A9D9-7CC226EF38C6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
