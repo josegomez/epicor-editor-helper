@@ -33,6 +33,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomizationEditor_2021.1.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomizationEditor_2021.2.X", "CustomizationEditor_2021.2\CustomizationEditor_2021.2.X.csproj", "{5AA528C3-84E3-4B96-9D1E-2A1EF107D318}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomizationEditor_2022.2.X", "CustomizationEditor_2022.2\CustomizationEditor_2022.2.X.csproj", "{87894741-9493-4ACF-A089-0D8EF74A92DA}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		CommonCode\CommonCode.projitems*{1e0a1518-5f6a-4ba5-b459-10abf9263ec8}*SharedItemsImports = 4
@@ -44,6 +46,7 @@ Global
 		CommonCode\CommonCode.projitems*{7ba070f6-d947-4cf9-92cc-81ac035c3abe}*SharedItemsImports = 4
 		CommonCode\CommonCode.projitems*{7cc05c03-06ec-45e1-80f5-daaf797ff13d}*SharedItemsImports = 4
 		CommonCode\CommonCode.projitems*{86c9a944-a03f-495f-9793-4796301de98d}*SharedItemsImports = 4
+		CommonCode\CommonCode.projitems*{87894741-9493-4acf-a089-0d8ef74a92da}*SharedItemsImports = 4
 		CommonCode\CommonCode.projitems*{cef1c382-3096-4dbc-b8d5-96b5f52851be}*SharedItemsImports = 4
 		CommonCode\CommonCode.projitems*{e0b385dc-04a2-4f50-97b5-4959d83041f5}*SharedItemsImports = 4
 		CommonCode\CommonCode.projitems*{ef014bb7-d332-433e-a188-746810df25a1}*SharedItemsImports = 13
@@ -109,6 +112,10 @@ Global
 		{5AA528C3-84E3-4B96-9D1E-2A1EF107D318}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5AA528C3-84E3-4B96-9D1E-2A1EF107D318}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5AA528C3-84E3-4B96-9D1E-2A1EF107D318}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87894741-9493-4ACF-A089-0D8EF74A92DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87894741-9493-4ACF-A089-0D8EF74A92DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87894741-9493-4ACF-A089-0D8EF74A92DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87894741-9493-4ACF-A089-0D8EF74A92DA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
