@@ -318,6 +318,7 @@
                             {
                                 args.Append($" -y \"{Settings.Default.DnSpy}\"");
                             }
+                            args.Append($" -d \"{dyn.DLLLocation}\"");
 
                             editMode = true;
                             runCommand(args);

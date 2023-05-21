@@ -658,8 +658,11 @@ namespace CommonCode
             XDocument xmldoc = XDocument.Load(new StringReader(projectFile));
             XNamespace ns = "http://schemas.microsoft.com/developer/msbuild/2003";
             var xe = xmldoc.Descendants(ns + "TargetFrameworkVersion").FirstOrDefault();
-            var valKey = verdic.Max(r => r.Key);
-            xe.Value = verdic[valKey];
+            if (verdic.Count > 0)
+            {
+                var valKey = verdic.Max(r => r.Key);
+                xe.Value = verdic[valKey];
+            }
             projectFile = xmldoc.ToString();
             o.Version = ds.XXXDef[0].SysRevID;
 
@@ -858,6 +861,9 @@ namespace CommonCode
 #endif
 #if EPICOR_10_1_500 || EPICOR_10_1_600 || EPICOR_10_2_100 || EPICOR_10_2_200
             aliases.Add(4.6m, "v4.6.1");
+#endif
+#if EPICOR_2021_2
+            aliases.Add(4.8m, "v4.8");
 #endif
             foreach (var r in csmR.SystemRefAssemblies)
             {
