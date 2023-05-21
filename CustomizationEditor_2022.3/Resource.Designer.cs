@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace VSExtension {
+namespace CustomizationEditor {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace VSExtension {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("VSExtension.Resource", typeof(Resource).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("CustomizationEditor.Resource", typeof(Resource).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,12 +61,17 @@ namespace VSExtension {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+        ///&lt;Project ToolsVersion=&quot;15.0&quot; xmlns=&quot;http://schemas.microsoft.com/developer/msbuild/2003&quot;&gt;
+        ///  &lt;Import Project=&quot;$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props&quot; Condition=&quot;Exists(&apos;$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props&apos;)&quot; /&gt;
+        ///  &lt;PropertyGroup&gt;
+        ///    &lt;Configuration Condition=&quot; &apos;$(Configuration)&apos; == &apos;&apos; &quot;&gt;Debug&lt;/Configuration&gt;
+        ///    &lt;Platform Condition=&quot; &apos;$(Platform)&apos; == &apos;&apos; &quot;&gt;x86&lt;/Platform&gt;
+        ///    &lt;ProjectGuid&gt;e75f4a18-bbb [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static System.Drawing.Bitmap Logo_128x128_fw {
+        internal static string BasicProjc {
             get {
-                object obj = ResourceManager.GetObject("Logo_128x128_fw", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return ResourceManager.GetString("BasicProjc", resourceCulture);
             }
         }
         

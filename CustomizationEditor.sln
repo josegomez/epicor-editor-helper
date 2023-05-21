@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29001.49
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32825.248
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomizationEditor_10.2.300.X", "CustomizationEditor_10.2.300\CustomizationEditor_10.2.300.X.csproj", "{7CC05C03-06EC-45E1-80F5-DAAF797FF13D}"
 EndProject
@@ -35,22 +35,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomizationEditor_2021.2.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomizationEditor_2022.2.X", "CustomizationEditor_2022.2\CustomizationEditor_2022.2.X.csproj", "{87894741-9493-4ACF-A089-0D8EF74A92DA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomizationEditor_2023.1.X", "CustomizationEditor_2022.3\CustomizationEditor_2023.1.X.csproj", "{945463CC-816B-44B9-88EB-1136DE602A74}"
+EndProject
 Global
-	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		CommonCode\CommonCode.projitems*{1e0a1518-5f6a-4ba5-b459-10abf9263ec8}*SharedItemsImports = 4
-		CommonCode\CommonCode.projitems*{20dd988f-e57e-428c-820f-ffb95e106166}*SharedItemsImports = 4
-		CommonCode\CommonCode.projitems*{277e9582-188a-4fec-9ad1-6b6d11ac8992}*SharedItemsImports = 4
-		CommonCode\CommonCode.projitems*{469a9fcb-d09c-407b-baf1-e9f0963468f4}*SharedItemsImports = 4
-		CommonCode\CommonCode.projitems*{5aa528c3-84e3-4b96-9d1e-2a1ef107d318}*SharedItemsImports = 4
-		CommonCode\CommonCode.projitems*{608d7f65-576f-4fca-845e-1d4149099654}*SharedItemsImports = 4
-		CommonCode\CommonCode.projitems*{7ba070f6-d947-4cf9-92cc-81ac035c3abe}*SharedItemsImports = 4
-		CommonCode\CommonCode.projitems*{7cc05c03-06ec-45e1-80f5-daaf797ff13d}*SharedItemsImports = 4
-		CommonCode\CommonCode.projitems*{86c9a944-a03f-495f-9793-4796301de98d}*SharedItemsImports = 4
-		CommonCode\CommonCode.projitems*{87894741-9493-4acf-a089-0d8ef74a92da}*SharedItemsImports = 4
-		CommonCode\CommonCode.projitems*{cef1c382-3096-4dbc-b8d5-96b5f52851be}*SharedItemsImports = 4
-		CommonCode\CommonCode.projitems*{e0b385dc-04a2-4f50-97b5-4959d83041f5}*SharedItemsImports = 4
-		CommonCode\CommonCode.projitems*{ef014bb7-d332-433e-a188-746810df25a1}*SharedItemsImports = 13
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -116,11 +103,31 @@ Global
 		{87894741-9493-4ACF-A089-0D8EF74A92DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{87894741-9493-4ACF-A089-0D8EF74A92DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{87894741-9493-4ACF-A089-0D8EF74A92DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{945463CC-816B-44B9-88EB-1136DE602A74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{945463CC-816B-44B9-88EB-1136DE602A74}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{945463CC-816B-44B9-88EB-1136DE602A74}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{945463CC-816B-44B9-88EB-1136DE602A74}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DC45F661-E91C-4140-9F69-FC91791286C3}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		CommonCode\CommonCode.projitems*{1e0a1518-5f6a-4ba5-b459-10abf9263ec8}*SharedItemsImports = 4
+		CommonCode\CommonCode.projitems*{20dd988f-e57e-428c-820f-ffb95e106166}*SharedItemsImports = 4
+		CommonCode\CommonCode.projitems*{277e9582-188a-4fec-9ad1-6b6d11ac8992}*SharedItemsImports = 4
+		CommonCode\CommonCode.projitems*{469a9fcb-d09c-407b-baf1-e9f0963468f4}*SharedItemsImports = 4
+		CommonCode\CommonCode.projitems*{5aa528c3-84e3-4b96-9d1e-2a1ef107d318}*SharedItemsImports = 4
+		CommonCode\CommonCode.projitems*{608d7f65-576f-4fca-845e-1d4149099654}*SharedItemsImports = 4
+		CommonCode\CommonCode.projitems*{7ba070f6-d947-4cf9-92cc-81ac035c3abe}*SharedItemsImports = 4
+		CommonCode\CommonCode.projitems*{7cc05c03-06ec-45e1-80f5-daaf797ff13d}*SharedItemsImports = 4
+		CommonCode\CommonCode.projitems*{86c9a944-a03f-495f-9793-4796301de98d}*SharedItemsImports = 4
+		CommonCode\CommonCode.projitems*{87894741-9493-4acf-a089-0d8ef74a92da}*SharedItemsImports = 4
+		CommonCode\CommonCode.projitems*{945463cc-816b-44b9-88eb-1136de602a74}*SharedItemsImports = 4
+		CommonCode\CommonCode.projitems*{cef1c382-3096-4dbc-b8d5-96b5f52851be}*SharedItemsImports = 4
+		CommonCode\CommonCode.projitems*{e0b385dc-04a2-4f50-97b5-4959d83041f5}*SharedItemsImports = 4
+		CommonCode\CommonCode.projitems*{ef014bb7-d332-433e-a188-746810df25a1}*SharedItemsImports = 13
 	EndGlobalSection
 EndGlobal
