@@ -372,7 +372,12 @@ namespace CustomizationEditor
             try
             {
                 password = NeedtoEncrypt(o);
-                ses = new Session(o.Username, password, Session.LicenseType.Default, newConfig);
+#if EPICOR_2023_1
+                ses = new Session(o.Username, password, new Guid("00000003-B615-4300-957B-34956697F040"), newConfig);
+#else
+    ses = new Session(o.Username, password, Session.LicenseType.Default, newConfig);
+#endif
+
             }
             catch (Exception ex)
             {
