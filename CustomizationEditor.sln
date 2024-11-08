@@ -37,6 +37,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomizationEditor_2022.2.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomizationEditor_2023.1.X", "CustomizationEditor_2022.3\CustomizationEditor_2023.1.X.csproj", "{945463CC-816B-44B9-88EB-1136DE602A74}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomizationEditor_2024.1.X", "CustomizationEditor_2024.1\CustomizationEditor_2024.1.X.csproj", "{AFAAD69C-A799-4CA7-8ABA-B8FF7C12356D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -107,6 +109,10 @@ Global
 		{945463CC-816B-44B9-88EB-1136DE602A74}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{945463CC-816B-44B9-88EB-1136DE602A74}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{945463CC-816B-44B9-88EB-1136DE602A74}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AFAAD69C-A799-4CA7-8ABA-B8FF7C12356D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AFAAD69C-A799-4CA7-8ABA-B8FF7C12356D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AFAAD69C-A799-4CA7-8ABA-B8FF7C12356D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AFAAD69C-A799-4CA7-8ABA-B8FF7C12356D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -126,6 +132,7 @@ Global
 		CommonCode\CommonCode.projitems*{86c9a944-a03f-495f-9793-4796301de98d}*SharedItemsImports = 4
 		CommonCode\CommonCode.projitems*{87894741-9493-4acf-a089-0d8ef74a92da}*SharedItemsImports = 4
 		CommonCode\CommonCode.projitems*{945463cc-816b-44b9-88eb-1136de602a74}*SharedItemsImports = 4
+		CommonCode\CommonCode.projitems*{afaad69c-a799-4ca7-8aba-b8ff7c12356d}*SharedItemsImports = 4
 		CommonCode\CommonCode.projitems*{cef1c382-3096-4dbc-b8d5-96b5f52851be}*SharedItemsImports = 4
 		CommonCode\CommonCode.projitems*{e0b385dc-04a2-4f50-97b5-4959d83041f5}*SharedItemsImports = 4
 		CommonCode\CommonCode.projitems*{ef014bb7-d332-433e-a188-746810df25a1}*SharedItemsImports = 13
